@@ -1,11 +1,22 @@
-import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import {NgModule} from '@angular/core';
+import {RouterModule, Routes} from '@angular/router';
 
 
-const routes: Routes = [];
+const routes: Routes = [
+  {
+    path: '', redirectTo: 'mobd', pathMatch: 'full'
+  },
+  {
+    path: 'mobd', loadChildren: () => import('./MOM/MOBD/mobd.module').then(m => m.MOBDModule)
+  },
+  {
+    path: 'mofm', loadChildren: () => import('./MOM/MOFM/mofm.module').then(m => m.MOFMModule)
+  },
+];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, {useHash: true})],
   exports: [RouterModule]
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {
+}
