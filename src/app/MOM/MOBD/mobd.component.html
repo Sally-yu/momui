@@ -4,5 +4,5 @@
 
 <input nz-input [(ngModel)]="text">
 
-<smarthelp *ngIf="visible" [visible]="visible" (onOk)="afterHelp($event)"
+<smarthelp [visible]="visible" (onOk)="afterHelp($event)"
            (onCancel)="visible=false;" [data]="data" [columns]="column"></smarthelp>
