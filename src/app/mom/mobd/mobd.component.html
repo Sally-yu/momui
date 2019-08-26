@@ -1,0 +1,10 @@
+<p>mobd works!</p>
+
+<button nz-button [nzType]="'primary'" (click)="show()">show</button>
+
+<input nz-input [(ngModel)]="text">
+
+<smarthelp  [visible]="visible" (onOk)="afterHelp($event)"
+            (onCancel)="visible=false;" [url]="'http://212.64.2.48:8899/grid'"  [columnUrl]="'http://212.64.2.48:8899/column'" [method]="'GET'"></smarthelp>
+
+

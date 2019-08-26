@@ -1,5 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Directive, Input, OnInit, ViewChild} from '@angular/core';
 import {HttpService} from './service/http.service';
+import {SmarthelpComponent} from '../../share/smarthelp/smarthelp.component';
 
 @Component({
   selector: 'app-mobd',
@@ -7,6 +8,8 @@ import {HttpService} from './service/http.service';
   styleUrls: ['./mobd.component.less']
 })
 export class MOBDComponent implements OnInit {
+
+  @ViewChild(SmarthelpComponent, {static: false}) help:SmarthelpComponent;
 
   visible: boolean;
 
@@ -37,5 +40,10 @@ export class MOBDComponent implements OnInit {
   afterHelp(data : any) {
     this.visible=false;
     this.text=data['name']
+  }
+
+  show() {
+    this.help.getData();
+    this.visible=true;
   }
 }

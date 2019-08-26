@@ -7,10 +7,10 @@ const routes: Routes = [
     path: '', redirectTo: 'mobd', pathMatch: 'full'
   },
   {
-    path: 'mobd', loadChildren: () => import('./MOM/MOBD/mobd.module').then(m => m.MOBDModule)
+    path: 'mobd', loadChildren: () => import('./mom/mobd/mobd.module').then(m => m.MOBDModule)
   },
   {
-    path: 'mofm', loadChildren: () => import('./MOM/MOFM/mofm.module').then(m => m.MOFMModule)
+    path: 'mofm', loadChildren: () => import('./mom/mofm/mofm.module').then(m => m.MOFMModule)
   },
 ];
 

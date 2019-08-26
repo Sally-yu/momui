@@ -1,5 +1,5 @@
 <nz-modal [(nzVisible)]="visible" [nzTitle]="title" (nzOnCancel)="cancel()" (nzOnOk)="ok()" >
-  <div>
+  <div *ngIf="visible">
     <nz-input-group nzSearch [nzAddOnAfter]="helpSearch" style="margin-bottom: 8px;">
       <input type="text" nz-input placeholder="请输入查找关键字" [(ngModel)]="searchValue"/>
     </nz-input-group>

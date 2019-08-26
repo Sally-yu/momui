@@ -17,7 +17,7 @@ export class HttpService {
     const obj = headers ? this.http.get(url, {headers: headers}) : this.http.get(url);
     return obj.pipe(
       tap(res => {
-
+        console.log(res)
       }, catchError(err => {
         throw new Error(err);
       }))

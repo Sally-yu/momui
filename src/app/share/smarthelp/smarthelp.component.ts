@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {HttpService} from './service/http.service';
 
 declare type METHOD = 'POST' | 'GET' | null; //取数方式
 
@@ -23,6 +24,9 @@ export class SmarthelpComponent implements OnInit {
 
   //取数url
   @Input() url: string;
+
+  //取列名对应关系
+  @Input() columnUrl: string;
 
   //取数方式
   @Input() method: METHOD;
@@ -53,7 +57,9 @@ export class SmarthelpComponent implements OnInit {
   pageOption = [5, 10, 20, 50, 100];
 
 
-  constructor() {
+  constructor(
+    private http: HttpService
+  ) {
     this.loading = true;
     this.pageSize = this.pageSize ? this.pageSize : 10;
     this.title = this.title ? this.title : '快捷帮助';
@@ -62,7 +68,6 @@ export class SmarthelpComponent implements OnInit {
   ngOnInit() {
     this.loading = false;
   }
-
 
   rowClick(row: any) {
     this.selected = row;
@@ -79,4 +84,27 @@ export class SmarthelpComponent implements OnInit {
     this.onOk.emit(this.selected);
   }
 
+  getData() {
+    if (this.url && this.method == 'GET') {
+      //取数据源
+      if (this.url) {
+        this.http.get(this.url,this.urlHeader).subscribe(res => {
+          this.data = JSON.parse(JSON.stringify(res));
+          console.log(this.data);
+        }, error1 => {
+
+        });
+      }
+      if (this.columnUrl) {
+        //取列名对应关系
+        this.http.get(this.columnUrl,this.urlHeader).subscribe(res => {
+          this.columns = JSON.parse(JSON.stringify(res));
+          console.log(this.columns);
+        }, error1 => {
+
+        });
+      }
+
+    }
+  }
 }
