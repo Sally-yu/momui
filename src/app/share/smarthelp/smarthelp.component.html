@@ -7,7 +7,7 @@
       <button nz-button nzType="primary"><i nz-icon nzType="search"></i></button>
     </ng-template>
 
-    <nz-table [nzData]="data"
+    <nz-table #Table [nzData]="data" nzSize="middle"
               [nzLoading]="loading"
               [(nzPageSize)]="pageSize"
               [nzPageSizeOptions]="pageOption"
@@ -19,7 +19,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr *ngFor="let a of data" (click)="rowClick(a)" (dblclick)="rowClick(a);ok()">
+      <tr *ngFor="let a of Table.data" (click)="rowClick(a)" (dblclick)="rowClick(a);ok()">
         <td *ngFor="let c of columns ">{{a[c.code]}}</td>
       </tr>
       </tbody>
