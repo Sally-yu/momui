@@ -33,7 +33,9 @@
               }
             ],
             "styles": [
-              "src/styles.less"
+              "src/styles.less",
+              "node_modules/jqwidgets-scripts/jqwidgets/styles/jqx.base.css",
+              "node_modules/jqwidgets-scripts/jqwidgets/styles/jqx.dark.css"
             ],
             "scripts": []
           },

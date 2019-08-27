@@ -1,9 +1,10 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
+import { TreehelpComponent } from './treehelp/treehelp.component';
 
 
 @NgModule({
-  declarations: [],
+  declarations: [TreehelpComponent],
   imports: [
     CommonModule,
   ]

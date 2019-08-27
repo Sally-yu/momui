@@ -29,11 +29,11 @@ export class MOBDComponent implements OnInit {
 
   //生命周期 初始化
   ngOnInit() {
-    this.http.grid().subscribe(res => {
-      this.data = JSON.parse(JSON.stringify(res));
-    }, err => {
-
-    });
+    // this.http.grid().subscribe(res => {
+    //   this.data = JSON.parse(JSON.stringify(res));
+    // }, err => {
+    //
+    // });
   }
 
 
@@ -43,7 +43,6 @@ export class MOBDComponent implements OnInit {
   }
 
   show() {
-    this.help.getData();
     this.visible=true;
   }
 }

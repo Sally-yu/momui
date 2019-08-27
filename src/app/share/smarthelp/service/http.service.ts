@@ -17,7 +17,7 @@ export class HttpService {
     const obj = headers ? this.http.get(url, {headers: headers}) : this.http.get(url);
     return obj.pipe(
       tap(res => {
-        console.log(res)
+        console.log(res);
       }, catchError(err => {
         throw new Error(err);
       }))
@@ -25,7 +25,8 @@ export class HttpService {
   }
 
   post(url: string, headers?: HttpHeaders, body?: any) {
-    const obj = headers ? this.http.post(url, body ? body : null, {headers: headers}) : this.http.post(url, body ? body : null);
+    const obj = headers ? this.http.post(url, body ? body : null, {headers: headers}) :
+      this.http.post(url, body ? body : null);
     return obj.pipe(
       tap(res => {
 
