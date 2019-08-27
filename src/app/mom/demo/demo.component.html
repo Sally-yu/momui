@@ -1,0 +1,18 @@
+Demo功能演示
+<br>
+<br>
+<br>
+
+<button nz-button [nzType]="'primary'" (click)="get()">get</button>
+<br>
+<br>
+
+<button nz-button [nzType]="'primary'" (click)="post()">post</button>
+
+<br>
+<br>
+调用智能帮助
+<br>
+<br>
+<button nz-button [nzType]="'primary'" (click)="visible=true">打开帮助</button>
+<smarthelp [visible]="visible" [title]="'快捷帮助'" [url]="http.url.gridUrl" (onCancel)="visible=false;" (onOk)="afterHelp($event)"></smarthelp>

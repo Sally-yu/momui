@@ -5,8 +5,7 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './mofm.component.html',
   styleUrls: ['./mofm.component.less']
 })
-export class MOFMComponent implements OnInit {
-  visible: boolean;
+export class MofmComponent implements OnInit {
 
   constructor() { }
 

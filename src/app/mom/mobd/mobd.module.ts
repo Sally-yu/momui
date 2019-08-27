@@ -1,25 +1,26 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { MOBDRoutingModule } from './mobd-routing.module';
-import {MOBDComponent} from './mobd.component';
-import {SmarthelpModule} from '../../share/smarthelp/smarthelp.module';
-import {NgZorroAntdModule} from 'ng-zorro-antd';
+import { MobdRoutingModule } from './mobd-routing.module';
+import {MobdComponent} from './mobd.component';
 import {FormsModule} from '@angular/forms';
-import { JCSJComponent } from './jcsj/jcsj.component';
+import {HttpClientModule} from '@angular/common/http';
+import {NgZorroAntdModule} from 'ng-zorro-antd';
 
 
 @NgModule({
   declarations: [
-    MOBDComponent,
-    JCSJComponent
+    MobdComponent
   ],
   imports: [
     CommonModule,
+    MobdRoutingModule,
     FormsModule,
-    MOBDRoutingModule,
+    HttpClientModule,
     NgZorroAntdModule,
-    SmarthelpModule
   ],
+  exports:[
+    MobdComponent
+  ]
 })
-export class MOBDModule { }
+export class MobdModule { }
