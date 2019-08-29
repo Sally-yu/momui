@@ -1,4 +1,4 @@
-<nz-modal [(nzVisible)]="visible" [nzTitle]="title" (nzOnCancel)="cancel()" (nzOnOk)="ok()" >
+<nz-modal id="helpModal" [(nzVisible)]="visible" [nzTitle]="title" (nzOnCancel)="cancel()" (nzOnOk)="ok()">
   <div *ngIf="visible">
     <nz-input-group nzSearch [nzAddOnAfter]="helpSearch" style="margin-bottom: 8px;">
       <input type="text" nz-input placeholder="请输入查找关键字" [(ngModel)]="searchValue"/>
@@ -7,7 +7,7 @@
       <button nz-button nzType="primary"><i nz-icon nzType="search"></i></button>
     </ng-template>
 
-    <nz-table #Table [nzData]="data" nzSize="middle"
+    <nz-table #Table [nzData]="data" nzSize="middle" [nzScroll]="{x:'100%'}"
               [nzLoading]="loading"
               [(nzPageSize)]="pageSize"
               [nzPageSizeOptions]="pageOption"
@@ -15,20 +15,58 @@
     >
       <thead>
       <tr>
-        <th *ngFor="let c of columns">{{c.name}}</th>
+        <th
+            nzShowCheckbox
+            [nzChecked]="selected"
+            (nzCheckedChange)="thChecked($event)"
+            nzLeft="0px"
+            nzWidth="50px"
+        ></th>
+        <th *ngFor="let c of columns" nzWidth="300px">{{c.name}}</th>
       </tr>
       </thead>
-      <tbody>
+      <tbody *ngIf="!tree">
       <tr *ngFor="let a of Table.data" (click)="rowClick(a)" (dblclick)="rowClick(a);ok()">
-        <td *ngFor="let c of columns ">{{a[c.code]}}</td>
+        <td nzShowCheckbox [nzChecked]="a==selected"
+            (nzCheckedChange)="checkRow($event,a)"
+            nzLeft="0px"
+        >
+        </td>
+        <td *ngFor="let c of columns "
+            [title]="c.name+':'+(a[c.code]?a[c.code]:'')">{{a[c.code]}}</td>
       </tr>
+      </tbody>
+
+      <tbody *ngIf="tree">
+      <ng-container *ngFor="let data of Table.data">
+        <ng-container *ngFor="let item of mapOfExpandedData[data[path]]">
+          <tr *ngIf="(item.parent && item.parent.expand) || !item.parent" (click)="rowClick(item)" (dblclick)="rowClick(item);ok()">
+            <td nzShowCheckbox [nzChecked]="item==selected"
+                (nzCheckedChange)="checkRow($event,item)"
+                nzLeft="0px"
+            >
+            <td
+              [nzIndentSize]="item.level * 20 "
+              [nzShowExpand]="!!item.children"
+              [(nzExpand)]="item.expand"
+              (nzExpandChange)="collapse(mapOfExpandedData[data[path]], item, $event)"
+            >
+              {{ item[columns[0]["code"]] }}
+            </td>
+            <td *ngFor="let c of columns.slice(1,columns.length)">{{ item[c["code"]] }}</td>
+          </tr>
+        </ng-container>
+      </ng-container>
+
+
+      <!--<td *ngFor="let c of columns.slice(1,columns.length-1) "-->
+      <!--[title]="c.name+':'+(item[c.code]?item[c.code]:'')">{{item[c.code]}}</td>-->
       </tbody>
     </nz-table>
 
-
   </div>
   <div *nzModalFooter>
-    <button nz-button nzType="default" (click)="cancel()">取消</button>
-    <button nz-button nzType="primary" (click)="ok()" [nzLoading]="loading">确定</button>
+    <button nz-button (click)="cancel()"> 取消</button>
+    <button nz-button [nzLoading]="loading" [disabled]="!selected" [nzType]="'primary'" (click)="ok()"> 确定</button>
   </div>
 </nz-modal>

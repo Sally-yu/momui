@@ -35,7 +35,9 @@
             "styles": [
               "src/styles.less",
               "node_modules/jqwidgets-scripts/jqwidgets/styles/jqx.base.css",
-              "node_modules/jqwidgets-scripts/jqwidgets/styles/jqx.dark.css"
+              "node_modules/jqwidgets-scripts/jqwidgets/styles/jqx.dark.css",
+              "src/theme.less",
+              "src/help.less"
             ],
             "scripts": []
           },
