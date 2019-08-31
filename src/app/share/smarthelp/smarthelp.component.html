@@ -1,4 +1,6 @@
-<nz-modal id="helpModal" [(nzVisible)]="visible" [nzTitle]="title" (nzOnCancel)="cancel()" (nzOnOk)="ok()">
+<nz-modal
+  class="help-modal"
+  [(nzVisible)]="visible" [nzTitle]="title" (nzOnCancel)="cancel()" (nzOnOk)="ok()">
   <div *ngIf="visible">
     <nz-input-group nzSearch [nzAddOnAfter]="helpSearch" style="margin-bottom: 8px;">
       <input type="text" nz-input placeholder="请输入查找关键字" [(ngModel)]="searchValue"/>
@@ -7,7 +9,9 @@
       <button nz-button nzType="primary"><i nz-icon nzType="search"></i></button>
     </ng-template>
 
-    <nz-table #Table [nzData]="data" nzSize="middle" [nzScroll]="{x:'100%'}"
+    <nz-table #Table [nzData]="data"
+              nzSize="middle"
+              [nzScroll]="{x:'100%',y:'400px'}"
               [nzLoading]="loading"
               [(nzPageSize)]="pageSize"
               [nzPageSizeOptions]="pageOption"
@@ -20,9 +24,9 @@
             [nzChecked]="selected"
             (nzCheckedChange)="thChecked($event)"
             nzLeft="0px"
-            nzWidth="50px"
+            nzWidth="100px"
         ></th>
-        <th *ngFor="let c of columns" nzWidth="300px">{{c.name}}</th>
+        <th *ngFor="let c of columns" nzWidth="150px">{{c.name}}</th>
       </tr>
       </thead>
       <tbody *ngIf="!tree">

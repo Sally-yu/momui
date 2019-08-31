@@ -1,14 +1,14 @@
-import {Injectable} from '@angular/core';
+import { Injectable } from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {catchError, tap} from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
 })
-export class HttpService{
+export class HttpService {
 
   constructor(
-    public http:HttpClient
+    private http: HttpClient
   ) {
   }
 
@@ -35,5 +35,4 @@ export class HttpService{
       }))
     );
   }
-
 }

@@ -1,0 +1,34 @@
+<div [hidden]="hidden" [nzSpan]="6" nz-col>
+  <nz-form-item nzFlex>
+    <nz-form-label [nzSm]="6" [nzXs]="20">{{item.name}}</nz-form-label>
+    <nz-form-control [nzSm]="16" [nzXs]="20">
+      <nz-input-group [nzAddOnAfter]="suffixIconButton" nzSearch>
+        <input [(ngModel)]="helpname" nz-input readonly type="text"/>
+      </nz-input-group>
+      <ng-template #suffixIconButton>
+        <button (click)="openHelp()" nz-button nzSearch nzType="primary" type="button"><i nz-icon
+                                                                                          nzType="search"></i>
+        </button>
+      </ng-template>
+    </nz-form-control>
+  </nz-form-item>
+</div>
+
+<smarthelp
+  *ngIf="visible"
+  [visible]="visible"
+  (onCancel)="visible=false;"
+  (onOk)="afterHelp($event)"
+  [url]="url"
+  [data]="data"
+  [columns]="columns"
+  [tree]="tree"
+  [urlBody]="urlBody"
+  [urlHeader]="urlHeader"
+  [title]="title"
+  [pageSize]="pageSize"
+  [showJumper]="showJumper"
+  [showPageSelection]="showPageSelection"
+
+
+></smarthelp>

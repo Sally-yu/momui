@@ -2,7 +2,8 @@ import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {SmarthelpComponent} from './smarthelp.component';
 import {NgZorroAntdModule} from 'ng-zorro-antd';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import {HttpClientModule} from '@angular/common/http';
 
 
 @NgModule({
@@ -11,7 +12,9 @@ import {FormsModule} from '@angular/forms';
   ],
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     FormsModule,
+    HttpClientModule,
     NgZorroAntdModule
   ],
   exports: [

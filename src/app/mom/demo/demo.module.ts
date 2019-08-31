@@ -7,6 +7,7 @@ import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {NgZorroAntdModule} from 'ng-zorro-antd';
 import {SmarthelpModule} from '../../share/smarthelp/smarthelp.module';
+import {QuerylistModule} from '../../share/querylist/querylist.module';
 
 
 @NgModule({
@@ -20,6 +21,7 @@ import {SmarthelpModule} from '../../share/smarthelp/smarthelp.module';
     HttpClientModule,
     NgZorroAntdModule,
     SmarthelpModule,
+    QuerylistModule
   ],
   exports: [
     DemoComponent

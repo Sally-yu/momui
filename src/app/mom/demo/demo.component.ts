@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {HttpService} from './service/http.service';
 import {NzMessageService} from 'ng-zorro-antd';
-import {ajaxGetJSON} from 'rxjs/internal-compatibility';
+import {SmarthelpComponent} from '../../share/smarthelp/smarthelp.component';
 
 @Component({
   selector: 'app-demo',
@@ -39,6 +39,10 @@ export class DemoComponent implements OnInit {
   afterHelp(data: any) {
     this.visible=false;
     this.message.success(JSON.stringify(data));
+    console.log(data)
+  }
+
+  query(data: any) {
     console.log(data)
   }
 }

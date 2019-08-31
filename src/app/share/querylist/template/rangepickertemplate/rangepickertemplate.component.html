@@ -1,0 +1,8 @@
+<div nz-col [nzSpan]="6" [hidden]="hidden">
+  <nz-form-item nzFlex>
+    <nz-form-label  [nzSm]="6"  [nzXs]="20">{{item.name}}</nz-form-label>
+    <nz-form-control  [nzSm]="16" [nzXs]="20">
+      <nz-range-picker  [(ngModel)]="item.content" ></nz-range-picker>
+    </nz-form-control>
+  </nz-form-item>
+</div>

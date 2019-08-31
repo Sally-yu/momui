@@ -1,7 +1,6 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {HttpService} from './service/http.service';
 
-declare type METHOD = 'POST' | 'GET' | null; //取数方式
 
 export interface TreeNodeInterface {
   key: number;
@@ -28,31 +27,31 @@ export class SmarthelpComponent implements OnInit, OnDestroy {
   @Output() onCancel: EventEmitter<any> = new EventEmitter<any>();
 
   //帮助标题
-  @Input() title: string = '快捷帮助';
+  @Input() title: string;
 
   //显示弹窗
   @Input() visible: boolean = false;
 
   //取数url
-  @Input() url: string = null;
+  @Input() url: string;
 
   //取数方式
-  @Input() method: METHOD = null;
+  @Input() method: string;
 
   //请求头
-  @Input() urlHeader: any = null;
+  @Input() urlHeader: any;
 
   //post请求体
-  @Input() urlBody: any = null;
+  @Input() urlBody: any;
 
   //帮助数据源，最终显示的数据
-  @Input() data: Array<any> = null;
+  @Input() data: Array<any>;
 
   //树形数据
-  @Input() treeData: Array<any> = null;
+  treeData: Array<any>;
 
   //默认每页记录数
-  @Input() pageSize: number = 10;
+  @Input() pageSize: number;
 
   //显示快速跳转页码
   @Input() showJumper: boolean = true;
@@ -61,7 +60,7 @@ export class SmarthelpComponent implements OnInit, OnDestroy {
   @Input() showPageSelection: boolean = false;
 
   //帮助数据源列名映射关系
-  @Input() columns: Array<any> = null;
+  @Input() columns: Array<any>;
 
   //是否树形帮助
   @Input() tree: boolean = false;
@@ -70,13 +69,19 @@ export class SmarthelpComponent implements OnInit, OnDestroy {
   // @Input() multiSelect: boolean = false;
 
   //分级码字段
-  @Input() path: string = 'path';
+  @Input() path: string;
 
   //层级字段
-  @Input() layer: string = 'layer';
+  @Input() layer: string;
+
+  //父级id
+  @Input() parentId: string;
+
+  //id字段
+  @Input() id: string;
 
   //列表型数据，树帮助时存储全部展开的列表数据
-  listData: Array<any> = null;
+  listData: Array<any>;
 
   mapOfExpandedData: { [key: string]: TreeNodeInterface[] } = {};
 
@@ -85,15 +90,24 @@ export class SmarthelpComponent implements OnInit, OnDestroy {
 
   selected: any = null;  // 暂时标记选中值
 
-  pageOption = [5, 10, 20, 50, 100];
+  pageOption = [5, 10, 20, 50, 100]; //页面条数候选
+
 
   constructor(
-    private http: HttpService
+    public http: HttpService
   ) {
 
   }
 
   ngOnInit() {
+    //TODO:重要参数设置默认值，防止扩展组件传空置出错
+    this.title = this.title ? this.title : '快捷帮助';
+    this.pageSize = this.pageSize ? this.pageSize : 10;
+    this.path = this.path ? this.path : 'path';
+    this.layer = this.layer ? this.layer : 'layer';
+    this.parentId = this.parentId ? this.parentId : 'parentid';
+    this.id = this.id ? this.id : 'id';
+
     this.loading = true;
     this.getData();
   }
@@ -167,11 +181,11 @@ export class SmarthelpComponent implements OnInit, OnDestroy {
 
   //勾选行
   checkRow(checked: boolean, a: any) {
-      if (checked) {
-        this.selected = a;
-      } else {
-        this.selected = null;
-      }
+    if (checked) {
+      this.selected = a;
+    } else {
+      this.selected = null;
+    }
   }
 
   //表头勾选
@@ -184,25 +198,41 @@ export class SmarthelpComponent implements OnInit, OnDestroy {
 
   //列表转树
   listToTree() {
-    this.data.sort((a, b) => a[this.layer] - b[this.layer]);
-    this.listData = [...this.data];
-    this.treeData = [...this.data];
-    let min = this.treeData[0][this.layer];
-    let max = this.treeData[this.treeData.length - 1][this.layer];
-    for (let i = min; i < max; i++) {
-      let parents = this.treeData.filter(l => l[this.layer] == i);
-      parents.forEach(p => {
-        let path = p[this.path];
-        let children = this.treeData.filter(l => l[this.path].indexOf(path) == 0 && l[this.layer] == i + 1);
-        if (children.length > 0) {
-          p['children'] = children;
-        }
-      });
+    if (!(this.parentId in this.data[0]) && this.path in this.data[0] && this.layer in this.data[0]) {
+      this.data.sort((a, b) => a[this.layer] - b[this.layer]);
+      this.listData = [...this.data];
+      this.treeData = [...this.data];
+      let min = this.treeData[0][this.layer];
+      let max = this.treeData[this.treeData.length - 1][this.layer];
+      for (let i = min; i < max; i++) {
+        let parents = this.treeData.filter(l => l[this.layer] == i);
+        parents.forEach(p => {
+          let path = p[this.path];
+          let children = this.treeData.filter(l => l[this.path].indexOf(path) == 0 && l[this.layer] == i + 1);
+          if (children.length > 0) {
+            p['children'] = children;
+          }
+        });
+      }
+      this.data = this.treeData.filter(l => l[this.layer] == min);
+    } else if (this.parentId in this.data[0]) {
+      this.listData = [...this.data];
+      this.treeData = [...this.data];
+      this.pushChildren(this.treeData);
+      this.data = this.treeData.filter(l => !l[this.parentId]);
     }
-    this.data = this.treeData.filter(l => l[this.layer] == min);
-    console.log(this.data);
+
     this.data.forEach(item => {
       this.mapOfExpandedData[item[this.path]] = this.convertTreeToList(item);
+    });
+  }
+
+  //循环查找子集
+  pushChildren(data: Array<any>) {
+    data.forEach(d => {
+      let children = this.treeData.filter(f => f[this.parentId] == d[this.id]);
+      this.pushChildren(children);
+      d['children'] = children;
     });
   }
 
@@ -211,7 +241,7 @@ export class SmarthelpComponent implements OnInit, OnDestroy {
     if (!hashMap[node[this.path]]) {
       hashMap[node[this.path]] = true;
       array.push(node);
-    }
+    }◊
   }
 
   //树列表折行

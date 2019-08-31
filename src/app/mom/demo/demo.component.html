@@ -15,4 +15,20 @@ Demo功能演示
 <br>
 <br>
 <button nz-button [nzType]="'primary'" (click)="visible=true">打开帮助</button>
-<smarthelp *ngIf="visible" [visible]="visible" [tree]="true" [title]="'快捷帮助'" [url]="http.url.gridUrl" (onCancel)="visible=false;" (onOk)="afterHelp($event)"></smarthelp>
+
+<querylist
+  (onQuery)="query($event)"
+  [backgroundColor]="'#fafafa'"
+  [url]="http.url.gridUrl"
+></querylist>
+
+<smarthelp
+  *ngIf="visible"
+  [tree]="true"
+  [title]="'快捷帮助'"
+  [visible]="visible"
+  [id]="'number'"
+  [url]="http.url.gridUrl"
+  (onCancel)="visible=false;"
+  (onOk)="afterHelp($event)">
+</smarthelp>

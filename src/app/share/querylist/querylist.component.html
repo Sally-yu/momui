@@ -1,0 +1,51 @@
+<form [ngStyle]="{'border':bordered?'1px solid':'none',
+      'background-color':backgroundColor,
+      'border-radius':radius?radius:'0'}" class="query-list"
+      nz-form>
+
+  <div nz-row style="margin-bottom: 4px;">
+    <div [nzSpan]="12" nz-col style="text-align: left;">
+      <a>{{title}}</a>
+    </div>
+    <div [nzSpan]="12" class="query-btns" nz-col>
+      <a (click)="query()">查询</a>
+      <a (click)="resetForm()">清空</a>
+      <a (click)="showTransfer=!showTransfer;">配置</a>
+      <a (click)="toggleCollapse()"
+         *ngIf="componentArray.length>showNumber">
+        {{isCollapse ? '展开' : '收起'}}
+        <i [type]="isCollapse ? 'down' : 'up'" nz-icon></i>
+      </a>
+    </div>
+  </div>
+
+  <div [nzGutter]="24" nz-row>
+    <ng-template dynamicComponent></ng-template>
+  </div>
+</form>
+
+<nz-modal
+  class="querylist-modal"
+  [nzVisible]="showTransfer"
+  (nzOnOk)="onOk()"
+  (nzOnCancel)="showTransfer=false;"
+  [nzTitle]="modalTitle"
+>
+
+  <nz-transfer #transfer
+    [nzDataSource]="columns"
+    [nzShowSearch]="search"
+    [nzShowSelectAll]="selectAll"
+    [nzOperations]="transferOptions"
+    [nzListStyle]="{ 'width.px': transferWidth, 'height.px': transferHeight }"
+    [nzRender]="render"
+  >
+    <ng-template #render let-item> {{ item['name'] ? item['name'] : item[0] }}</ng-template>
+    <!--<ng-template #footer let-direction>-->
+    <!--<button nz-button (click)="reload(direction)" [nzSize]="'small'" style="float: right; margin: 5px;">-->
+    <!--reload-->
+    <!--</button>-->
+    <!--</ng-template>-->
+  </nz-transfer>
+</nz-modal>
+
