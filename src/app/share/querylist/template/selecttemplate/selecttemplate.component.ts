@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-selecttemplate',
@@ -7,9 +7,13 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class SelectTemplateComponent implements OnInit {
 
-  constructor() { }
   @Input() public item: any;
   @Input() public hidden: boolean;
+  @Input() public data: Array<{ value: string, label: string }>;
+
+  constructor() {
+  }
+
   ngOnInit() {
   }
 }

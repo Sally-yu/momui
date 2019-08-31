@@ -96,7 +96,6 @@ export class SmarthelpComponent implements OnInit, OnDestroy {
   constructor(
     public http: HttpService
   ) {
-
   }
 
   ngOnInit() {
@@ -142,7 +141,7 @@ export class SmarthelpComponent implements OnInit, OnDestroy {
             }
             //不返回数据列，自动生成，不判断类型，不建议用
             else {
-              for (var key in list['data']) {
+              for (let key in list['data']) {
                 this.columns = [...this.columns, {code: key, name: key}];
               }
             }
@@ -157,6 +156,7 @@ export class SmarthelpComponent implements OnInit, OnDestroy {
         },
         error1 => {
           this.loading = false;
+          throw new Error(error1);
         }
       );
     }
@@ -169,7 +169,7 @@ export class SmarthelpComponent implements OnInit, OnDestroy {
     }
     //不传columns自己循环一个 不分类型，不建议用
     else if (this.data && !this.columns) {
-      for (var key in this.data) {
+      for (let key in this.data) {
         this.columns = [...this.columns, {code: key, name: key}];
       }
       if (this.tree) {
@@ -231,8 +231,10 @@ export class SmarthelpComponent implements OnInit, OnDestroy {
   pushChildren(data: Array<any>) {
     data.forEach(d => {
       let children = this.treeData.filter(f => f[this.parentId] == d[this.id]);
-      this.pushChildren(children);
-      d['children'] = children;
+      if (children.length>0) {
+        this.pushChildren(children);
+        d['children'] = children;
+      }
     });
   }
 
@@ -280,7 +282,6 @@ export class SmarthelpComponent implements OnInit, OnDestroy {
 
 
   ngOnDestroy(): void {
-    console.log('destory');
   }
 
 

@@ -1,5 +1,4 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {NzMessageService} from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-helptemplate',
@@ -8,6 +7,10 @@ import {NzMessageService} from 'ng-zorro-antd';
 })
 
 export class HelpTemplateComponent implements OnInit {
+
+  @Input() public item: any;
+  @Input() public hidden: boolean;
+
 
   //帮助标题
   @Input() title: string;
@@ -43,7 +46,7 @@ export class HelpTemplateComponent implements OnInit {
   @Input() columns: Array<any>;
 
   //是否树形帮助
-  @Input() tree: boolean=true;
+  @Input() tree: boolean;
 
   //多选
   // @Input() multiSelect: boolean = false;
@@ -59,7 +62,6 @@ export class HelpTemplateComponent implements OnInit {
   @Input() id: string;
 
   constructor(
-    public message: NzMessageService
   ) {
   }
 
@@ -69,7 +71,7 @@ export class HelpTemplateComponent implements OnInit {
 
   afterHelp(data: any) {
     this.visible = false;
-    this.message.success(JSON.stringify(data));
+    this.item.content=data;
   }
 
   openHelp() {

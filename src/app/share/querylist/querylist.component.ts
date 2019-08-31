@@ -6,7 +6,6 @@ import {SelectTemplateComponent} from './template/selecttemplate/selecttemplate.
 import {RangepickerTemplateComponent} from './template/rangepickertemplate/rangepickertemplate.component';
 import {HttpService} from './service/http.service';
 import {NzTransferComponent} from 'ng-zorro-antd';
-import {UrlService} from '../../core/service/url.service';
 
 
 @Component({
@@ -65,12 +64,17 @@ export class QuerylistComponent implements OnInit {
   //展示穿梭对话框
   showTransfer: boolean = false;
 
-  jsonData: Array<any> = [];//Http获取数据
+  jsonData: Array<any> = [];//TODO:存储动态查询条件
   showNumber: number = 8;//TODO:需通过后台系统配置获取，查询方案默认显示组件个数
-  componentArray: any[] = [];//组件数组
-  isCollapse: boolean = true;//展开、关闭标识
-  queryArray: any[] = [];
+  componentArray: any[] = [];//TODO:组件数组
+  isCollapse: boolean = true;//TODO:展开、关闭标识
+  queryArray: Array<any> = [];
 
+  selections=[
+    {value:'jack',label:'jack'},
+    {value:'arm',label:'arm'},
+    {value:'jojo',label:'jojo'},
+  ];
 
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver,
@@ -96,6 +100,7 @@ export class QuerylistComponent implements OnInit {
           }
         },
         error1 => {
+          throw new Error(error1);
         }
       );
     }
@@ -103,15 +108,11 @@ export class QuerylistComponent implements OnInit {
 
   //查询
   query(): void {
-    this.componentArray.forEach((c, index) => {
-      switch (c.instance.item.type) {
-        case 'help':
-          this.queryArray.push(c.instance.helpname);
-          break;
-        default:
-          this.queryArray.push(c.instance.item.content);
-          break;
-      }
+    this.componentArray.forEach(c => {
+      let obj = {};
+      obj[c.instance.item.code] = c.instance.item.content;
+      obj['type']=c.instance.item.type;
+      this.queryArray.push(obj);
     });
     this.onQuery.emit(JSON.stringify(this.queryArray));
   }
@@ -140,8 +141,8 @@ export class QuerylistComponent implements OnInit {
     this.onReset.emit(true);
   }
 
-  //创建查询方案
-  createQueryPlan() {
+  //动态创建查询
+  createQuery() {
     this.componentHost.viewContainerRef.clear();
     this.componentArray = [];
     const inputTemplateComponent = this.componentFactoryResolver.resolveComponentFactory(InputTemplateComponent);
@@ -150,6 +151,7 @@ export class QuerylistComponent implements OnInit {
     const rangepickerTemplateComponent = this.componentFactoryResolver.resolveComponentFactory(RangepickerTemplateComponent);
     this.jsonData.forEach(j => {
       let componentRef;
+      j['content'] = '';
       const i = this.jsonData.indexOf(j);
       switch (j.type) {
         case 'text':
@@ -163,13 +165,17 @@ export class QuerylistComponent implements OnInit {
           componentRef.instance.componentRef = componentRef;
           componentRef.instance.item = j;
           componentRef.instance.hidden = this.isCollapse && i >= this.showNumber;
-          componentRef.instance.url='HTTP://212.64.2.48:8899/grid';
+          componentRef.instance.url = 'HTTP://212.64.2.48:8899/grid';
+          componentRef.instance.tree = true;
+          componentRef.instance.parentId = 'null';//不存在此字段，用分级码计算树
+          componentRef.instance.title = '帮助模板';
           break;
         case 'select':
           componentRef = this.componentHost.viewContainerRef.createComponent(selectTemplateComponent);
           componentRef.instance.componentRef = componentRef;
           componentRef.instance.item = j;
           componentRef.instance.hidden = this.isCollapse && i >= this.showNumber;
+          componentRef.instance.data = this.selections;
           break;
         case 'range':
           componentRef = this.componentHost.viewContainerRef.createComponent(rangepickerTemplateComponent);
@@ -191,11 +197,8 @@ export class QuerylistComponent implements OnInit {
   //确定查询条件
   onOk() {
     this.jsonData = this.transfer.rightDataSource;
-    console.log(this.jsonData);
-    console.log(this.transfer.rightDataSource);
     this.showTransfer = false;
-    this.createQueryPlan();
-
+    this.createQuery();
   }
 
   inputType(item): string {

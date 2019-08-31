@@ -3,7 +3,7 @@
     <nz-form-label [nzSm]="6" [nzXs]="20">{{item.name}}</nz-form-label>
     <nz-form-control [nzSm]="16" [nzXs]="20">
       <nz-input-group [nzAddOnAfter]="suffixIconButton" nzSearch>
-        <input [(ngModel)]="helpname" nz-input readonly type="text"/>
+        <input [(ngModel)]="item.content['name']" nz-input readonly type="text"/>
       </nz-input-group>
       <ng-template #suffixIconButton>
         <button (click)="openHelp()" nz-button nzSearch nzType="primary" type="button"><i nz-icon
@@ -29,6 +29,9 @@
   [pageSize]="pageSize"
   [showJumper]="showJumper"
   [showPageSelection]="showPageSelection"
-
+  [id]="id"
+  [parentId]="parentId"
+  [path]="path"
+  [layer]="layer"
 
 ></smarthelp>
