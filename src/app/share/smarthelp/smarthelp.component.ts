@@ -241,7 +241,7 @@ export class SmarthelpComponent implements OnInit, OnDestroy {
     if (!hashMap[node[this.path]]) {
       hashMap[node[this.path]] = true;
       array.push(node);
-    }◊
+    }
   }
 
   //树列表折行
