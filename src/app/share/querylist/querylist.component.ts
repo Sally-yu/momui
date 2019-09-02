@@ -65,9 +65,9 @@ export class QuerylistComponent implements OnInit {
   showTransfer: boolean = false;
 
   jsonData: Array<any> = [];//TODO:存储动态查询条件
-  showNumber: number = 8;//TODO:需通过后台系统配置获取，查询方案默认显示组件个数
+  showNumber: number = 0;//TODO:需通过后台系统配置获取，查询方案默认显示组件个数
   componentArray: any[] = [];//TODO:组件数组
-  isCollapse: boolean = true;//TODO:展开、关闭标识
+  isCollapse: boolean = false;//TODO:展开、关闭标识
   queryArray: any = {};
 
   selections = [

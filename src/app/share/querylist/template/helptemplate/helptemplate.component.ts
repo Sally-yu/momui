@@ -16,7 +16,7 @@ export class HelpTemplateComponent implements OnInit {
   @Input() title: string;
 
   //显示弹窗
-  visible: boolean;
+  visible: boolean;w
 
   //取数url
   @Input() url: string;

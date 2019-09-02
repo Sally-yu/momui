@@ -26,7 +26,22 @@
           nzShowCheckbox
           nzWidth="100px"
         ></th>
-        <th *ngFor="let c of columns" nzWidth="150px">{{c.name}}</th>
+        <th nzCustomFilter *ngFor="let c of columns" nzWidth="150px">{{c.name}}
+          <i
+            *ngIf="columns.indexOf(c)==columns.length-1"
+            class="table-setting"
+            nz-icon
+            nz-dropdown
+            #dropdown="nzDropdown"
+            nzType="setting"
+            [nzDropdownMenu]="menu"
+            [class.table-setting]="dropdown.nzVisible"
+            nzTrigger="click"
+            nzPlacement="bottomRight"
+            [nzClickHide]="false"
+            nzTableFilter
+          ></i>
+        </th>
       </tr>
       </thead>
       <tbody *ngIf="!tree">
@@ -71,3 +86,14 @@
     <button (click)="ok()" [disabled]="!selected" [nzLoading]="loading" [nzType]="'primary'" nz-button> 确定</button>
   </div>
 </nz-modal>
+
+
+<nz-dropdown-menu #menu="nzDropdownMenu">
+  <div class="search-box">
+    <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchValue" />
+    <button nz-button nzSize="small" nzType="primary"  class="search-button">
+      Search
+    </button>
+    <button nz-button nzSize="small" >Reset</button>
+  </div>
+</nz-dropdown-menu>

@@ -3,23 +3,25 @@
       'border-radius':radius?radius:'0'}" class="query-list"
       nz-form>
 
-  <div nz-row style="margin-bottom: 4px;">
-    <div [nzSpan]="12" nz-col style="text-align: left;">
-      <a>{{title}}</a>
+  <div nz-row style="margin-bottom: 8px;">
+    <div  [nzSpan]="12" nz-col style="text-align: left;">
+      <div class="query-title primary-color"  (click)="showTransfer=!showTransfer;">
+      <a style="padding-right: 4px;">{{title}}</a>
+      <a>
+        <i nzType="setting" nz-icon></i>
+      </a></div>
     </div>
     <div [nzSpan]="12" class="query-btns" nz-col>
-      <a (click)="query()">查询</a>
+      <button nz-button nzSize="small" (click)="query()" nzType="primary">查询</button>
       <a (click)="resetForm()">清空</a>
-      <a (click)="showTransfer=!showTransfer;">配置</a>
-      <a (click)="toggleCollapse()"
-         *ngIf="componentArray.length>showNumber">
-        {{isCollapse ? '展开' : '收起'}}
+      <a (click)="toggleCollapse()">
+        {{isCollapse?'展开':'收起'}}
         <i [type]="isCollapse ? 'down' : 'up'" nz-icon></i>
       </a>
     </div>
   </div>
 
-  <div [nzGutter]="24" nz-row>
+  <div nz-row >
     <ng-template dynamicComponent></ng-template>
   </div>
 </form>
