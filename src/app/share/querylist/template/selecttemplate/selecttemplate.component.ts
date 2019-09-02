@@ -9,7 +9,7 @@ export class SelectTemplateComponent implements OnInit {
 
   @Input() public item: any;
   @Input() public hidden: boolean;
-  @Input() public data: Array<{ value: string, label: string }>;
+  @Input() public data: Array<any>;
 
   constructor() {
   }

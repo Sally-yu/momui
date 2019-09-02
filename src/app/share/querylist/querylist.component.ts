@@ -68,12 +68,12 @@ export class QuerylistComponent implements OnInit {
   showNumber: number = 8;//TODO:需通过后台系统配置获取，查询方案默认显示组件个数
   componentArray: any[] = [];//TODO:组件数组
   isCollapse: boolean = true;//TODO:展开、关闭标识
-  queryArray: Array<any> = [];
+  queryArray: any = {};
 
-  selections=[
-    {value:'jack',label:'jack'},
-    {value:'arm',label:'arm'},
-    {value:'jojo',label:'jojo'},
+  selections = [
+    {value: 'jack', label: 'jackson'},
+    {value: 'arm', label: 'armary'},
+    {value: 'jojo', label: 'jojolist'},
   ];
 
   constructor(
@@ -108,11 +108,22 @@ export class QuerylistComponent implements OnInit {
 
   //查询
   query(): void {
+    this.queryArray={};
     this.componentArray.forEach(c => {
-      let obj = {};
-      obj[c.instance.item.code] = c.instance.item.content;
-      obj['type']=c.instance.item.type;
-      this.queryArray.push(obj);
+      if (c.instance.item.content!=''&&c.instance.item.content!=null&&c.instance.item.content!={})
+      switch (c.instance.item.type) {
+        case 'help':
+          this.queryArray[c.instance.item.code] = c.instance.item.content.code;
+          break;
+        case 'select':
+          if (c.instance.item.content) {
+            this.queryArray[c.instance.item.code] = c.instance.item.content.value;
+          }
+          break;
+        default:
+          this.queryArray[c.instance.item.code] = c.instance.item.content;
+          break;
+      }
     });
     this.onQuery.emit(JSON.stringify(this.queryArray));
   }
@@ -128,13 +139,16 @@ export class QuerylistComponent implements OnInit {
 
   //清空
   resetForm(): void {
-    this.componentArray.forEach((c, index) => {
+    this.componentArray.forEach(c => {
       switch (c.instance.item.type) {
         case 'help':
-          c.instance.helpname = '';
+          c.instance.item.content = {};
+          break;
+        case 'select':
+          c.instance.item.content = null;
           break;
         default:
-          c.instance.item.content = '';
+          c.instance.item.content = null;
           break;
       }
     });
@@ -151,7 +165,7 @@ export class QuerylistComponent implements OnInit {
     const rangepickerTemplateComponent = this.componentFactoryResolver.resolveComponentFactory(RangepickerTemplateComponent);
     this.jsonData.forEach(j => {
       let componentRef;
-      j['content'] = '';
+      j['content'] = null;
       const i = this.jsonData.indexOf(j);
       switch (j.type) {
         case 'text':
@@ -161,6 +175,7 @@ export class QuerylistComponent implements OnInit {
           componentRef.instance.hidden = this.isCollapse && i >= this.showNumber;
           break;
         case 'help':
+          j['content'] = {};
           componentRef = this.componentHost.viewContainerRef.createComponent(helpTemplateComponent);
           componentRef.instance.componentRef = componentRef;
           componentRef.instance.item = j;
@@ -171,6 +186,7 @@ export class QuerylistComponent implements OnInit {
           componentRef.instance.title = '帮助模板';
           break;
         case 'select':
+          j['content'] = {};
           componentRef = this.componentHost.viewContainerRef.createComponent(selectTemplateComponent);
           componentRef.instance.componentRef = componentRef;
           componentRef.instance.item = j;

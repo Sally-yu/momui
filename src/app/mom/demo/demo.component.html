@@ -16,7 +16,7 @@ Demo功能演示
 <br>
 <button nz-button [nzType]="'primary'" (click)="visible=true">打开帮助</button>
 
-<querylist
+<querylist class="tb-search-header"
   (onQuery)="query($event)"
   [backgroundColor]="'#fafafa'"
   [url]="http.url.gridUrl"
@@ -32,3 +32,8 @@ Demo功能演示
   (onCancel)="visible=false;"
   (onOk)="afterHelp($event)">
 </smarthelp>
+
+<app-demohelp>
+
+
+</app-demohelp>

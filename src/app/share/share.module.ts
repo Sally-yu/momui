@@ -3,7 +3,7 @@ import {CommonModule} from '@angular/common';
 
 
 @NgModule({
-  declarations: [],
+  declarations: [HelpcenterComponent],
   imports: [
     CommonModule,
   ]

@@ -1,39 +1,39 @@
 <nz-modal
-  class="help-modal"
-  [(nzVisible)]="visible" [nzTitle]="title" (nzOnCancel)="cancel()" (nzOnOk)="ok()">
-  <div *ngIf="visible">
-    <nz-input-group nzSearch [nzAddOnAfter]="helpSearch" style="margin-bottom: 8px;">
-      <input type="text" nz-input placeholder="请输入查找关键字" [(ngModel)]="searchValue"/>
+  (nzOnCancel)="cancel()"
+  (nzOnOk)="ok()" [(nzVisible)]="visible" [nzTitle]="title" class="help-modal">
+  <div>
+    <nz-input-group [nzAddOnAfter]="helpSearch" nzSearch style="margin-bottom: 8px;">
+      <input [(ngModel)]="searchValue" nz-input placeholder="请输入查找关键字" type="text"/>
     </nz-input-group>
     <ng-template #helpSearch>
-      <button nz-button nzType="primary"><i nz-icon nzType="search"></i></button>
+      <button nz-button nzSearch nzType="primary"><i nz-icon nzType="search"></i></button>
     </ng-template>
 
-    <nz-table #Table [nzData]="data"
-              nzSize="middle"
-              [nzScroll]="{x:'100%',y:'400px'}"
+    <nz-table #Table [(nzPageSize)]="pageSize"
+              [nzData]="data"
               [nzLoading]="loading"
-              [(nzPageSize)]="pageSize"
               [nzPageSizeOptions]="pageOption"
+              [nzScroll]="{x:'100%',y:'400px'}"
               [nzShowQuickJumper]="showJumper"
+              nzSize="middle"
     >
       <thead>
       <tr>
         <th
-            nzShowCheckbox
-            [nzChecked]="selected"
-            (nzCheckedChange)="thChecked($event)"
-            nzLeft="0px"
-            nzWidth="100px"
+          (nzCheckedChange)="thChecked($event)"
+          [nzChecked]="selected"
+          nzLeft="0px"
+          nzShowCheckbox
+          nzWidth="100px"
         ></th>
         <th *ngFor="let c of columns" nzWidth="150px">{{c.name}}</th>
       </tr>
       </thead>
       <tbody *ngIf="!tree">
-      <tr *ngFor="let a of Table.data" (click)="rowClick(a)" (dblclick)="rowClick(a);ok()">
-        <td nzShowCheckbox [nzChecked]="a==selected"
-            (nzCheckedChange)="checkRow($event,a)"
+      <tr (click)="rowClick(a)" (dblclick)="rowClick(a);ok()" *ngFor="let a of Table.data">
+        <td (nzCheckedChange)="checkRow($event,a)" [nzChecked]="a==selected"
             nzLeft="0px"
+            nzShowCheckbox
         >
         </td>
         <td *ngFor="let c of columns "
@@ -44,16 +44,17 @@
       <tbody *ngIf="tree">
       <ng-container *ngFor="let data of Table.data">
         <ng-container *ngFor="let item of mapOfExpandedData[data[path]]">
-          <tr *ngIf="(item.parent && item.parent.expand) || !item.parent" (click)="rowClick(item)" (dblclick)="rowClick(item);ok()">
-            <td nzShowCheckbox [nzChecked]="item==selected"
-                (nzCheckedChange)="checkRow($event,item)"
+          <tr (click)="rowClick(item)" (dblclick)="rowClick(item);ok()"
+              *ngIf="(item.parent && item.parent.expand) || !item.parent">
+            <td (nzCheckedChange)="checkRow($event,item)" [nzChecked]="item==selected"
                 nzLeft="0px"
+                nzShowCheckbox
             >
             <td
+              (nzExpandChange)="collapse(mapOfExpandedData[data[path]], item, $event)"
+              [(nzExpand)]="item.expand"
               [nzIndentSize]="item.level * 20 "
               [nzShowExpand]="!!item.children"
-              [(nzExpand)]="item.expand"
-              (nzExpandChange)="collapse(mapOfExpandedData[data[path]], item, $event)"
             >
               {{ item[columns[0]["code"]] }}
             </td>
@@ -61,16 +62,12 @@
           </tr>
         </ng-container>
       </ng-container>
-
-
-      <!--<td *ngFor="let c of columns.slice(1,columns.length-1) "-->
-      <!--[title]="c.name+':'+(item[c.code]?item[c.code]:'')">{{item[c.code]}}</td>-->
       </tbody>
     </nz-table>
 
   </div>
   <div *nzModalFooter>
-    <button nz-button (click)="cancel()"> 取消</button>
-    <button nz-button [nzLoading]="loading" [disabled]="!selected" [nzType]="'primary'" (click)="ok()"> 确定</button>
+    <button (click)="cancel()" nz-button> 取消</button>
+    <button (click)="ok()" [disabled]="!selected" [nzLoading]="loading" [nzType]="'primary'" nz-button> 确定</button>
   </div>
 </nz-modal>
