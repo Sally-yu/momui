@@ -1,21 +1,37 @@
 <nz-modal
   (nzOnCancel)="cancel()"
-  (nzOnOk)="ok()" [(nzVisible)]="visible" [nzTitle]="title" class="help-modal">
+  (nzOnOk)="ok()"
+  [(nzVisible)]="visible"
+  [nzTitle]="title"
+  class="help-modal">
   <div>
-    <nz-input-group [nzAddOnAfter]="helpSearch" nzSearch style="margin-bottom: 8px;">
+    <nz-input-group [nzAddOnAfter]="helpSearch" nzSearch
+                    style="margin-bottom: 8px;margin-right: -40px;padding-right: 40px;">
       <input [(ngModel)]="searchValue" nz-input placeholder="请输入查找关键字" type="text"/>
     </nz-input-group>
+    <button
+      [nzContent]="menu"
+      nz-button nz-popover
+      nzPlacement="bottomRight"
+      nzTitle="自定义显示列"
+      style="float: right;margin-right: 0;"
+    ><i nz-icon nzType="setting"></i></button>
+  </div>
+
+  <div>
     <ng-template #helpSearch>
       <button nz-button nzSearch nzType="primary"><i nz-icon nzType="search"></i></button>
     </ng-template>
 
-    <nz-table #Table [(nzPageSize)]="pageSize"
+    <nz-table #Table
+              [(nzPageSize)]="pageSize"
+              [(nzPageIndex)]="pageIndex"
               [nzData]="data"
               [nzLoading]="loading"
               [nzPageSizeOptions]="pageOption"
-              [nzScroll]="{x:'100%',y:'400px'}"
+              [nzScroll]="{x:colWidth(),y:'380px'}"
               [nzShowQuickJumper]="showJumper"
-              nzSize="middle"
+              nzSize="small"
     >
       <thead>
       <tr>
@@ -24,34 +40,21 @@
           [nzChecked]="selected"
           nzLeft="0px"
           nzShowCheckbox
-          nzWidth="100px"
+          nzWidth="50px"
         ></th>
-        <th nzCustomFilter *ngFor="let c of columns" nzWidth="150px">{{c.name}}
-          <i
-            *ngIf="columns.indexOf(c)==columns.length-1"
-            class="table-setting"
-            nz-icon
-            nz-dropdown
-            #dropdown="nzDropdown"
-            nzType="setting"
-            [nzDropdownMenu]="menu"
-            [class.table-setting]="dropdown.nzVisible"
-            nzTrigger="click"
-            nzPlacement="bottomRight"
-            [nzClickHide]="false"
-            nzTableFilter
-          ></i>
-        </th>
+        <th *ngFor="let c of displayedCols() " nzWidth="150px">{{c.name}}</th>
       </tr>
       </thead>
       <tbody *ngIf="!tree">
-      <tr (click)="rowClick(a)" (dblclick)="rowClick(a);ok()" *ngFor="let a of Table.data">
+      <tr [ngClass]="{'selected-tr':a==selected}"
+          (click)="rowClick(a)" (dblclick)="rowClick(a);ok()"
+          *ngFor="let a of Table.data">
         <td (nzCheckedChange)="checkRow($event,a)" [nzChecked]="a==selected"
             nzLeft="0px"
             nzShowCheckbox
         >
         </td>
-        <td *ngFor="let c of columns "
+        <td *ngFor="let c of displayedCols() "
             [title]="c.name+':'+(a[c.code]?a[c.code]:'')">{{a[c.code]}}</td>
       </tr>
       </tbody>
@@ -59,7 +62,8 @@
       <tbody *ngIf="tree">
       <ng-container *ngFor="let data of Table.data">
         <ng-container *ngFor="let item of mapOfExpandedData[data[path]]">
-          <tr (click)="rowClick(item)" (dblclick)="rowClick(item);ok()"
+          <tr [ngClass]="{'selected-tr':item==selected}"
+              (click)="rowClick(item)" (dblclick)="rowClick(item);ok()"
               *ngIf="(item.parent && item.parent.expand) || !item.parent">
             <td (nzCheckedChange)="checkRow($event,item)" [nzChecked]="item==selected"
                 nzLeft="0px"
@@ -71,9 +75,10 @@
               [nzIndentSize]="item.level * 20 "
               [nzShowExpand]="!!item.children"
             >
-              {{ item[columns[0]["code"]] }}
+              {{ item[displayedCols()[0]["code"]] }}
             </td>
-            <td *ngFor="let c of columns.slice(1,columns.length)">{{ item[c["code"]] }}</td>
+            <td *ngFor="let c of displayedCols().slice(1,displayedCols().length)">
+              {{ item[c["code"]] }}</td>
           </tr>
         </ng-container>
       </ng-container>
@@ -83,17 +88,23 @@
   </div>
   <div *nzModalFooter>
     <button (click)="cancel()" nz-button> 取消</button>
-    <button (click)="ok()" [disabled]="!selected" [nzLoading]="loading" [nzType]="'primary'" nz-button> 确定</button>
+    <button (click)="ok()" [disabled]="!selected" [nzLoading]="loading"
+            [nzType]="'primary'" nz-button> 确定</button>
   </div>
 </nz-modal>
 
-
-<nz-dropdown-menu #menu="nzDropdownMenu">
-  <div class="search-box">
-    <input type="text" nz-input placeholder="Search name" [(ngModel)]="searchValue" />
-    <button nz-button nzSize="small" nzType="primary"  class="search-button">
-      Search
-    </button>
-    <button nz-button nzSize="small" >Reset</button>
-  </div>
-</nz-dropdown-menu>
+<ng-template #menu>
+  <nz-list
+    style="padding: 16px;max-height: 300px;overflow-y: auto;"
+    [nzDataSource]="columns"
+    nzSize="small"
+    [nzRenderItem]="smallItem"
+  >
+    <ng-template #smallItem let-item>
+      <nz-list-item [nzContent]="item[name]">
+        <nz-switch [nzDisabled]="displayedCols().length<=3&&item['display']" [(ngModel)]="item['display']"
+                   style="margin-right: 8px;"></nz-switch>
+      </nz-list-item>
+    </ng-template>
+  </nz-list>
+</ng-template>

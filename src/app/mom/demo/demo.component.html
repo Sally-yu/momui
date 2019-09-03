@@ -21,6 +21,11 @@ Demo功能演示
   [backgroundColor]="'#fafafa'"
   [url]="http.url.gridUrl"
 ></querylist>
+<app-demohelp>
+
+
+</app-demohelp>
+
 
 <smarthelp
   *ngIf="visible"
@@ -30,10 +35,7 @@ Demo功能演示
   [id]="'code'"
   [url]="http.url.gridUrl"
   (onCancel)="visible=false;"
+  [showJumper]="true"
   (onOk)="afterHelp($event)">
 </smarthelp>
 
-<app-demohelp>
-
-
-</app-demohelp>

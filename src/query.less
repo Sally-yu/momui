@@ -1,32 +1,53 @@
 @import "../node_modules/ng-zorro-antd/ng-zorro-antd.less";
 
 .querylist-modal {
-    .ant-modal{
-      width: max-content !important;
-      max-width: 80%;
-      top: 5%;
+  .ant-modal {
+    width: max-content !important;
+    max-width: 80%;
+    max-height:80%;
+    min-height: 240px;
+    top: 5%;
+  }
+
+  .ant-modal-body {
+    padding: 16px !important;
+  }
+
+  .ant-modal-footer {
+    padding: 8px;
+    text-align: center;
+
+    .ant-btn {
+      width: 120px;
     }
   }
+  .ant-modal-header{
+    padding:16px;
+  }
+}
 
 .query-btns {
   text-align: right;
+
   a {
     margin-left: 8px;
   }
-  a:hover{
+
+  a:hover {
     color: @primary-color !important;
   }
 }
 
-.query-title:hover{
+.query-title:hover {
   a {
     color: @primary-color !important;
   }
 }
-.query-title{
+
+.query-title {
   width: max-content;
 }
 
-.primary-color{
-  color:@primary-color !important;
+.primary-color {
+  color: @primary-color !important;
 }

@@ -36,19 +36,19 @@ export class QuerylistComponent implements OnInit {
   @Input() urlBody: any = null;
 
   //TODO:查询块标题
-  @Input() title: string = '筛选条件';
+  @Input() title: string ;
   //TODO:查询穿梭框标题
-  @Input() modalTitle: string = '配置筛选条件';
+  @Input() modalTitle: string ;
   //TODO:穿梭框穿梭按钮文字
-  @Input() transferOptions: Array<string> = ['', ''];
+  @Input() transferOptions: Array<string>;
   //TODO:穿梭框搜索框
   @Input() search: boolean = false;
   //TODO:穿梭框全选
   @Input() selectAll: boolean = false;
   //TODO:穿梭框宽度
-  @Input() transferWidth: number = 300;
+  @Input() transferWidth: number ;
   //TODO:穿梭框高度
-  @Input() transferHeight: number = 500;
+  @Input() transferHeight: number ;
 
   //TODO:背景颜色
   @Input() backgroundColor: string;
@@ -83,6 +83,11 @@ export class QuerylistComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.title=this.title?this.title:'筛选条件';
+    this.modalTitle=this.modalTitle?this.modalTitle:'配置筛选条件';
+    this.transferOptions=this.transferOptions?this.transferOptions:['',''];
+    this.transferWidth=this.transferWidth?this.transferWidth:200;
+    this.transferHeight=this.transferHeight?this.transferHeight:400;
     this.getData();
   }
 
@@ -125,7 +130,7 @@ export class QuerylistComponent implements OnInit {
           break;
       }
     });
-    this.onQuery.emit(JSON.stringify(this.queryArray));
+    this.onQuery.emit(this.queryArray);
   }
 
   //展开/关闭
