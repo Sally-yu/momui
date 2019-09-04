@@ -3,8 +3,13 @@
   <input *ngIf="item" [(ngModel)]="item['name']" nz-input placeholder="演示帮助" readonly type="text"/>
 </nz-input-group>
 <ng-template #suffixIconButton>
-  <button (click)="openHelp()" nz-button nzSearch nzType="primary" type="button"><i nz-icon
-                                                                                    nzType="search"></i>
+  <button
+    (click)="openHelp()"
+    nz-button
+    nzSearch
+    nzType="primary"
+    type="button">
+    <i nz-icon nzType="search"></i>
   </button>
 </ng-template>
 

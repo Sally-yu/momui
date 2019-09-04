@@ -9,6 +9,7 @@ import {NgZorroAntdModule} from 'ng-zorro-antd';
 import {SmarthelpModule} from '../../share/smarthelp/smarthelp.module';
 import {QuerylistModule} from '../../share/querylist/querylist.module';
 import {DemohelpModule} from '../../share/helpcenter/demohelp/demohelp.module';
+import {WorkflowModule} from '../../share/workflow/workflow.module';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import {DemohelpModule} from '../../share/helpcenter/demohelp/demohelp.module';
     NgZorroAntdModule,
     SmarthelpModule,
     QuerylistModule,
-    DemohelpModule
+    DemohelpModule,
+    WorkflowModule
   ],
   exports: [
     DemoComponent

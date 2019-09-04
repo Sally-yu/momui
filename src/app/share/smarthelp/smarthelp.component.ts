@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {HttpService} from './service/http.service';
 
 export interface TreeNodeInterface {
@@ -17,7 +17,7 @@ export interface TreeNodeInterface {
   templateUrl: './smarthelp.component.html',
   styleUrls: ['./smarthelp.component.less']
 })
-export class SmarthelpComponent implements OnInit, OnDestroy,AfterViewInit {
+export class SmarthelpComponent implements OnInit, OnDestroy, AfterViewInit {
 
   //确定按钮弹出事件
   @Output() onOk: EventEmitter<any> = new EventEmitter<any>();
@@ -88,6 +88,9 @@ export class SmarthelpComponent implements OnInit, OnDestroy,AfterViewInit {
   //名称字段
   @Input() name: string;
 
+  //分页条数候选
+  @Input() pageOption: Array<number>;//分页候选
+
   //列表型数据，树帮助时存储全部展开的列表数据
   listData: Array<any>;
 
@@ -96,14 +99,10 @@ export class SmarthelpComponent implements OnInit, OnDestroy,AfterViewInit {
   searchValue: string = null; // 简单搜索值
   loading: boolean = false; // 加载中
   selected: any = null;  // 暂时标记选中值
-  pageOption = [5, 10, 20, 50, 100];//分页候选
-
-  //页面条数候选
-
 
   constructor(
     public http: HttpService
-) {
+  ) {
   }
 
   ngOnInit() {
@@ -116,6 +115,7 @@ export class SmarthelpComponent implements OnInit, OnDestroy,AfterViewInit {
     this.parentId = this.parentId ? this.parentId : 'parentid';
     this.id = this.id ? this.id : 'id';
     this.name = this.name ? this.name : 'name';
+    this.pageOption = this.pageOption ? this.pageOption : [5, 10, 20, 50, 100];
 
     this.loading = true;
     this.getData();
@@ -243,7 +243,7 @@ export class SmarthelpComponent implements OnInit, OnDestroy,AfterViewInit {
     }
   }
 
-  colWidth():string{
+  colWidth(): string {
     try {
       return this.displayedCols().length * 150 + 50 + 'px';
     } catch (e) {

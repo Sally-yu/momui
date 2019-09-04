@@ -24,8 +24,8 @@
     </ng-template>
 
     <nz-table #Table
-              [(nzPageSize)]="pageSize"
               [(nzPageIndex)]="pageIndex"
+              [(nzPageSize)]="pageSize"
               [nzData]="data"
               [nzLoading]="loading"
               [nzPageSizeOptions]="pageOption"
@@ -46,9 +46,9 @@
       </tr>
       </thead>
       <tbody *ngIf="!tree">
-      <tr [ngClass]="{'selected-tr':a==selected}"
-          (click)="rowClick(a)" (dblclick)="rowClick(a);ok()"
-          *ngFor="let a of Table.data">
+      <tr (click)="rowClick(a)"
+          (dblclick)="rowClick(a);ok()" *ngFor="let a of Table.data"
+          [ngClass]="{'selected-tr':a==selected}">
         <td (nzCheckedChange)="checkRow($event,a)" [nzChecked]="a==selected"
             nzLeft="0px"
             nzShowCheckbox
@@ -62,9 +62,10 @@
       <tbody *ngIf="tree">
       <ng-container *ngFor="let data of Table.data">
         <ng-container *ngFor="let item of mapOfExpandedData[data[path]]">
-          <tr [ngClass]="{'selected-tr':item==selected}"
-              (click)="rowClick(item)" (dblclick)="rowClick(item);ok()"
-              *ngIf="(item.parent && item.parent.expand) || !item.parent">
+          <tr
+            (click)="rowClick(item)"
+            (dblclick)="rowClick(item);ok()" *ngIf="(item.parent && item.parent.expand) || !item.parent"
+            [ngClass]="{'selected-tr':item==selected}">
             <td (nzCheckedChange)="checkRow($event,item)" [nzChecked]="item==selected"
                 nzLeft="0px"
                 nzShowCheckbox
@@ -89,7 +90,8 @@
   <div *nzModalFooter>
     <button (click)="cancel()" nz-button> 取消</button>
     <button (click)="ok()" [disabled]="!selected" [nzLoading]="loading"
-            [nzType]="'primary'" nz-button> 确定</button>
+            [nzType]="'primary'" nz-button> 确定
+    </button>
   </div>
 </nz-modal>
 

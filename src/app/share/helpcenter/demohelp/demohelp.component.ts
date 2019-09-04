@@ -7,8 +7,8 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 })
 export class DemohelpComponent implements OnInit {
   visible: boolean;
-  data: Array<any>;
   item: any;
+
   @Output() result: EventEmitter<any> = new EventEmitter<any>();
 
   constructor() {
