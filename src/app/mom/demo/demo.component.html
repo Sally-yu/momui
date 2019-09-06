@@ -38,4 +38,5 @@ Demo功能演示
   (onOk)="afterHelp($event)">
 </smarthelp>
 
-<workflow [DataSource]="data"></workflow>
+<workflow [TreeData]="tree"  (blockClick)="showNode($event)"></workflow>
+

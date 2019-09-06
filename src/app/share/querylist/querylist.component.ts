@@ -36,19 +36,19 @@ export class QuerylistComponent implements OnInit {
   @Input() urlBody: any = null;
 
   //TODO:查询块标题
-  @Input() title: string ;
+  @Input() title: string = '筛选条件';
   //TODO:查询穿梭框标题
-  @Input() modalTitle: string ;
+  @Input() modalTitle: string = '配置筛选条件';
   //TODO:穿梭框穿梭按钮文字
-  @Input() transferOptions: Array<string>;
+  @Input() transferOptions: Array<string> = ['', ''];
   //TODO:穿梭框搜索框
   @Input() search: boolean = false;
   //TODO:穿梭框全选
   @Input() selectAll: boolean = false;
   //TODO:穿梭框宽度
-  @Input() transferWidth: number ;
+  @Input() transferWidth: number = 200;
   //TODO:穿梭框高度
-  @Input() transferHeight: number ;
+  @Input() transferHeight: number = 400;
 
   //TODO:背景颜色
   @Input() backgroundColor: string;
@@ -83,11 +83,6 @@ export class QuerylistComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.title=this.title?this.title:'筛选条件';
-    this.modalTitle=this.modalTitle?this.modalTitle:'配置筛选条件';
-    this.transferOptions=this.transferOptions?this.transferOptions:['',''];
-    this.transferWidth=this.transferWidth?this.transferWidth:200;
-    this.transferHeight=this.transferHeight?this.transferHeight:400;
     this.getData();
   }
 
@@ -113,21 +108,22 @@ export class QuerylistComponent implements OnInit {
 
   //查询
   query(): void {
-    this.queryArray={};
+    this.queryArray = {};
     this.componentArray.forEach(c => {
-      if (c.instance.item.content!=''&&c.instance.item.content!=null&&c.instance.item.content!={})
-      switch (c.instance.item.type) {
-        case 'help':
-          this.queryArray[c.instance.item.code] = c.instance.item.content.code;
-          break;
-        case 'select':
-          if (c.instance.item.content) {
-            this.queryArray[c.instance.item.code] = c.instance.item.content.value;
-          }
-          break;
-        default:
-          this.queryArray[c.instance.item.code] = c.instance.item.content;
-          break;
+      if (c.instance.item.content != '' && c.instance.item.content != null && c.instance.item.content != {}) {
+        switch (c.instance.item.type) {
+          case 'help':
+            this.queryArray[c.instance.item.code] = c.instance.item.content.code;
+            break;
+          case 'select':
+            if (c.instance.item.content) {
+              this.queryArray[c.instance.item.code] = c.instance.item.content.value;
+            }
+            break;
+          default:
+            this.queryArray[c.instance.item.code] = c.instance.item.content;
+            break;
+        }
       }
     });
     this.onQuery.emit(this.queryArray);

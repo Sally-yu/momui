@@ -11,31 +11,124 @@ export class DemoComponent implements OnInit {
   visible: boolean;
 
 
-  data = [{text: '1'},
-    {text: '2'},
-    {text: '3'},
-    {text: '4'},
-    {text: '5'},
-    {text: '6'},
-    {text: '7'},
-    {text: '8'},
-    {text: '9'},
-    {text: '10'},
-    {text: '11'},
-    {text: '12'},
-    {text: '13'},
-    {text: '14'},
-    {text: '15'},
-    {text: '16'},
-    {text: '17'},
-    {text: '18'},
-    {text: '18'},
-    {text: '18'},
-    {text: '18'},
-    {text: '18'},
-    {text: '18'},
-    {text: '18'},
-    {text: '18'},];
+  // data = [{text: '1'},
+  //   {text: '2'},
+  //   {text: '3'},
+  //   {text: '4'},
+  //   {text: '5'},
+  //   {text: '6'},
+  //   {text: '7'},
+  //   {text: '8'},
+  //   {text: '9'},
+  //   {text: '10'},
+  //   {text: '11'},
+  //   {text: '12'},
+  //   {text: '13'},
+  //   {text: '14'},
+  //   {text: '15'},
+  //   {text: '16'},
+  //   {text: '17'},
+  //   {text: '18'},
+  //   {text: '18'},
+  //   {text: '18'},
+  //   {text: '18'},
+  //   {text: '18'},
+  //   {text: '18'},
+  //   {text: '18'},
+  //   {text: '18'},];
+
+
+  tree = {
+    text: '1', children: [
+      {
+        text: '2'
+      },  {
+        text: '5', children: [
+          {
+            text: '6'
+          }, {
+            text: '7'
+          }, {
+            text: '8', children: [
+              {
+                text: '9'
+              }, {
+                text: '10', children: [
+                  {
+                    text: '11'
+                  }, {
+                    text: '12', children: [
+                      {
+                        text: '13', children: [
+                          {
+                            text: '14'
+                          }
+                        ]
+                      },
+                      {
+                        text: '15', children: [
+                          {
+                            text: '16', children: [
+                              {
+                                text: '17'
+                              },{
+                                text: '17'
+                              },
+                            ]
+                          }
+                        ]
+                      },
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        text: '2'
+      },{
+        text: '2'
+      },{
+        text: '2'
+      },{
+        text: '2',children:[
+          {
+            text: '2'
+          },{
+            text: '2'
+          },{
+            text: '2'
+          },
+        ]
+      },
+    ]
+  };
+
+  data = [
+    {text:'1'},
+    {text:'1'},
+    {text:'1'},
+    {text:'1'},
+    {text:'1'},
+    {text:'1'},
+    {text:'1'},
+    {text:'1'},
+    {text:'1'},
+    {text:'1'},
+    {text:'1'},
+    {text:'1'},
+    {text:'1'},
+    {text:'1'},
+    {text:'1'},
+    {text:'1'},
+    {text:'1'},
+    {text:'1'},
+    {text:'1'},
+    {text:'1'},
+  ]
+
 
   constructor(
     private http: HttpService,
@@ -70,5 +163,10 @@ export class DemoComponent implements OnInit {
 
   query(data: any) {
     console.log(data);
+  }
+
+  showNode(data: any) {
+    this.message.success(JSON.stringify(data));
+    console.log(data)
   }
 }

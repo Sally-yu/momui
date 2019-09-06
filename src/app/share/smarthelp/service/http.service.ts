@@ -7,6 +7,7 @@ import {catchError, tap} from 'rxjs/operators';
 })
 export class HttpService {
 
+
   constructor(
     public http: HttpClient
   ) {
@@ -17,7 +18,6 @@ export class HttpService {
     const obj = headers ? this.http.get(url, {headers: headers}) : this.http.get(url);
     return obj.pipe(
       tap(res => {
-        console.log(res);
       }, catchError(err => {
         throw new Error(err);
       }))
@@ -35,7 +35,6 @@ export class HttpService {
       }))
     );
   }
-
 
   postPage(url: string, index: number, pagesize: number, headers?: HttpHeaders, body?: any) {
     index = index ? index : 0;

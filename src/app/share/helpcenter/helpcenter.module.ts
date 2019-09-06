@@ -1,15 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DemohelpComponent } from './demohelp/demohelp.component';
 import {DemohelpModule} from './demohelp/demohelp.module';
 
 
 
 @NgModule({
-  declarations: [DemohelpComponent],
+  declarations: [],
   imports: [
     CommonModule,
-    DemohelpModule
-  ]
+    DemohelpModule,
+  ],
 })
 export class HelpcenterModule { }

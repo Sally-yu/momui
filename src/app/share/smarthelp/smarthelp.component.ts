@@ -26,7 +26,7 @@ export class SmarthelpComponent implements OnInit, OnDestroy, AfterViewInit {
   @Output() onCancel: EventEmitter<any> = new EventEmitter<any>();
 
   //帮助标题
-  @Input() title: string;
+  @Input() title: string = '快捷帮助';
 
   //显示弹窗
   @Input() visible: boolean = false;
@@ -53,10 +53,10 @@ export class SmarthelpComponent implements OnInit, OnDestroy, AfterViewInit {
   treeData: Array<any>;
 
   //默认每页记录数
-  @Input() pageSize: number;
+  @Input() pageSize: number = 10;
 
   //默认启动页
-  @Input() pageIndex: number;
+  @Input() pageIndex: number = 1;
 
   //显示快速跳转页码
   @Input() showJumper: boolean = false;
@@ -74,22 +74,22 @@ export class SmarthelpComponent implements OnInit, OnDestroy, AfterViewInit {
   // @Input() multiSelect: boolean = false;
 
   //分级码字段
-  @Input() path: string;
+  @Input() path: string = 'path';
 
   //层级字段
-  @Input() layer: string;
+  @Input() layer: string = 'layer';
 
   //父级id
-  @Input() parentId: string;
+  @Input() parentId: string = 'parentid';
 
   //id字段
-  @Input() id: string;
+  @Input() id: string = 'id';
 
   //名称字段
-  @Input() name: string;
+  @Input() name: string = 'name';
 
   //分页条数候选
-  @Input() pageOption: Array<number>;//分页候选
+  @Input() pageOption: Array<number> = [5, 10, 20, 50, 100];//分页候选
 
   //列表型数据，树帮助时存储全部展开的列表数据
   listData: Array<any>;
@@ -106,17 +106,6 @@ export class SmarthelpComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    //TODO:重要参数设置默认值，防止扩展组件传空置出错
-    this.title = this.title ? this.title : '快捷帮助';
-    this.pageSize = this.pageSize ? this.pageSize : 10;
-    this.pageIndex = this.pageIndex ? this.pageIndex : 1;
-    this.path = this.path ? this.path : 'path';
-    this.layer = this.layer ? this.layer : 'layer';
-    this.parentId = this.parentId ? this.parentId : 'parentid';
-    this.id = this.id ? this.id : 'id';
-    this.name = this.name ? this.name : 'name';
-    this.pageOption = this.pageOption ? this.pageOption : [5, 10, 20, 50, 100];
-
     this.loading = true;
     this.getData();
   }
@@ -357,7 +346,6 @@ export class SmarthelpComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-
   }
 
 
