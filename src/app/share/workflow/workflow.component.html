@@ -1,3 +1,31 @@
-<div #jointdiv id="jointdiv"></div>
+<div #jointdiv [ngStyle]="{'width':Width*0==0?Width+'px':Width,'height':Height*0==0?Height+'px':Height}">
+<div class="joint-tool" >
+  <ul >
+    <li>
+      <a>
+        <i nz-icon nzTheme="outline" nzType="fullscreen"></i>
+      </a>
+    </li>
+    <li>
+      <a>
+        <i nz-icon nzTheme="outline" nzType="fullscreen"></i>
+      </a>
+    </li>
+    <li>
+      <a>
+        <i nz-icon nzTheme="outline" nzType="fullscreen"></i>
+      </a>
+    </li>
+    <li>
+      <a>
+        <i nz-icon nzType="zoom-in" nzTheme="outline"></i>      </a>
+    </li>
+    <li>
+      <a>
+        <i nz-icon nzType="zoom-out" nzTheme="outline"></i>      </a>
+    </li>
+  </ul>
+</div>
+<div  id="jointdiv"></div>
 
-<nz-spin nzSimple [nzSize]="'large'" [ngStyle]="{'display':loading?'block':'none','height':'100%'}"></nz-spin>
+</div>

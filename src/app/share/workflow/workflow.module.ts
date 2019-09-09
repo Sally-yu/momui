@@ -1,7 +1,7 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {WorkflowComponent} from './workflow.component';
-import {NzSpinModule} from 'ng-zorro-antd';
+import {NzIconModule, NzSpinModule} from 'ng-zorro-antd';
 
 @NgModule({
   declarations: [
@@ -10,6 +10,7 @@ import {NzSpinModule} from 'ng-zorro-antd';
   imports: [
     CommonModule,
     NzSpinModule,
+    NzIconModule
   ],
   exports: [
     WorkflowComponent

@@ -39,46 +39,25 @@ export class DemoComponent implements OnInit {
 
 
   tree = {
-    text: '1', children: [
+    text: '零部件测量', pre:1,children: [
       {
-        text: '2'
+        text: '零部件测量',pre:2,
       },  {
-        text: '5', children: [
+        text: '零部件测量', children: [
           {
-            text: '6'
+            text: '零部件测量',pre:4
           }, {
-            text: '7'
+            text: '零部件测量'
           }, {
-            text: '8', children: [
+            text: '零部件测量', children: [
               {
-                text: '9'
+                text: '零部件测量',pre:9
               }, {
-                text: '10', children: [
+                text: '零部件测量',pre:10, children: [
                   {
-                    text: '11'
+                    text: '零部件测量'
                   }, {
-                    text: '12', children: [
-                      {
-                        text: '13', children: [
-                          {
-                            text: '14'
-                          }
-                        ]
-                      },
-                      {
-                        text: '15', children: [
-                          {
-                            text: '16', children: [
-                              {
-                                text: '17'
-                              },{
-                                text: '17'
-                              },
-                            ]
-                          }
-                        ]
-                      },
-                    ]
+                    text: '零部件测量',
                   }
                 ]
               }
@@ -87,19 +66,19 @@ export class DemoComponent implements OnInit {
         ]
       },
       {
-        text: '2'
+        text: '零部件测量',
       },{
-        text: '2'
+        text: '零部件测量'
       },{
-        text: '2'
+        text: '零部件测量'
       },{
-        text: '2',children:[
+        text: '零部件测量',children:[
           {
-            text: '2'
+            text: '零部件测量'
           },{
-            text: '2'
+            text: '零部件测量'
           },{
-            text: '2'
+            text: '零部件测量'
           },
         ]
       },
@@ -107,28 +86,16 @@ export class DemoComponent implements OnInit {
   };
 
   data = [
-    {text:'1'},
-    {text:'1'},
-    {text:'1'},
-    {text:'1'},
-    {text:'1'},
-    {text:'1'},
-    {text:'1'},
-    {text:'1'},
-    {text:'1'},
-    {text:'1'},
-    {text:'1'},
-    {text:'1'},
-    {text:'1'},
-    {text:'1'},
-    {text:'1'},
-    {text:'1'},
-    {text:'1'},
-    {text:'1'},
-    {text:'1'},
-    {text:'1'},
-  ]
-
+    {text:'零部件测量',pre:1},
+    {text:'零部件测量',pre:2},
+    {text:'零部件测量',pre:3},
+    {text:'零部件测量',pre:4},
+    {text:'零部件测量',pre:5},
+    {text:'零部件测量',pre:6},
+    {text:'零部件测量',pre:7},
+    {text:'零部件测量',pre:8},
+    {text:'零部件测量',pre:9},
+  ];
 
   constructor(
     private http: HttpService,
