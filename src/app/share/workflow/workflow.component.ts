@@ -12,9 +12,9 @@ import {
 } from '@angular/core';
 import {ResizeSensor} from 'css-element-queries';
 
-declare var joint:any;
-declare var $:any;
-declare var g:any;
+declare var joint: any;
+declare var $: any;
+declare var g: any;
 
 @Component({
   selector: 'workflow',
@@ -89,44 +89,84 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
       },
     });
     let self = this;
-    this.paper.on('element:pointerclick', function(elementView) {
-      console.log(self.paper);
+    this.paper.on('blank:pointerdown', function(evt, x, y) {
       let elements = self.paper.model.getElements();
       elements.forEach(e => {
         //内部节点不变色
         if (e.attributes.attrs.body.class != 'sub') {
           e.attr('body/fill', self.BodyColor);
           e.attr('label/fill', self.TextColor);
+        } else {
+          e.attr('label/fill', '#101010');
         }
       });
+      if (self.DataSource.length > 0) {
+        self.DataSource.forEach(d => {
+          d[self.highLightKey] = false;
+        });
+      } else if (self.TreeData) {
+        f(self.TreeData);
+      }
+
+      function f(data) {
+        data[self.highLightKey] = false;
+        if (data.hasOwnProperty(self.children) && data[self.children].length > 0) {
+          f(data[self.children]);
+        }
+      }
+    });
+    this.paper.on('cell:pointerclick', function(elementView) {
       let currentElement = elementView.model;
+      if (currentElement.attributes.type=="standard.Link"){
+        return;
+      }
+      let elements = self.paper.model.getElements();
+      elements.forEach(e => {
+        //内部节点不变色
+        if (e.attributes.attrs.body.class != 'sub') {
+          e.attr('body/fill', self.BodyColor);
+          e.attr('label/fill', self.TextColor);
+        } else {
+          e.attr('label/fill', '#101010');
+        }
+      });
+      //内部圆圈点击 父块响应
+      if (currentElement.attributes.parent) {
+        currentElement.attr('label/fill', self.HighLightColor);
+        let id = currentElement.attributes.parent;
+        currentElement = elements.filter(e => e.id == id)[0];
+      }
+      //父块点击 子块也响应
+      else if (currentElement.attributes.embeds[0]) {
+        let id = currentElement.attributes.embeds[0];
+        elements.filter(e => e.id == id)[0].attr('label/fill', self.HighLightColor);
+      }
+
       let x = currentElement.attributes.position.x;
       let y = currentElement.attributes.position.y;
+
       if (self.DataSource.length > 0) {
-        //FIXME:内部块点击 现无法响应到父块
         self.selected = self.DataSource.filter(d => d['x'] == x && d['y'] == y)[0];
-        self.DataSource.forEach(d=>{
+        self.DataSource.forEach(d => {
           d[self.highLightKey] = d == self.selected;
         });
       } else if (self.TreeData) {
         self.searchTreeNode(self.TreeData, x, y);
       }
-      if (currentElement.attributes.attrs.body.class != 'sub') {
-        currentElement.attr('body/fill', self.HighLightColor);
-        currentElement.attr('label/fill', self.HighLightTextColor);
-        self.blockClick.emit(self.selected);
-      }
+      currentElement.attr('body/fill', self.HighLightColor);
+      currentElement.attr('label/fill', self.HighLightTextColor);
+      self.blockClick.emit(self.selected);
     });
   }
 
-  //点选事件遍历子节点
+  //点选事件遍历树子节点
   searchTreeNode(data, x, y) {
     if (data['x'] == x && data['y'] == y) {
       this.selected = data;
-      data[this.highLightKey]=true;
+      data[this.highLightKey] = true;
       return;
     } else {
-      data[this.highLightKey]=false;
+      data[this.highLightKey] = false;
       if (data.hasOwnProperty(this.children) && data[this.children].length > 0) {
         data[this.children].forEach(d => {
           this.searchTreeNode(d, x, y);
@@ -248,7 +288,7 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
           label: {
             cursor: 'pointer',
             text: 'OP' + (this.DataSource[i]['pre'] ? this.DataSource[i]['pre'] : ''),
-            fill: '#101010'
+            fill: this.DataSource[i][this.highLightKey] ? this.HighLightColor : '#101010'
           },
         });
 
@@ -558,7 +598,7 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
       label: {
         cursor: 'pointer',
         text: 'OP' + (data['pre'] ? data['pre'] : ''),
-        fill: '#101010'
+        fill: data[this.highLightKey] ? this.HighLightColor : '#101010'
       },
     });
 
@@ -669,14 +709,14 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
     this.paper.scale(this.scale, this.scale);
   }
 
-  scaleToFit(){
+  scaleToFit() {
     this.paper.scaleContentToFit({
-      padding:this.disY
+      padding: this.disY
     });
   }
 
-  isNumber(x):boolean{
-    return typeof x =="number";
+  isNumber(x): boolean {
+    return typeof x == 'number';
   }
 }
 
