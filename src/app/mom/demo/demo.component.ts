@@ -10,50 +10,32 @@ import {NzMessageService} from 'ng-zorro-antd';
 export class DemoComponent implements OnInit {
   visible: boolean;
 
-
-  // data = [{text: '1'},
-  //   {text: '2'},
-  //   {text: '3'},
-  //   {text: '4'},
-  //   {text: '5'},
-  //   {text: '6'},
-  //   {text: '7'},
-  //   {text: '8'},
-  //   {text: '9'},
-  //   {text: '10'},
-  //   {text: '11'},
-  //   {text: '12'},
-  //   {text: '13'},
-  //   {text: '14'},
-  //   {text: '15'},
-  //   {text: '16'},
-  //   {text: '17'},
-  //   {text: '18'},
-  //   {text: '18'},
-  //   {text: '18'},
-  //   {text: '18'},
-  //   {text: '18'},
-  //   {text: '18'},
-  //   {text: '18'},
-  //   {text: '18'},];
-
-
   tree = {
-    text: '零部件测量', pre:1,children: [
+    text: '零部件测量', pre: 1, children: [
       {
-        text: '零部件测量',pre:2,
-      },  {
+        text: '零部件测量', pre: 2,
+        children: [
+          {
+            text: '零部件测量', pre: 4
+          },
+          {
+            text: '零部件测量', pre: 4
+          }]
+      }, {
         text: '零部件测量', children: [
           {
-            text: '零部件测量',pre:4
+            text: '零部件测量', pre: 4
+          },{
+            text: '零部件测量', pre: 4
           }, {
-            text: '零部件测量'
+            text: '零部件测量',
+            selected: true,
           }, {
             text: '零部件测量', children: [
               {
-                text: '零部件测量',pre:9
+                text: '零部件测量', pre: 9
               }, {
-                text: '零部件测量',pre:10, children: [
+                text: '零部件测量', pre: 10, children: [
                   {
                     text: '零部件测量'
                   }, {
@@ -67,34 +49,28 @@ export class DemoComponent implements OnInit {
       },
       {
         text: '零部件测量',
-      },{
-        text: '零部件测量'
-      },{
-        text: '零部件测量'
-      },{
-        text: '零部件测量',children:[
+      }, {
+        text: '零部件测量', children: [
           {
             text: '零部件测量'
-          },{
+          }, {
             text: '零部件测量'
-          },{
-            text: '零部件测量'
-          },
+          }
         ]
       },
     ]
   };
 
   data = [
-    {text:'零部件测量',pre:1},
-    {text:'零部件测量',pre:2},
-    {text:'零部件测量',pre:3},
-    {text:'零部件测量',pre:4},
-    {text:'零部件测量',pre:5},
-    {text:'零部件测量',pre:6},
-    {text:'零部件测量',pre:7},
-    {text:'零部件测量',pre:8},
-    {text:'零部件测量',pre:9},
+    {text: '零部件测量', pre: 1},
+    {text: '零部件测量', pre: 2, selected: true},
+    {text: '零部件测量', pre: 3},
+    {text: '零部件测量', pre: 4},
+    {text: '零部件测量', pre: 5},
+    {text: '零部件测量', pre: 6},
+    {text: '零部件测量', pre: 7},
+    {text: '零部件测量', pre: 8},
+    {text: '零部件测量', pre: 9},
   ];
 
   constructor(
@@ -134,6 +110,6 @@ export class DemoComponent implements OnInit {
 
   showNode(data: any) {
     this.message.success(JSON.stringify(data));
-    console.log(data)
+    console.log(data);
   }
 }

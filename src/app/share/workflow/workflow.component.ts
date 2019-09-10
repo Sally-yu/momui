@@ -25,7 +25,7 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
 
   @ViewChild('jointdiv', {static: false}) joint: ElementRef;
 
-  @Output() blockClick: EventEmitter<any> = new EventEmitter<any>();
+  @Output() blockClick: EventEmitter<any> = new EventEmitter<any>();//点选弹出事件
   @Output() selected: any;//选中节点
 
   @Input() Width: number | string = '100%'; // 宽度
@@ -44,16 +44,17 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() children: string = 'children';//子级标识字段
 
   @Input() col: number = 0; //列数，默认自动计算
-  @Input() distance: number = 50;//列最小间距，
+  @Input() distance: number = 120;//列最小间距，
 
-  @Input() boxWidth: number = 160;
-  @Input() boxHeight: number = 80;
-  @Input() radius: number = 40;
+  @Input() boxWidth: number = 180;
+  @Input() boxHeight: number = 50;
+  @Input() radius: number = 25;
 
   @Input() text: string = 'text';//标签绑定的字段名
   @Input() highLightKey: string = 'selected'; //选中标记符，字段值boolean
   @Input() markSize: number = 6;//连线箭头大小
 
+  scale: number = 1;//整体缩放
   model;
   paper;
   rects = [];
@@ -88,7 +89,7 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
     });
     let self = this;
     this.paper.on('element:pointerclick', function(elementView) {
-      console.log(self.paper)
+      console.log(self.paper);
       let elements = self.paper.model.getElements();
       elements.forEach(e => {
         //内部节点不变色
@@ -101,6 +102,7 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
       let x = currentElement.attributes.position.x;
       let y = currentElement.attributes.position.y;
       if (self.DataSource.length > 0) {
+        //FIXME:内部块点击 现无法响应到父块
         self.selected = self.DataSource.filter(d => d['x'] == x && d['y'] == y)[0];
       } else if (self.TreeData) {
         self.searchTreeNode(self.TreeData, x, y);
@@ -111,7 +113,6 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
         self.blockClick.emit(self.selected);
       }
     });
-
   }
 
   //点选事件遍历子节点
@@ -136,7 +137,6 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
     new ResizeSensor(this.joint.nativeElement, () => {
       this.pushNodes();
     });
-
   }
 
   //传入值改变，重新渲染
@@ -151,15 +151,20 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
     this.model.clear();
     this.rects = [];
     let width = this.joint.nativeElement.offsetWidth;
-    this.avaHeight = this.joint.nativeElement.offsetHeight - 40;//重新设置高度
+    //FIXME:重新设置高度，工具栏高40 常会引起初始滚动位置偏移
+    this.avaHeight = this.joint.nativeElement.offsetHeight - 40;
     this.paper.setDimensions(this.Width, this.avaHeight);
     if (this.DataSource.length > 0) {
       let col = this.col ? this.col : Math.floor(width / (0.5 * this.boxWidth + this.distance) / 2);
       let len = this.DataSource.length;
       let row: number;
-      row = Math.ceil(len / col);//总行数
-      this.disY = this.avaHeight / (2 * row);//纵向行间距
-      this.disX = (width - 2 * this.disY) / (2 * col);//横向距离
+
+      //总行数
+      row = Math.ceil(len / col);
+      //纵向行间距
+      this.disY = this.avaHeight / (2 * row);
+      //横向距离
+      this.disX = (width - 2 * this.disY) / (2 * col);
 
       let left = this.disX + this.disY;
       let top = this.disY;
@@ -170,11 +175,14 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
         if (i == 0) {
           //首块不换行，单倍间距起
         } else {
-          if (i % col == 0) { //已换行块，x不动，y下移
+          //已换行块，x不动，y下移
+          if (i % col == 0) {
             top += 2 * this.disY;
             fromLeft = !fromLeft;
             edge = true;
-          } else { //同行块，按方向判断增减
+          }
+          //同行块，按方向判断增减
+          else {
             if (fromLeft) {
               left += 2 * this.disX;
             } else {
@@ -182,28 +190,31 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
             }
           }
         }
+        //块坐标点是左上角
         this.DataSource[i]['x'] = left - 0.5 * this.boxWidth;
         this.DataSource[i]['y'] = top - 0.5 * this.boxHeight;
+
         const rect = new joint.shapes.standard.Rectangle();
         rect.position(this.DataSource[i]['x'], this.DataSource[i]['y']);
         rect.resize(this.boxWidth, this.boxHeight);
         rect.attr({
           body: {
             cursor: 'pointer',
-            fill: this.DataSource[this.highLightKey] ? this.HighLightColor : this.BodyColor,
-            stroke: this.DataSource[this.highLightKey] ? this.HighLightTextColor : this.StrokeColor,
-            rx: this.radius,  // 默认椭圆格子
+            fill: this.DataSource[i][this.highLightKey] ? this.HighLightColor : this.BodyColor,
+            // stroke: this.DataSource[i][this.highLightKey] ? this.HighLightTextColor : this.StrokeColor,
+            rx: this.radius,
             ry: this.radius,
             strokeWidth: 0
           },
           label: {
             cursor: 'pointer',
             text: this.DataSource[i][this.text],
-            fill: this.TextColor,
-            'ref-x':(this.boxHeight)/3
+            fill: this.DataSource[i][this.highLightKey] ? this.HighLightTextColor : this.TextColor,
+            'ref-x': (this.boxHeight) / 3
           }
         });
         rect.addTo(this.model);
+
         //阴影
         rect.attr('rect/filter', {
           name: 'dropShadow',
@@ -214,6 +225,8 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
             opacity: .6,
           }
         });
+
+        //圆圈子块
         let subRect = new joint.shapes.standard.Rectangle();
         subRect.position(this.DataSource[i]['x'] + 4, this.DataSource[i]['y'] + 4);
         subRect.resize(this.boxHeight - 8, this.boxHeight - 8);
@@ -221,23 +234,22 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
           body: {
             cursor: 'pointer',
             fill: '#ffffff',
-            rx: this.radius - 4,  // 默认椭圆格子
+            rx: this.radius - 4,
             ry: this.radius - 4,
             strokeWidth: 0,
             class: 'sub'
           },
           label: {
             cursor: 'pointer',
-            text: 'OP'+(this.DataSource[i]['pre']?this.DataSource[i]['pre']:''),
+            text: 'OP' + (this.DataSource[i]['pre'] ? this.DataSource[i]['pre'] : ''),
             fill: '#101010'
           },
         });
 
-        // rect.addTo(this.model);
         this.model.addCells([rect, subRect]);
+        //作为子块
         rect.embed(subRect);
-
-        // subRect.addTo(this.model);
+        //循环连接
         link = this.link(rect, link, edge, fromLeft);
       }
     }
@@ -247,28 +259,25 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
       this.row = 0;
       this.xs = [];
       this.ys = [];
-      this.checkChildren(this.TreeData);
-      this.forTree(this.TreeData, 10, 0);
+
+      // this.checkChildren(this.TreeData);
+      this.forTree(this.TreeData, 0, 0);
       this.col = [...new Set(this.xs)].length;
-      this.row = [...new Set(this.ys)].length;
-      console.log(this.col);
-      console.log(this.row);
+      this.row = [...new Set(this.ys)].length + 2;
+
       this.disX = width / (this.col + 1);//横向距离
       this.disY = this.avaHeight / (this.row + 1);//纵向行间距
       this.completeTree(this.TreeData, null, this.disX, 0);
     }
-
   }
 
-  /*
-  * TODO:顺序结构连线
-  * */
-
+  //顺序结构连线
   //顺序相连，添加连接线
   link(rect: any, link: any, edge: boolean, fromLeft: boolean): any {
     if (link) {
       link.target(rect, {
         connectionPoint: {
+          //连接点边距
           name: 'boundary',
           args: {
             offset: 4
@@ -279,6 +288,7 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
         let y = rect.attributes.position['y'] + 0.5 * this.boxHeight;
         if (!fromLeft) {
           let x = rect.attributes.position['x'] + this.boxWidth;
+          //FIXME:硬核圆弧连接线
           link.vertices([
             new g.Point(x + 0.05 * this.disY, y - (1 + Math.sqrt(1 - 0.0025)) * this.disY),
             new g.Point(x + 0.1 * this.disY, y - (1 + Math.sqrt(1 - 0.01)) * this.disY),
@@ -322,6 +332,7 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
           ]);
         } else if (fromLeft) {
           let x = rect.attributes.position['x'];
+          //FIXME:硬核圆弧连接线
           link.vertices([
             new g.Point(x - 0.05 * this.disY, y - (1 + Math.sqrt(1 - 0.0025)) * this.disY),
             new g.Point(x - 0.1 * this.disY, y - (1 + Math.sqrt(1 - 0.01)) * this.disY),
@@ -367,6 +378,7 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
       }
       let m = this.markSize.toString();
       link.appendLabel({
+        //连线中箭头形label
         markup: [
           {
             tagName: 'path',
@@ -387,10 +399,7 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
             fill: this.LineColor,
             stroke: this.LineColor,
             strokeWidth: this.LineWidth,
-
-
-            // 'stroke': 'black',
-            // 'fill': 'yellow',
+            //三点坐标
             d: edge ? 'M 0 0 0 0 0 0 Z' : (fromLeft ? `M -${m} ${m} ${m} 0 -${m} -${m} Z` : `M ${m} ${m} -${m} 0 ${m} -${m} Z`),//六点三坐标，三点围成三角箭头
           },
         },
@@ -400,16 +409,16 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
       });
       link.addTo(this.model);
     }
+
     const toNextLink = new joint.shapes.standard.Link();
     toNextLink.attr({
       line: {
         stroke: this.LineColor,
         strokeWidth: this.LineWidth,
-        targetMarker: { //连接线默认无箭头
-          'type': 'path',
-          // 'stroke': 'black',
-          // 'fill': 'yellow',
-          'd': 'M 0 0 0 0 0 0 Z',//六点三坐标，三点围成三角箭头
+        //连接线结束端箭头隐藏
+        targetMarker: {
+          type: 'path',
+          d: 'M 0 0 0 0 0 0 Z',
         }
       }
     });
@@ -426,10 +435,7 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
 
-  /*
-  * TODO:树结构排布，连线
-  * */
-
+  //树结构排布，连线
   //检索广度深度，存全局变量，先排布引导树
   checkChildren(data: any) {
     if (data.hasOwnProperty(this.children) && data[this.children].length > 0) {
@@ -437,9 +443,13 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
       data[this.children].forEach(d => {
         this.checkChildren(d);
       });
+      // FIXME:偶数子节点情况，行数计算
       // if (data[this.children].length % 2 == 0) {
       //   this.row -= 1;
       // }
+      if (data[this.children].length > 1) {
+        this.row += 2 * data[this.children].length - 2;
+      }
     } else if (!data.hasOwnProperty(this.children)) {
       this.row += 1;
     }
@@ -447,11 +457,22 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
 
   //循环计算引导树节点位置，用于获取准确的行列数
   forTree(data: any, x: number, y: number) {
+    if (data.hasOwnProperty(this.children) && data[this.children].length > 0) {
+      let len = data[this.children].length;
+      if (len > 1) {
+        if (y < 0) {
+          y -= (len - 1) * 5;
+        } else if (y > 0) {
+          y += (len - 1) * 5;
+        }
+      }
+    }
     data['x'] = x;
     data['y'] = y;
     this.minTop = Math.min(this.minTop, y);//取最顶位置块高度
     this.ys.push(y);
     this.xs.push(x);
+
     //计算子节点高度偏移
     if (data.hasOwnProperty(this.children) && data[this.children].length > 0) {
       let len = data[this.children].length;
@@ -459,22 +480,33 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
       for (let i = 0; i < len; i++) {
         let top;
         if (i < middle) {
-          top = y - Math.ceil(middle - i) * 10;
+          top = y - Math.ceil(middle - i) * 5;
         } else if (i == middle) {
           top = y;
         } else if (i > middle) {
-          top = Math.ceil(i - middle) * 10 + y;
+          top = Math.ceil(i - middle) * 5 + y;
         }
-        this.forTree(data[this.children][i], x + 10, top);
+        this.forTree(data[this.children][i], x + 5, top);
       }
     }
   }
 
   //最终排列树
   completeTree(data: any, link: any, x: number, y: number) {
+    if (data.hasOwnProperty(this.children) && data[this.children].length > 0) {
+      let len = data[this.children].length;
+      if (len > 2) {
+        if (y < 0) {
+          y -= (len - 1) * (this.disY + 0.5 * this.boxHeight);
+        } else if (y > 0) {
+          y += (len - 1) * (this.disY + 0.5 * this.boxHeight);
+        }
+      }
+    }
     data['x'] = x - 0.5 * this.boxWidth;
     data['y'] = y - 0.5 * this.boxHeight;
-    data['y'] += 0.5 * this.avaHeight + this.minTop;//整体偏移至顶节点位置合适
+    data['y'] -= this.minTop / 5 * this.disY - this.boxHeight - this.disY;//整体偏移至顶节点位置合适
+
     //根据data绘制方块
     const rect = new joint.shapes.standard.Rectangle();
     rect.position(data['x'], data['y']);
@@ -482,17 +514,17 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
     rect.attr({
       body: {
         cursor: 'pointer',
-        fill: this.TreeData[this.highLightKey] ? this.HighLightColor : this.BodyColor,
-        stroke: this.TreeData[this.highLightKey] ? this.HighLightTextColor : this.StrokeColor,
-        rx: this.radius,  //树形图 默认椭圆格子
+        fill: data[this.highLightKey] ? this.HighLightColor : this.BodyColor,
+        // stroke: data[this.highLightKey] ? this.HighLightTextColor : this.StrokeColor,
+        rx: this.radius,
         ry: this.radius,
         strokeWidth: 0
       },
       label: {
         cursor: 'pointer',
         text: data[this.text],
-        fill: this.TextColor,
-        'ref-x':this.boxHeight/3
+        fill: data[this.highLightKey] ? this.HighLightTextColor : this.TextColor,
+        'ref-x': this.boxHeight / 3
       },
     });
     //阴影
@@ -519,7 +551,7 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
       },
       label: {
         cursor: 'pointer',
-        text: 'OP'+(data['pre']?data['pre']:''),
+        text: 'OP' + (data['pre'] ? data['pre'] : ''),
         fill: '#101010'
       },
     });
@@ -542,36 +574,35 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
           }
         }
       });
-      link.appendLabel({
-        markup: [
-          {
-            tagName: 'path',
-            selector: 'body'
-          }
-          , {
-            tagName: 'text',
-            selector: 'label'
-          }
-        ],
-        attrs: {
-          label: {
-            text: ' ',
-          },
-          body: {
-            ref: 'label',
-            fill: this.BodyColor,
-            stroke: this.LineColor,
-            strokeWidth: this.LineWidth,
-            refR: 2,
-            refCx: 0,
-            refCy: 0,
-
-          },
-        },
-        position: {
-          distance: 1
-        }
-      });
+      // link.appendLabel({
+      //   markup: [
+      //     {
+      //       tagName: 'path',
+      //       selector: 'body'
+      //     }
+      //     , {
+      //       tagName: 'text',
+      //       selector: 'label'
+      //     }
+      //   ],
+      //   attrs: {
+      //     label: {
+      //       text: ' ',
+      //     },
+      //     body: {
+      //       ref: 'label',
+      //       fill: this.BodyColor,
+      //       stroke: this.LineColor,
+      //       strokeWidth: this.LineWidth,
+      //       refR: 2,
+      //       refCx: 0,
+      //       refCy: 0,
+      //     },
+      //   },
+      //   position: {
+      //     distance: 1
+      //   }
+      // });
       link.addTo(this.model);
     }
     //计算子节点偏移位置，传入连线
@@ -592,11 +623,10 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
           line: {
             stroke: this.LineColor,
             strokeWidth: this.LineWidth,
-            targetMarker: { //连接线默认无箭头
-              'type': 'path',
-              // 'stroke': 'black',
-              // 'fill': 'yellow',
-              'd': 'M 0 0 0 0 0 0 Z',//六点三坐标，三点围成三角箭头
+            //连接线箭头隐藏
+            targetMarker: {
+              type: 'path',
+              d: 'M 0 0 0 0 0 0 Z'
             }
           }
         });
@@ -604,7 +634,6 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
           anchor: {
             name: 'right',
             rotate: true
-
           },
           connectionPoint: {
             name: 'boundary',
@@ -612,20 +641,33 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
               offset: 4
             }
           }
-
         });
-        linkToNext.vertices([
-          // new g.Point(data['x']+this.boxWidth,data['y']+0.5*this.boxHeight),
-          //连线标签顶到头，有bug，左移一个px
-          new g.Point(data['x'] + this.boxWidth + this.LineWidth * 2, data['y'] + 0.5 * this.boxHeight),//+1防止尾差计算错位
-          new g.Point(data['x'] + this.disX - 10, top + 0.5 * this.avaHeight + this.minTop)
-        ]);
+        // 指定左近右出，不必指定路径点
+        // linkToNext.vertices([
+        //   new g.Point(data['x'] + this.boxWidth + this.LineWidth * 2, data['y'] + 0.5 * this.boxHeight),
+        //   new g.Point(data['x'] + this.disX - 10, top + 0.5 * this.avaHeight + this.minTop)
+        // ]);
         linkToNext.connector('rounded');//圆润
         this.completeTree(data[this.children][i], linkToNext, x + this.disX, top);
       }
     }
   }
 
+  zoomIn() {
+    const p = this.scale;
+    this.scale += 0.2;
+    this.paper.scale(this.scale, this.scale);
+  }
+
+  zoomOut() {
+    const p = this.scale;
+    this.scale -= 0.2;
+    this.paper.scale(this.scale, this.scale);
+  }
+
+  scaleToFit(){
+    this.paper.scaleContentToFit();
+  }
 
 }
 
