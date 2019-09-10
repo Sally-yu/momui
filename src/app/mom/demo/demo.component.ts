@@ -74,7 +74,7 @@ export class DemoComponent implements OnInit {
   ];
 
   constructor(
-    private http: HttpService,
+    public http: HttpService,
     private message: NzMessageService
   ) {
   }

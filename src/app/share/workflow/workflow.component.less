@@ -1,7 +1,7 @@
 ul{
   list-style:none;
   height: 40px;
-  padding:0;
+  padding:0 0 0 16px;
   li {
     float: left;
     width:40px;
@@ -10,9 +10,15 @@ ul{
     text-align: center;
     margin: 0 5px;
     line-height: 40px;
+    cursor: pointer;
   }
   a{
     color:#595959;
+  }
+  li:hover{
+    a{
+      color: rgb(27,134,215);
+    }
   }
 }
 
@@ -21,3 +27,4 @@ ul{
   height: 40px;
   border-bottom: 1px solid rgba(10,10,10,.3);
 }
+

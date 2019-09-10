@@ -10,10 +10,11 @@ import {
   SimpleChanges,
   ViewChild
 } from '@angular/core';
-import * as jQuery from 'jquery';
-import * as joint from 'node_modules/jointjs/dist/joint.js';
 import {ResizeSensor} from 'css-element-queries';
-import {g} from 'node_modules/jointjs/dist/joint';
+
+declare var joint:any;
+declare var $:any;
+declare var g:any;
 
 @Component({
   selector: 'workflow',
@@ -76,7 +77,7 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
     // this.loading=true;
     this.model = new joint.dia.Graph;
     this.paper = new joint.dia.Paper({
-      el: jQuery('#jointdiv'),
+      el: $('#jointdiv'),
       model: this.model,
       width: this.Width,
       height: this.Height,
@@ -104,6 +105,9 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
       if (self.DataSource.length > 0) {
         //FIXME:内部块点击 现无法响应到父块
         self.selected = self.DataSource.filter(d => d['x'] == x && d['y'] == y)[0];
+        self.DataSource.forEach(d=>{
+          d[self.highLightKey] = d == self.selected;
+        });
       } else if (self.TreeData) {
         self.searchTreeNode(self.TreeData, x, y);
       }
@@ -119,8 +123,10 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
   searchTreeNode(data, x, y) {
     if (data['x'] == x && data['y'] == y) {
       this.selected = data;
+      data[this.highLightKey]=true;
       return;
     } else {
+      data[this.highLightKey]=false;
       if (data.hasOwnProperty(this.children) && data[this.children].length > 0) {
         data[this.children].forEach(d => {
           this.searchTreeNode(d, x, y);
@@ -654,20 +660,23 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
   }
 
   zoomIn() {
-    const p = this.scale;
     this.scale += 0.2;
     this.paper.scale(this.scale, this.scale);
   }
 
   zoomOut() {
-    const p = this.scale;
     this.scale -= 0.2;
     this.paper.scale(this.scale, this.scale);
   }
 
   scaleToFit(){
-    this.paper.scaleContentToFit();
+    this.paper.scaleContentToFit({
+      padding:this.disY
+    });
   }
 
+  isNumber(x):boolean{
+    return typeof x =="number";
+  }
 }
 

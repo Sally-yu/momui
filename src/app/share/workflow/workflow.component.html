@@ -1,29 +1,19 @@
-<div #jointdiv [ngStyle]="{'width':Width*0==0?Width+'px':Width,'height':Height*0==0?Height+'px':Height}">
+<div #jointdiv [ngStyle]="{'width':isNumber(Width)?Width+'px':Width,'height':isNumber(Height)?Height+'px':Height}">
   <div class="joint-tool">
     <ul>
-      <li>
+      <li (click)="scaleToFit()" >
         <a>
-          <i nz-icon nzTheme="outline" nzType="fullscreen"></i>
+          <i nz-icon nzTheme="outline" [nz-tooltip]="'自适应'" nzType="fullscreen"></i>
         </a>
       </li>
-      <li>
+      <li (click)="zoomIn()" >
         <a>
-          <i nz-icon nzTheme="outline" nzType="fullscreen"></i>
-        </a>
-      </li>
-      <li>
-        <a>
-          <i nz-icon nzTheme="outline" nzType="fullscreen"></i>
-        </a>
-      </li>
-      <li (click)="zoomIn()">
-        <a>
-          <i nz-icon nzTheme="outline" nzType="zoom-in"></i>
+          <i nz-icon nzTheme="outline" [nz-tooltip]="'放大'" nzType="zoom-in"></i>
         </a>
       </li>
       <li (click)="zoomOut()">
         <a>
-          <i nz-icon nzTheme="outline" nzType="zoom-out"></i>
+          <i nz-icon nzTheme="outline" [nz-tooltip]="'缩小'" nzType="zoom-out"></i>
         </a>
       </li>
     </ul>
