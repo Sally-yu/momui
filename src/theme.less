@@ -1,6 +1,12 @@
 @import "../node_modules/ng-zorro-antd/ng-zorro-antd.less";
 
 
+// vertical paddings
+@padding-lg: 16px; // containers
+@padding-md: 16px; // small containers and buttons
+@padding-sm: 12px; // Form controls and items
+@padding-xs: 8px; // small items
+
 .ant-table-thead > tr > th,
 .ant-table-tbody > tr > td {
   word-break: break-all;
@@ -8,15 +14,11 @@
 }
 
 .ant-btn {
-  margin-right: 8px;
-}
-
-.tb-search-header {
-  padding: 8px;
+  margin-right: @padding-xs;
 }
 
 .ant-form {
-  padding: 8px !important;
+  padding: @padding-xs !important;
 }
 
 .ant-input-search-button{
@@ -35,12 +37,13 @@
 }
 
 .ant-form-item{
-  margin-bottom:8px;
+  margin-bottom:@padding-xs !important;
 }
 
+.ant-calendar-picker{
+  width:100%;
+}
 
-// vertical paddings
-@padding-lg: 16px; // containers
-@padding-md: 16px; // small containers and buttons
-@padding-sm: 12px; // Form controls and items
-@padding-xs: 8px; // small items
+.ant-input{
+  //text-align: center !important;
+}

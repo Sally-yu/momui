@@ -1,17 +1,24 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {NgZorroAntdModule} from 'ng-zorro-antd';
+import {
+  NzButtonModule,
+  NzFormModule, NzGridModule,
+  NzIconModule,
+  NzModalModule,
+  NzTransferModule
+} from 'ng-zorro-antd';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {QuerylistComponent} from './querylist.component';
-import {HelpTemplateComponent} from './template/helptemplate/helptemplate.component';
 import {InputTemplateComponent} from './template/inputtemplate/inputtemplate.component';
 import {SelectTemplateComponent} from './template/selecttemplate/selecttemplate.component';
 import {RangepickerTemplateComponent} from './template/rangepickertemplate/rangepickertemplate.component';
-import {HelptemplateModule} from './template/helptemplate/helptemplate.module';
-import {DynamicComponentDirective} from './directive/dynamic-component.directive';
 import {InputtemplateModule} from './template/inputtemplate/inputtemplate.module';
 import {SelecttemplateModule} from './template/selecttemplate/selecttemplate.module';
 import {RangepickertemplateModule} from './template/rangepickertemplate/rangepickertemplate.module';
+import {HelpcenterModule} from "../helpcenter/helpcenter.module";
+import {HelpcenterComponent} from "../helpcenter/helpcenter.component";
+import {DatetemplateModule} from "./template/datetemplate/datetemplate.module";
+import {DatetemplateComponent} from "./template/datetemplate/datetemplate.component";
 
 
 @NgModule({
@@ -19,26 +26,32 @@ import {RangepickertemplateModule} from './template/rangepickertemplate/rangepic
     FormsModule,
     CommonModule,
     ReactiveFormsModule,
-    NgZorroAntdModule,
+    NzFormModule,
+    NzGridModule,
+    NzButtonModule,
+    NzIconModule,
+    NzModalModule,
+    NzTransferModule,
 
-    HelptemplateModule,
+    //各模板模块
     InputtemplateModule,
     SelecttemplateModule,
     RangepickertemplateModule,
-
+    DatetemplateModule,
+    HelpcenterModule,//需要使用查询的帮助
   ],
   exports: [
     QuerylistComponent,
   ],
   declarations: [
     QuerylistComponent,
-    DynamicComponentDirective,
   ],
   entryComponents: [
     InputTemplateComponent,
     SelectTemplateComponent,
     RangepickerTemplateComponent,
-    HelpTemplateComponent
+    DatetemplateComponent,
+    HelpcenterComponent,
   ],
 })
 export class QuerylistModule {

@@ -1,13 +1,16 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit} from '@angular/core';
 import {HttpService} from './service/http.service';
 import {NzMessageService} from 'ng-zorro-antd';
+import j from 'src/assets/tables/meta/meta.json';
+
+declare var $: any;
 
 @Component({
   selector: 'app-demo',
   templateUrl: './demo.component.html',
   styleUrls: ['./demo.component.less']
 })
-export class DemoComponent implements OnInit {
+export class DemoComponent implements OnInit, AfterViewInit {
   visible: boolean;
 
   tree = {
@@ -25,7 +28,7 @@ export class DemoComponent implements OnInit {
         text: '零部件测量', children: [
           {
             text: '零部件测量', pre: 4
-          },{
+          }, {
             text: '零部件测量', pre: 4
           }, {
             text: '零部件测量',
@@ -73,9 +76,11 @@ export class DemoComponent implements OnInit {
     {text: '零部件测量', pre: 9},
   ];
 
+  columns = j;
+
   constructor(
     public http: HttpService,
-    private message: NzMessageService
+    private message: NzMessageService,
   ) {
   }
 
@@ -98,12 +103,6 @@ export class DemoComponent implements OnInit {
     });
   }
 
-  afterHelp(data: any) {
-    this.visible = false;
-    this.message.success(JSON.stringify(data));
-    console.log(data);
-  }
-
   query(data: any) {
     console.log(data);
   }
@@ -111,5 +110,13 @@ export class DemoComponent implements OnInit {
   showNode(data: any) {
     this.message.success(JSON.stringify(data));
     console.log(data);
+  }
+
+  afterHelp(data: any) {
+    this.message.success(JSON.stringify(data));
+  }
+
+  ngAfterViewInit(): void {
+
   }
 }

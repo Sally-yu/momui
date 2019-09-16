@@ -5,13 +5,14 @@
   [nzTitle]="title"
   class="help-modal">
   <div>
-    <nz-input-group [nzAddOnAfter]="helpSearch" nzSearch
+    <nz-input-group [nzAddOnAfter]="helpSearch"
                     style="margin-bottom: 8px;margin-right: -40px;padding-right: 40px;">
       <input [(ngModel)]="searchValue" nz-input placeholder="请输入查找关键字" type="text"/>
     </nz-input-group>
     <button
       [nzContent]="menu"
-      nz-button nz-popover
+      nz-button
+      nz-popover
       nzPlacement="bottomRight"
       nzTitle="自定义显示列"
       style="float: right;margin-right: 0;"
@@ -20,7 +21,7 @@
 
   <div>
     <ng-template #helpSearch>
-      <button nz-button nzSearch nzType="primary"><i nz-icon nzType="search"></i></button>
+      <i nz-icon nzType="search"></i>
     </ng-template>
 
     <nz-table #Table
@@ -32,6 +33,7 @@
               [nzScroll]="{x:colWidth(),y:'380px'}"
               [nzShowQuickJumper]="showJumper"
               nzSize="small"
+              style="height: 468px;"
     >
       <thead>
       <tr>
@@ -109,4 +111,17 @@
       </nz-list-item>
     </ng-template>
   </nz-list>
+</ng-template>
+
+
+<nz-input-group [nzSuffix]="suffixIconButton">
+  <input *ngIf="!item" nz-input [placeholder]="placeHolder" (click)="openHelp()" readonly type="text" style="cursor: pointer"/>
+  <input *ngIf="item" [(ngModel)]="item['name']" nz-input (click)="openHelp()" [placeholder]="placeHolder"
+         style="cursor: pointer"
+         type="text"/>
+</nz-input-group>
+
+<ng-template #suffixIconButton>
+
+  <i nz-icon nzType="search"></i>
 </ng-template>

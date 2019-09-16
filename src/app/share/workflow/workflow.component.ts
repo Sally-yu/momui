@@ -35,25 +35,25 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() TreeData: any;//树形数据源
   @Input() BackgroundColor: string;//整体背景颜色
   @Input() BackgroundImg: string;//背景图
-  @Input() BodyColor: string = 'rgb(27,134,215)'; //块背景颜色
-  @Input() TextColor: string = '#ffffff'; // 文字颜色
+  @Input() BodyColor: string = 'rgb(227,245,254)'; //块背景颜色
+  @Input() TextColor: string = 'rgba(0,0,0,.85)'; // 文字颜色
   @Input() HighLightColor: string = 'rgb(250,158,59)';//高亮块
   @Input() HighLightTextColor: string = '#ffffff';//高亮块
-  @Input() StrokeColor: string; //边框颜色
-  @Input() LineColor: string = 'rgb(158,185,206)';//连线颜色
-  @Input() LineWidth: number = 4;//连线宽度
+  @Input() StrokeColor: string="rgb(108,186,255)"; //边框颜色
+  @Input() LineColor: string = 'rgb(188,205,206)';//连线颜色
+  @Input() LineWidth: number = 1;//连线宽度
   @Input() children: string = 'children';//子级标识字段
 
   @Input() col: number = 0; //列数，默认自动计算
-  @Input() distance: number = 120;//列最小间距，
+  @Input() distance: number = 40;//列最小间距，
 
-  @Input() boxWidth: number = 180;
-  @Input() boxHeight: number = 50;
-  @Input() radius: number = 25;
+  @Input() boxWidth: number = 120;
+  @Input() boxHeight: number = 40;
+  @Input() radius: number = 20;
 
   @Input() text: string = 'text';//标签绑定的字段名
   @Input() highLightKey: string = 'selected'; //选中标记符，字段值boolean
-  @Input() markSize: number = 6;//连线箭头大小
+  @Input() markSize: number = 2;//连线箭头大小
 
   scale: number = 1;//整体缩放
   model;
@@ -93,12 +93,9 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
       let elements = self.paper.model.getElements();
       elements.forEach(e => {
         //内部节点不变色
-        if (e.attributes.attrs.body.class != 'sub') {
           e.attr('body/fill', self.BodyColor);
+          e.attr('body/stroke', self.StrokeColor);
           e.attr('label/fill', self.TextColor);
-        } else {
-          e.attr('label/fill', '#101010');
-        }
       });
       if (self.DataSource.length > 0) {
         self.DataSource.forEach(d => {
@@ -123,24 +120,25 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
       let elements = self.paper.model.getElements();
       elements.forEach(e => {
         //内部节点不变色
-        if (e.attributes.attrs.body.class != 'sub') {
+        // if (e.attributes.attrs.body.class != 'sub') {
           e.attr('body/fill', self.BodyColor);
+          e.attr('body/stroke', self.StrokeColor);
           e.attr('label/fill', self.TextColor);
-        } else {
-          e.attr('label/fill', '#101010');
-        }
+        // } else {
+        //   e.attr('label/fill', '#101010');
+        // }
       });
       //内部圆圈点击 父块响应
-      if (currentElement.attributes.parent) {
-        currentElement.attr('label/fill', self.HighLightColor);
-        let id = currentElement.attributes.parent;
-        currentElement = elements.filter(e => e.id == id)[0];
-      }
+      // if (currentElement.attributes.parent) {
+      //   currentElement.attr('label/fill', self.HighLightColor);
+      //   let id = currentElement.attributes.parent;
+      //   currentElement = elements.filter(e => e.id == id)[0];
+      // }
       //父块点击 子块也响应
-      else if (currentElement.attributes.embeds[0]) {
-        let id = currentElement.attributes.embeds[0];
-        elements.filter(e => e.id == id)[0].attr('label/fill', self.HighLightColor);
-      }
+      // else if (currentElement.attributes.embeds[0]) {
+      //   let id = currentElement.attributes.embeds[0];
+      //   elements.filter(e => e.id == id)[0].attr('label/fill', self.HighLightColor);
+      // }
 
       let x = currentElement.attributes.position.x;
       let y = currentElement.attributes.position.y;
@@ -154,6 +152,7 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
         self.searchTreeNode(self.TreeData, x, y);
       }
       currentElement.attr('body/fill', self.HighLightColor);
+      currentElement.attr('body/stroke', self.HighLightColor);
       currentElement.attr('label/fill', self.HighLightTextColor);
       self.blockClick.emit(self.selected);
     });
@@ -247,55 +246,43 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
           body: {
             cursor: 'pointer',
             fill: this.DataSource[i][this.highLightKey] ? this.HighLightColor : this.BodyColor,
-            // stroke: this.DataSource[i][this.highLightKey] ? this.HighLightTextColor : this.StrokeColor,
-            rx: this.radius,
-            ry: this.radius,
-            strokeWidth: 0
+            stroke: this.DataSource[i][this.highLightKey] ? this.HighLightTextColor : this.StrokeColor,
+            rx: 2,
+            ry: 2,
+            strokeWidth: 1
           },
           label: {
             cursor: 'pointer',
-            text: this.DataSource[i][this.text],
+            text: 'OP'+(this.DataSource[i]['pre']?this.DataSource[i]['pre']:i.toString())+':'+this.DataSource[i][this.text],
             fill: this.DataSource[i][this.highLightKey] ? this.HighLightTextColor : this.TextColor,
-            'ref-x': (this.boxHeight) / 3
-          }
-        });
-        rect.addTo(this.model);
-
-        //阴影
-        rect.attr('rect/filter', {
-          name: 'dropShadow',
-          args: {
-            // dx: 2,
-            // dy: 2,
-            // blur: 4,
-            opacity: .6,
+            // 'ref-x': (this.boxHeight) / 3
           }
         });
 
         //圆圈子块
-        let subRect = new joint.shapes.standard.Rectangle();
-        subRect.position(this.DataSource[i]['x'] + 4, this.DataSource[i]['y'] + 4);
-        subRect.resize(this.boxHeight - 8, this.boxHeight - 8);
-        subRect.attr({
-          body: {
-            cursor: 'pointer',
-            fill: '#ffffff',
-            rx: this.radius - 4,
-            ry: this.radius - 4,
-            strokeWidth: 0,
-            class: 'sub'
-          },
-          label: {
-            cursor: 'pointer',
-            text: 'OP' + (this.DataSource[i]['pre'] ? this.DataSource[i]['pre'] : ''),
-            fill: this.DataSource[i][this.highLightKey] ? this.HighLightColor : '#101010'
-          },
-        });
-
-        this.model.addCells([rect, subRect]);
-        //作为子块
-        rect.embed(subRect);
-        //循环连接
+        // let subRect = new joint.shapes.standard.Rectangle();
+        // subRect.position(this.DataSource[i]['x'] + 4, this.DataSource[i]['y'] + 4);
+        // subRect.resize(this.boxHeight - 8, this.boxHeight - 8);
+        // subRect.attr({
+        //   body: {
+        //     cursor: 'pointer',
+        //     fill: '#ffffff00',
+        //     // rx: this.radius - 4,
+        //     // ry: this.radius - 4,
+        //     strokeWidth: 0,
+        //     class: 'sub'
+        //   },
+        //   label: {
+        //     cursor: 'pointer',
+        //     text: this.DataSource[i]['pre'] ? this.DataSource[i]['pre'] : i.toString(),
+        //     fill: this.DataSource[i][this.highLightKey] ? this.HighLightColor : '#101010'
+        //   },
+        // });
+        //
+        this.model.addCells([rect]);
+        // // 作为子块
+        // rect.embed(subRect);
+        // 循环连接
         link = this.link(rect, link, edge, fromLeft);
       }
     }
@@ -561,50 +548,41 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
       body: {
         cursor: 'pointer',
         fill: data[this.highLightKey] ? this.HighLightColor : this.BodyColor,
-        // stroke: data[this.highLightKey] ? this.HighLightTextColor : this.StrokeColor,
-        rx: this.radius,
-        ry: this.radius,
-        strokeWidth: 0
+        stroke: data[this.highLightKey] ? this.HighLightColor : this.StrokeColor,
+        rx: 2,
+        ry: 2,
+        strokeWidth: 1
       },
       label: {
         cursor: 'pointer',
-        text: data[this.text],
+        text: (data['pre']?'OP'+data['pre']+':':'')+data[this.text],
         fill: data[this.highLightKey] ? this.HighLightTextColor : this.TextColor,
-        'ref-x': this.boxHeight / 3
-      },
-    });
-    //阴影
-    rect.attr('rect/filter', {
-      name: 'dropShadow',
-      args: {
-        // dx: 2,
-        // dy: 2,
-        // blur: 8,
-        opacity: 0.6,
-      }
-    });
-    let subRect = new joint.shapes.standard.Rectangle();
-    subRect.position(data['x'] + 4, data['y'] + 4);
-    subRect.resize(this.boxHeight - 8, this.boxHeight - 8);
-    subRect.attr({
-      body: {
-        cursor: 'pointer',
-        fill: '#ffffff',
-        rx: this.radius - 4,  // 默认椭圆格子
-        ry: this.radius - 4,
-        strokeWidth: 0,
-        class: 'sub'
-      },
-      label: {
-        cursor: 'pointer',
-        text: 'OP' + (data['pre'] ? data['pre'] : ''),
-        fill: data[this.highLightKey] ? this.HighLightColor : '#101010'
+        // 'ref-x': this.boxHeight / 3
       },
     });
 
+    // let subRect = new joint.shapes.standard.Rectangle();
+    // subRect.position(data['x'] + 4, data['y'] + 4);
+    // subRect.resize(this.boxHeight - 8, this.boxHeight - 8);
+    // subRect.attr({
+    //   body: {
+    //     cursor: 'pointer',
+    //     fill: '#ffffff',
+    //     rx: this.radius - 4,  // 默认椭圆格子
+    //     ry: this.radius - 4,
+    //     strokeWidth: 0,
+    //     class: 'sub'
+    //   },
+    //   label: {
+    //     cursor: 'pointer',
+    //     text: data['pre'] ? data['pre'] : '',
+    //     fill: data[this.highLightKey] ? this.HighLightColor : '#101010'
+    //   },
+    // });
+
     // rect.addTo(this.model);
-    this.model.addCells([rect, subRect]);
-    rect.embed(subRect);
+    this.model.addCells([rect]);
+    // rect.embed(subRect);
     //传入连线的目标点
     if (link) {
       link.target(rect, {

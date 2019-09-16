@@ -7,36 +7,19 @@ Demo功能演示
 <br>
 <br>
 
-<button nz-button [nzType]="'primary'" (click)="post()">post</button>
+<button  nz-button [nzType]="'primary'" (click)="post()">post</button>
 
-<br>
-<br>
-调用智能帮助
-<br>
-<br>
-<button nz-button [nzType]="'primary'" (click)="visible=true">打开帮助</button>
-
-<querylist class="tb-search-header"
+<querylist
   (onQuery)="query($event)"
   [backgroundColor]="'#fafafa'"
-  [url]="http.url.gridUrl"
+  [columns]="columns"
 ></querylist>
 
-<app-demohelp>
-</app-demohelp>
+<!--确切引用,直接引用具体的帮助组件-->
+<app-alphahelp (result)="afterHelp($event)"></app-alphahelp>
 
+<!--动态引用,根据helpId选择帮助,需要ts脚本内添加switch选项-->
+<app-helpcenter helpId="alpha" (result)="afterHelp($event)"></app-helpcenter>
 
-<smarthelp
-  *ngIf="visible"
-  [tree]="true"
-  [title]="'快捷帮助'"
-  [visible]="visible"
-  [id]="'code'"
-  [url]="http.url.gridUrl"
-  (onCancel)="visible=false;"
-  [showJumper]="true"
-  (onOk)="afterHelp($event)">
-</smarthelp>
-
-<workflow [TreeData]="tree"  [DataSource]="data"  (blockClick)="showNode($event)"></workflow>
+<workflow [TreeData]="tree"    (blockClick)="showNode($event)"></workflow>
 

@@ -1,30 +1,35 @@
-<form [ngStyle]="{'border':bordered?'1px solid':'none',
-      'background-color':backgroundColor,
-      'border-radius':radius?radius:'0'}" class="query-list"
-      nz-form>
-
-  <div nz-row style="margin-bottom: 8px;">
-    <div  [nzSpan]="12" nz-col style="text-align: left;">
-      <div class="query-title primary-color"  (click)="showTransfer=!showTransfer;">
-      <a style="padding-right: 4px;">{{title}}</a>
-      <a>
-        <i nzType="setting" nz-icon></i>
-      </a></div>
+<div
+  [ngStyle]="{'background-color':backgroundColor}"
+  class="">
+  <div>
+    <div style="text-align: left;width: 50%;display: inline-block;padding: 8px;">
+      <div (click)="showTransfer=!showTransfer;" class="query-title primary-color">
+        <a style="padding-right: 4px;">{{title}}</a>
+        <a>
+          <i nz-icon nzType="setting"></i>
+        </a></div>
     </div>
-    <div [nzSpan]="12" class="query-btns" nz-col>
-      <button nz-button nzSize="small" (click)="query()" nzType="primary">查询</button>
-      <a (click)="resetForm()">清空</a>
+    <div class="query-btns">
+      <!--<button nz-button nzType="primary" nzSize="small" (click)="query()">查询</button>-->
+      <a (click)="query()" class="primary-color">查询</a>
+      <a (click)="resetForm()" style="margin-left: 8px">清空</a>
       <a (click)="toggleCollapse()">
-        {{isCollapse?'展开':'收起'}}
+        {{isCollapse ? '展开' : '收起'}}
         <i [type]="isCollapse ? 'down' : 'up'" nz-icon></i>
       </a>
     </div>
   </div>
 
-  <div nz-row >
-    <ng-template dynamicComponent></ng-template>
-  </div>
-</form>
+  <form
+    [ngStyle]="{'display':componentArray.length>0&&!isCollapse?'block':'none','background-color':backgroundColor}"
+    nz-form
+    style="padding-top: 0 !important;">
+    <div nz-row>
+      <div #template></div>
+    </div>
+  </form>
+</div>
+
 
 <nz-modal
   class="querylist-modal"
@@ -35,19 +40,15 @@
 >
 
   <nz-transfer #transfer
-    [nzDataSource]="columns"
-    [nzShowSearch]="search"
-    [nzShowSelectAll]="selectAll"
-    [nzOperations]="transferOptions"
-    [nzListStyle]="{ 'width.px': transferWidth, 'height.px': transferHeight }"
-    [nzRender]="render"
+               [nzDataSource]="columns"
+               [nzShowSearch]="search"
+               [nzShowSelectAll]="selectAll"
+               [nzOperations]="transferOptions"
+               [nzListStyle]="{ 'width.px': transferWidth, 'height.px': transferHeight }"
+               [nzTitles]="titleOptions"
+               [nzRender]="render"
   >
     <ng-template #render let-item> {{ item['name'] ? item['name'] : item[0] }}</ng-template>
-    <!--<ng-template #footer let-direction>-->
-    <!--<button nz-button (click)="reload(direction)" [nzSize]="'small'" style="float: right; margin: 5px;">-->
-    <!--reload-->
-    <!--</button>-->
-    <!--</ng-template>-->
   </nz-transfer>
 </nz-modal>
 

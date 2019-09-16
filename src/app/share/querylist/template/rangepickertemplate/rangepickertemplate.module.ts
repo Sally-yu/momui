@@ -2,9 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {RangepickerTemplateComponent} from './rangepickertemplate.component';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgZorroAntdModule} from 'ng-zorro-antd';
-
-
+import {NzDatePickerModule, NzFormModule, NzGridModule, NzInputModule} from 'ng-zorro-antd';
 
 @NgModule({
   declarations: [
@@ -14,7 +12,10 @@ import {NgZorroAntdModule} from 'ng-zorro-antd';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    NgZorroAntdModule
+    NzFormModule,
+    NzInputModule,
+    NzGridModule,
+    NzDatePickerModule
   ],
   exports:[
     RangepickerTemplateComponent

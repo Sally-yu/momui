@@ -42,6 +42,7 @@
             ],
             "scripts": [
               "src/assets/js/jquery.js",
+              "src/assets/js/jquery-ui.min.js",
               "src/assets/js/lodash.js",
               "src/assets/js/backbone.js",
               "src/assets/js/joint.min.js"

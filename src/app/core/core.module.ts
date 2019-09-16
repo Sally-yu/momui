@@ -1,15 +1,13 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-
-import { CoreRoutingModule } from './core-routing.module';
-import { SafePipe } from './pipe/safe.pipe';
+import {NgModule} from '@angular/core';
+import {CommonModule} from '@angular/common';
 
 
 @NgModule({
-  declarations: [SafePipe],
+  declarations: [],
   imports: [
     CommonModule,
-    CoreRoutingModule
-  ]
+  ],
+  exports: []
 })
-export class CoreModule { }
+export class CoreModule {
+}

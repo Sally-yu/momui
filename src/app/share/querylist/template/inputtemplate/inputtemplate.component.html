@@ -1,8 +1,21 @@
-<div nz-col [nzSpan]="6"  [hidden]="hidden">
-    <nz-form-item nzFlex>
-        <nz-form-label  nzXXl="6" nzXl="6" nzLg="6" nzMd="6" nzSm="12" nzXs="18">{{item.name}}</nz-form-label>
-        <nz-form-control nzXXl="18" nzXl="18" nzLg="18" nzMd="18" nzSm="12" nzXs="6">
-            <input id="input" [(ngModel)]="item.content"  nz-input />
-        </nz-form-control>
-    </nz-form-item>
+<div [hidden]="hidden" [nzSpan]="6" nz-col>
+  <nz-form-item nzFlex>
+    <nz-form-label nzLg="6" nzMd="6" nzSm="12" nzXXl="6" nzXl="6" nzXs="18">{{item.name}}</nz-form-label>
+    <nz-form-control nzLg="18" nzMd="18" nzSm="12" nzXXl="18" nzXl="18" nzXs="6">
+      <nz-input-group [nzSuffix]="suffixTemplate">
+        <input [(ngModel)]="item.content" [placeholder]="'请输入'+item['name']" nz-input type="text"/>
+      </nz-input-group>
+      <ng-template #suffixTemplate
+      ><i
+        (click)="item.content = undefined"
+        *ngIf="item.content"
+        class="ant-input-clear-icon"
+        nz-icon
+        nz-tooltip
+        nzTheme="fill"
+        nzType="close-circle"
+      ></i
+      ></ng-template>
+    </nz-form-control>
+  </nz-form-item>
 </div>

@@ -2,7 +2,7 @@
   <nz-form-item nzFlex>
     <nz-form-label  nzXXl="6" nzXl="6" nzLg="6" nzMd="6" nzSm="12" nzXs="18">{{item.name}}</nz-form-label>
     <nz-form-control nzXXl="18" nzXl="18" nzLg="18" nzMd="18" nzSm="12" nzXs="6">
-      <nz-select nzAllowClear  [(ngModel)]="item.content">
+      <nz-select style="width:100%;" nzAllowClear nzShowSearch [nzPlaceHolder]="'请选择'+item['name']" [(ngModel)]="item.content">
         <nz-option *ngFor="let d of data" [nzValue]="d" [nzLabel]="d.label"></nz-option>
       </nz-select>
     </nz-form-control>

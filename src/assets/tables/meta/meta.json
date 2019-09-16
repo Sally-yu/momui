@@ -1,0 +1,56 @@
+[
+  {
+    "code": "number",
+    "name": "序号",
+    "type": "text",
+    "default": true,
+    "display": true
+  },
+  {
+    "code": "code",
+    "name": "编号",
+    "type": "select",
+    "default": true,
+    "display": true,
+    "data": [
+      {
+        "value": "jackson",
+        "label": "jack"
+      },
+      {
+        "value": "arm",
+        "label": "armmy"
+      },
+      {
+        "value": "polo",
+        "label": "poloris"
+      }
+    ]
+  },
+  {
+    "code": "name",
+    "name": "名称",
+    "type": "help",
+    "default": true,
+    "helpid": "demo",
+    "display": true
+  },
+  {
+    "code": "custom",
+    "name": "自定义",
+    "type": "range",
+    "display": true
+  },
+  {
+    "code": "from",
+    "name": "起始",
+    "type": "date",
+    "display": true
+  },
+  {
+    "code": "to",
+    "name": "终止",
+    "type": "date",
+    "display": true
+  }
+]

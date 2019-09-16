@@ -1,9 +1,17 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {SmarthelpComponent} from './smarthelp.component';
-import {NgZorroAntdModule} from 'ng-zorro-antd';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
+import {
+  NzButtonModule,
+  NzIconModule,
+  NzInputModule,
+  NzListModule,
+  NzModalModule, NzPopoverModule,
+  NzSwitchModule,
+  NzTableModule,
+} from "ng-zorro-antd";
 
 
 @NgModule({
@@ -15,7 +23,14 @@ import {HttpClientModule} from '@angular/common/http';
     ReactiveFormsModule,
     FormsModule,
     HttpClientModule,
-    NgZorroAntdModule,
+    NzModalModule,
+    NzInputModule,
+    NzIconModule,
+    NzTableModule,
+    NzListModule,
+    NzPopoverModule,
+    NzButtonModule,
+    NzSwitchModule
   ],
   exports: [
     SmarthelpComponent

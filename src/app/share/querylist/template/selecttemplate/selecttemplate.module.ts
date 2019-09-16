@@ -1,10 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
-import {NgZorroAntdModule} from 'ng-zorro-antd';
 import {SelectTemplateComponent} from './selecttemplate.component';
-
-
+import {NzFormModule, NzGridModule, NzInputModule, NzSelectModule} from "ng-zorro-antd";
 
 @NgModule({
   declarations: [
@@ -14,7 +12,10 @@ import {SelectTemplateComponent} from './selecttemplate.component';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    NgZorroAntdModule
+    NzFormModule,
+    NzInputModule,
+    NzGridModule,
+    NzSelectModule
   ],
   exports:[
     SelectTemplateComponent

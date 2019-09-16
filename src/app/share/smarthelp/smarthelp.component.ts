@@ -1,4 +1,10 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {HttpService} from './service/http.service';
 
 export interface TreeNodeInterface {
@@ -11,19 +17,25 @@ export interface TreeNodeInterface {
   children?: TreeNodeInterface[];
 }
 
+declare var $: any;
 
 @Component({
   selector: 'smarthelp',
   templateUrl: './smarthelp.component.html',
   styleUrls: ['./smarthelp.component.less']
 })
-export class SmarthelpComponent implements OnInit, OnDestroy, AfterViewInit {
+export class SmarthelpComponent implements OnInit {
 
-  //确定按钮弹出事件
-  @Output() onOk: EventEmitter<any> = new EventEmitter<any>();
+  //当前选中项
+  //仿制帮助时,务必保证该变量名为item  重要
+  item: any;
 
-  //取消关闭等弹出事件
-  @Output() onCancel: EventEmitter<any> = new EventEmitter<any>();
+  //弹出结果事件
+  //仿制帮助时,务必保证该变量名为result   重要
+  @Output() result: EventEmitter<any> = new EventEmitter<any>();
+
+  //暂存选中行
+  selected: any = null;
 
   //帮助标题
   @Input() title: string = '快捷帮助';
@@ -61,9 +73,6 @@ export class SmarthelpComponent implements OnInit, OnDestroy, AfterViewInit {
   //显示快速跳转页码
   @Input() showJumper: boolean = false;
 
-  //显示每页条数选项
-  @Input() showPageSelection: boolean = false;
-
   //帮助数据源列名映射关系
   @Input() columns: Array<any>;
 
@@ -91,14 +100,19 @@ export class SmarthelpComponent implements OnInit, OnDestroy, AfterViewInit {
   //分页条数候选
   @Input() pageOption: Array<number> = [5, 10, 20, 50, 100];//分页候选
 
+  //输入框placeholder
+  @Input() placeHolder: string='';
+
   //列表型数据，树帮助时存储全部展开的列表数据
   listData: Array<any>;
 
   mapOfExpandedData: { [key: string]: TreeNodeInterface[] } = {};
 
   searchValue: string = null; // 简单搜索值
-  loading: boolean = false; // 加载中
-  selected: any = null;  // 暂时标记选中值
+  loading: boolean = false;
+  focus:boolean;
+
+  // 加载中
 
   constructor(
     public http: HttpService
@@ -106,8 +120,9 @@ export class SmarthelpComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   ngOnInit() {
-    this.loading = true;
+    // this.loading = true;
     this.getData();
+    $('ant-modal-content').draggable({scroll: false})
   }
 
   //单选行，勾选框
@@ -117,39 +132,35 @@ export class SmarthelpComponent implements OnInit, OnDestroy, AfterViewInit {
 
   //取消按钮事件
   cancel() {
-    this.onCancel.emit();
+    this.visible = false;
   }
 
   //确认返回事件
   ok() {
-    this.onOk.emit(this.selected);
+    this.visible = false;
+    if (this.selected) {
+      this.item = this.selected;
+      this.result.emit(this.selected);
+    } else {
+      // this.result.emit(false);
+    }
   }
 
   //获取数据源并整理格式
   getData() {
     // 传url，服务器端分页
+    this.loading = true;
     if (!this.data && this.url && this.servicePage) {
       this.http.postPage(this.url, this.pageIndex, this.pageSize,
         this.urlHeader, this.urlBody).subscribe(res => {
           const list = JSON.parse(JSON.stringify(res));
-          if (list['data']) {
-            if (list['columns']) {
-              this.columns = list['columns'];
-            }
-            //不返回数据列，自动生成，不判断类型，不建议用
-            else {
-              for (let key in list['data']) {
-                this.columns = [...this.columns, {code: key, name: key}];
-              }
-            }
-            this.data = list['data'];
-            //整理树类型数据源
+          if (list) {
+            this.data = list;
             if (this.tree) {
               this.listToTree();
             }
           }
           this.loading = false;
-          this.changeCols();
         },
         error1 => {
           this.loading = false;
@@ -166,23 +177,13 @@ export class SmarthelpComponent implements OnInit, OnDestroy, AfterViewInit {
       //取数据源
       ob.subscribe(res => {
           const list = JSON.parse(JSON.stringify(res));
-          if (list['data']) {
-            if (list['columns']) {
-              this.columns = list['columns'];
-            }
-            //不返回数据列，自动生成，不判断类型，不建议用
-            else {
-              for (let key in list['data']) {
-                this.columns = [...this.columns, {code: key, name: key}];
-              }
-            }
-            this.data = list['data'];
+          if (list) {
+            this.data = list;
             //整理树类型数据源
             if (this.tree) {
               this.listToTree();
             }
           }
-          this.changeCols();
           this.loading = false;
         },
         error1 => {
@@ -197,7 +198,6 @@ export class SmarthelpComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.tree) {
         this.listToTree();
       }
-      this.changeCols();
       this.loading = false;
     }
     //不传columns自己循环一个 不分类型，不建议用
@@ -208,27 +208,15 @@ export class SmarthelpComponent implements OnInit, OnDestroy, AfterViewInit {
       if (this.tree) {
         this.listToTree();
       }
-      this.changeCols();
       this.loading = false;
-
     }
   }
 
   //展示列
   displayedCols(): Array<any> {
     try {
-      return this.columns.filter(c => c.display);
+      return this.columns.filter(c => c.display || !c.hasOwnProperty('display'));
     } catch (e) {
-    }
-  }
-
-  //初始化展示列
-  changeCols() {
-    if ('display' in this.columns[0]) {
-    } else {
-      this.columns.forEach(c => {
-        c['display'] = true;
-      });
     }
   }
 
@@ -298,7 +286,6 @@ export class SmarthelpComponent implements OnInit, OnDestroy, AfterViewInit {
     });
   }
 
-
   visitNode(node: TreeNodeInterface, hashMap: { [key: string]: any },
             array: TreeNodeInterface[]): void {
     if (!hashMap[node[this.path]]) {
@@ -341,12 +328,13 @@ export class SmarthelpComponent implements OnInit, OnDestroy, AfterViewInit {
     return array;
   }
 
-
-  ngOnDestroy(): void {
+  openHelp() {
+    this.visible = true;
+    if (this.item) {
+      this.selected = this.item;
+    } else {
+      this.selected = null;
+    }
   }
-
-  ngAfterViewInit(): void {
-  }
-
 
 }
