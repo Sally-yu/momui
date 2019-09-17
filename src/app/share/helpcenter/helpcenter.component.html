@@ -1,10 +1,10 @@
 <div *ngIf="!query">
   <ng-template #help></ng-template>
 </div>
-<div *ngIf="query" [hidden]="hidden" [nzSpan]="6" nz-col>
+<div *ngIf="query" [hidden]="hidden" [nzSpan]="span" nz-col>
   <nz-form-item nzFlex>
-    <nz-form-label nzLg="6" nzMd="6" nzSm="12" nzXXl="6" nzXl="6" nzXs="18">{{item.name}}</nz-form-label>
-    <nz-form-control nzLg="18" nzMd="18" nzSm="12" nzXXl="18" nzXl="18" nzXs="6">
+    <nz-form-label nzLg="8" nzMd="10" nzSm="12" nzXXl="8" nzXl="8" nzXs="18">{{item.name}}</nz-form-label>
+    <nz-form-control nzLg="15" nzMd="13" nzSm="11" nzXXl="15" nzXl="15" nzXs="6">
       <ng-template #help></ng-template>
     </nz-form-control>
   </nz-form-item>

@@ -1022,7 +1022,7 @@
     },
 
     // Force the collection to re-sort itself. You don't need to call this under
-    // normal circumstances, as the set will maintain sort order as each item
+    // normal circumstances, as the set will maintain sort order as each content
     // is added.
     sort: function(options) {
       var comparator = this.comparator;
@@ -1284,7 +1284,7 @@
 
   // Backbone Views are almost more convention than they are actual code. A View
   // is simply a JavaScript object that represents a logical chunk of UI in the
-  // DOM. This might be a single item, an entire list, a sidebar or panel, or
+  // DOM. This might be a single content, an entire list, a sidebar or panel, or
   // even the surrounding frame which wraps your whole app. Defining a chunk of
   // UI as a **View** allows you to define your DOM events declaratively, without
   // having to worry about render order ... and makes it easy for the view to

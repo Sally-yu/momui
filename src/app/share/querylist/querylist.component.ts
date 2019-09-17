@@ -55,6 +55,8 @@ export class QuerylistComponent implements OnInit {
   @Input() columns: Array<any> = [];
   //左右选框辅助显示信息,左右
   @Input() titleOptions = ['未选', '已选'];
+  //列数
+  @Input() colsInRow: number=4;
 
   //展示穿梭对话框
   showTransfer: boolean = false;
@@ -148,12 +150,14 @@ export class QuerylistComponent implements OnInit {
     this.jsonData.forEach(j => {
       let ref;
       const i = this.jsonData.indexOf(j);
+      const colNumber=24/this.colsInRow;
       switch (j.type) {
         case 'text':
           j['content'] = undefined;
           const inputTemplateComponent = this.componentFactoryResolver.resolveComponentFactory(InputTemplateComponent);
           ref = this.componentHost.createComponent(inputTemplateComponent);
           ref.instance.item = j;
+          ref.instance.span=colNumber;
           ref.instance.hidden = this.isCollapse && i >= this.showNumber;
           break;
         case 'help':
@@ -161,6 +165,7 @@ export class QuerylistComponent implements OnInit {
           ref = this.componentHost.createComponent(helpTemplateComponent);
           ref.instance.query = true;
           ref.instance.item = j;
+          ref.instance.span=colNumber;
           ref.instance.hidden = this.isCollapse && i >= this.showNumber;
           ref.instance.helpId = j['helpid'];
           break;
@@ -169,6 +174,7 @@ export class QuerylistComponent implements OnInit {
           const selectTemplateComponent = this.componentFactoryResolver.resolveComponentFactory(SelectTemplateComponent);
           ref = this.componentHost.createComponent(selectTemplateComponent);
           ref.instance.item = j;
+          ref.instance.span=colNumber;
           ref.instance.hidden = this.isCollapse && i >= this.showNumber;
           ref.instance.data = j['data'];
           break;
@@ -177,6 +183,7 @@ export class QuerylistComponent implements OnInit {
           const rangepickerTemplateComponent = this.componentFactoryResolver.resolveComponentFactory(RangepickerTemplateComponent);
           ref = this.componentHost.createComponent(rangepickerTemplateComponent);
           ref.instance.item = j;
+          ref.instance.span=colNumber;
           ref.instance.hidden = this.isCollapse && i >= this.showNumber;
           break;
         case 'date':
@@ -184,12 +191,14 @@ export class QuerylistComponent implements OnInit {
           const datePicker = this.componentFactoryResolver.resolveComponentFactory(DatetemplateComponent);
           ref = this.componentHost.createComponent(datePicker);
           ref.instance.item = j;
+          ref.instance.span=colNumber;
           ref.instance.hidden = this.isCollapse && i >= this.showNumber;
           break;
         default:
           const defaultComponent = this.componentFactoryResolver.resolveComponentFactory(InputTemplateComponent);
           ref = this.componentHost.createComponent(defaultComponent);
           ref.instance.item = j;
+          ref.instance.span=colNumber;
           ref.instance.hidden = this.isCollapse && i >= this.showNumber;
           break;
       }

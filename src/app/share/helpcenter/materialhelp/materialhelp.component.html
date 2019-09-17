@@ -1,0 +1,147 @@
+<nz-modal
+  (nzOnCancel)="cancel()"
+  (nzOnOk)="ok()"
+  [(nzVisible)]="visible"
+  [nzTitle]="title"
+  class="m-help"
+>
+
+  <div style="display: inline-flex;width:100%">
+    <div class="left">
+      <nz-select [(ngModel)]="categroy" style="width: 100%;margin-bottom: 8px;margin-top: 4px;">
+        <nz-option *ngFor="let data of ['物料类型','物料分类']" [nzLabel]="data" [nzValue]="data"></nz-option>
+      </nz-select>
+      <nz-table #leftTable
+                [nzData]="demoData"
+                nzSize="small"
+      >
+        <thead>
+        <tr>
+          <th>编号</th>
+          <th>名称</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr (click)="leftSelected=data" *ngFor="let data of leftTable.data"
+            [ngClass]="{'selected-tr':data==leftSelected}">
+          <td>{{data.code}}</td>
+          <td>{{data.name}}</td>
+        </tr>
+        </tbody>
+
+      </nz-table>
+    </div>
+
+    <nz-divider nzType="vertical" style="height: auto;margin-bottom: 8px;"></nz-divider>
+    <div class="right">
+      <querylist
+        (onQuery)="query($event)"
+        [colsInRow]="3"
+        [columns]="columns"
+      ></querylist>
+
+      <div>
+        <nz-table #Table
+                  [(nzPageIndex)]="pageIndex"
+                  [(nzPageSize)]="pageSize"
+                  [nzData]="rightData"
+                  [nzLoading]="loading"
+                  [nzPageSizeOptions]="pageOption"
+                  [nzScroll]="{x:colWidth(),y:'468px'}"
+                  [nzShowQuickJumper]="showJumper"
+                  nzSize="small"
+                  style="height: 468px;margin-top: 8px;"
+        >
+          <thead>
+          <tr>
+            <th
+              (nzCheckedChange)="thChecked($event)"
+              [nzChecked]="selected"
+              nzLeft="0px"
+              nzShowCheckbox
+              nzWidth="50px"
+            ></th>
+            <th *ngFor="let c of displayedCols() " nzWidth="150px">{{c.name}}</th>
+          </tr>
+          </thead>
+          <tbody *ngIf="!tree">
+          <tr (click)="rowClick(a)"
+              (dblclick)="rowClick(a);ok()" *ngFor="let a of Table.data"
+              [ngClass]="{'selected-tr':a==selected}">
+            <td (nzCheckedChange)="checkRow($event,a)" [nzChecked]="a==selected"
+                nzLeft="0px"
+                nzShowCheckbox
+            >
+            </td>
+            <td *ngFor="let c of displayedCols() "
+                [title]="c.name+':'+(a[c.code]?a[c.code]:'')">{{a[c.code]}}</td>
+          </tr>
+          </tbody>
+
+          <tbody *ngIf="tree">
+          <ng-container *ngFor="let data of Table.data">
+            <ng-container *ngFor="let content of mapOfExpandedData[data[path]]">
+              <tr
+                (click)="rowClick(content)"
+                (dblclick)="rowClick(content);ok()" *ngIf="(content.parent && content.parent.expand) || !content.parent"
+                [ngClass]="{'selected-tr':content==selected}">
+                <td (nzCheckedChange)="checkRow($event,content)" [nzChecked]="content==selected"
+                    nzLeft="0px"
+                    nzShowCheckbox
+                >
+                <td
+                  (nzExpandChange)="collapse(mapOfExpandedData[data[path]], content, $event)"
+                  [(nzExpand)]="content.expand"
+                  [nzIndentSize]="content.level * 20 "
+                  [nzShowExpand]="!!content.children"
+                >
+                  {{ content[displayedCols()[0]["code"]] }}
+                </td>
+                <td *ngFor="let c of displayedCols().slice(1,displayedCols().length)">
+                  {{ content[c["code"]] }}</td>
+              </tr>
+            </ng-container>
+          </ng-container>
+          </tbody>
+        </nz-table>
+
+      </div>
+    </div>
+  </div>
+  <div *nzModalFooter>
+    <button (click)="cancel()" nz-button> 取消</button>
+    <button (click)="ok()" [disabled]="!selected" [nzLoading]="loading"
+            [nzType]="'primary'" nz-button> 确定
+    </button>
+  </div>
+</nz-modal>
+
+<ng-template #menu>
+  <nz-list
+    style="padding: 16px;max-height: 300px;overflow-y: auto;"
+    [nzDataSource]="columns"
+    nzSize="small"
+    [nzRenderItem]="smallItem"
+  >
+    <ng-template #smallItem let-item>
+      <nz-list-item [nzContent]="item[name]">
+        <nz-switch [nzDisabled]="displayedCols().length<=3&&item['display']" [(ngModel)]="item['display']"
+                   style="margin-right: 8px;"></nz-switch>
+      </nz-list-item>
+    </ng-template>
+  </nz-list>
+</ng-template>
+
+
+<nz-input-group [nzSuffix]="suffixIconButton">
+  <input *ngIf="!content" nz-input [placeholder]="placeHolder" (click)="openHelp()" readonly type="text"
+         style="cursor: pointer"/>
+  <input *ngIf="content" [(ngModel)]="content['name']" nz-input (click)="openHelp()" [placeholder]="placeHolder"
+         style="cursor: pointer"
+         type="text"/>
+</nz-input-group>
+
+<ng-template #suffixIconButton>
+
+  <i nz-icon nzType="search" style="cursor: pointer;color:rgba(0,0,0,.25);" (click)="openHelp()"></i>
+</ng-template>

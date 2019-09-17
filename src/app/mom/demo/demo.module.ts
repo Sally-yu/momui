@@ -5,12 +5,12 @@ import {DemoRoutingModule} from './demo-routing.module';
 import {DemoComponent} from './demo.component';
 import {FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
-import {NzButtonModule, NzMessageModule} from 'ng-zorro-antd';
-import {SmarthelpModule} from '../../share/smarthelp/smarthelp.module';
+import {NgZorroAntdModule, NzBadgeModule, NzButtonModule, NzMessageModule, NzTableModule} from 'ng-zorro-antd';
 import {QuerylistModule} from '../../share/querylist/querylist.module';
-import {WorkflowModule} from '../../share/workflow/workflow.module';
-import {AlphahelpModule} from "../../share/helpcenter/alphahelp/alphahelp.module";
+import {FlowchartModule} from '../../share/flowchart/flowchart.module';
 import {HelpcenterModule} from "../../share/helpcenter/helpcenter.module";
+import {MaterialhelpModule} from "../../share/helpcenter/materialhelp/materialhelp.module";
+import {AlphahelpModule} from "../../share/helpcenter/alphahelp/alphahelp.module";
 
 @NgModule({
   declarations: [
@@ -23,11 +23,21 @@ import {HelpcenterModule} from "../../share/helpcenter/helpcenter.module";
     HttpClientModule,
     NzButtonModule,
     NzMessageModule,
-    SmarthelpModule,
-    QuerylistModule,
-    WorkflowModule,
-    AlphahelpModule,
-    HelpcenterModule
+    NzTableModule,
+    NzBadgeModule,
+    NgZorroAntdModule,
+    FlowchartModule,
+
+
+
+
+    MaterialhelpModule,
+
+
+    QuerylistModule,//只是用动态查询组件
+    HelpcenterModule,
+
+    AlphahelpModule,//只使用普通定制帮助
   ],
   exports: [
     DemoComponent

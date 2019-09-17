@@ -10,6 +10,7 @@ export class SelectTemplateComponent implements OnInit {
   @Input() public item: any;
   @Input() public hidden: boolean;
   @Input() public data: Array<any>;
+  @Input() span:number=6 ;
 
   constructor() {
   }

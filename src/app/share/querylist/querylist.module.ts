@@ -38,7 +38,6 @@ import {DatetemplateComponent} from "./template/datetemplate/datetemplate.compon
     SelecttemplateModule,
     RangepickertemplateModule,
     DatetemplateModule,
-    HelpcenterModule,//需要使用查询的帮助
   ],
   exports: [
     QuerylistComponent,
@@ -51,6 +50,7 @@ import {DatetemplateComponent} from "./template/datetemplate/datetemplate.compon
     SelectTemplateComponent,
     RangepickerTemplateComponent,
     DatetemplateComponent,
+
     HelpcenterComponent,
   ],
 })

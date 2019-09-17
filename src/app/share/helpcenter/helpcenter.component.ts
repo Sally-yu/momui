@@ -9,9 +9,10 @@ import {
   ViewChild, ViewContainerRef
 } from '@angular/core';
 import {AlphahelpComponent} from "./alphahelp/alphahelp.component";
+import {MaterialhelpComponent} from "./materialhelp/materialhelp.component";
 
 @Component({
-  selector: 'app-helpcenter',
+  selector: 'helpcenter',
   templateUrl: './helpcenter.component.html',
   styleUrls: ['./helpcenter.component.less']
 })
@@ -28,8 +29,9 @@ export class HelpcenterComponent implements OnInit, AfterViewInit, AfterViewChec
   @Input() item: any;
   @Input() hidden: boolean;
 
-  content;
+  @Input() content;
   ref: ComponentRef<any>;
+  @Input() span: number = 6;
 
   constructor(
     private componentFactoryResolver: ComponentFactoryResolver,
@@ -50,6 +52,16 @@ export class HelpcenterComponent implements OnInit, AfterViewInit, AfterViewChec
         help = this.componentFactoryResolver.resolveComponentFactory(AlphahelpComponent);
         this.ref = this.help.createComponent(help);
         break;
+      case "material":
+        help = this.componentFactoryResolver.resolveComponentFactory(MaterialhelpComponent);
+        this.ref = this.help.createComponent(help);
+        break;
+
+      //TODO:追加需要的case,使用不同的id对应不同的帮助组件
+      // case "myhelp":
+      //   help = this.componentFactoryResolver.resolveComponentFactory(MyhelpComponent);
+      //   this.ref = this.help.createComponent(help);
+      //   break;
 
       default:
         help = this.componentFactoryResolver.resolveComponentFactory(AlphahelpComponent);
@@ -61,8 +73,9 @@ export class HelpcenterComponent implements OnInit, AfterViewInit, AfterViewChec
 
   ngAfterViewInit(): void {
     this.findHelpWithId();
+    this.ref.instance.content=this.content;
     this.ref.instance.result.subscribe(res => {
-      this.content = JSON.parse(JSON.stringify(this.ref.instance.item));
+      this.content = JSON.parse(JSON.stringify(this.ref.instance.content));
       this.result.emit(this.content);
     });
   }
@@ -72,8 +85,8 @@ export class HelpcenterComponent implements OnInit, AfterViewInit, AfterViewChec
     this.cdRef.detectChanges();
   }
 
-  clear(){
-    this.content=undefined;
+  clear() {
+    this.content = undefined;
     this.ref.instance.clear();
   }
 

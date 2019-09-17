@@ -1,50 +1,40 @@
-import {
-  AfterViewChecked,
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnInit,
-  Output,
-} from '@angular/core';
-import {HttpService} from './service/http.service';
-
-export interface TreeNodeInterface {
-  key: number;
-  name: string;
-  age: number;
-  level: number;
-  expand: boolean;
-  address: string;
-  children?: TreeNodeInterface[];
-}
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import j from 'src/assets/tables/material/material.json';
+import {HttpService} from "./service/http.service";
+import {TreeNodeInterface} from "../../smarthelp/smarthelp.component";
 
 @Component({
-  selector: 'smarthelp',
-  templateUrl: './smarthelp.component.html',
-  styleUrls: ['./smarthelp.component.less']
+  selector: 'materialhelp',
+  templateUrl: './materialhelp.component.html',
+  styleUrls: ['./materialhelp.component.less']
 })
-export class SmarthelpComponent implements OnInit,AfterViewChecked {
+export class MaterialhelpComponent implements OnInit {
 
-  //当前选中项
-  //仿制帮助时,务必保证该变量名为item  重要
+//当前选中项
+  //仿制帮助时,务必保证该变量名为content  TODO:重要
   content: any;
 
   //弹出结果事件
-  //仿制帮助时,务必保证该变量名为result   重要
+  //仿制帮助时,务必保证该变量名为result   TODO:重要
   @Output() result: EventEmitter<any> = new EventEmitter<any>();
+
+  //帮助数据源列名映射关系
+  columns: Array<any> = j;
 
   //暂存选中行
   selected: any = null;
 
+  //
+  leftSelected: any = null;
+
   //帮助标题
-  @Input() title: string = '快捷帮助';
+  @Input() title: string = '物料帮助';
 
   //显示弹窗
   @Input() visible: boolean = false;
 
   //服务器端分页
-  @Input() servicePage: boolean = false;
+  @Input() servicePage: boolean = true;
 
   //取数url
   @Input() url: string;
@@ -73,8 +63,6 @@ export class SmarthelpComponent implements OnInit,AfterViewChecked {
   //显示快速跳转页码
   @Input() showJumper: boolean = false;
 
-  //帮助数据源列名映射关系
-  @Input() columns: Array<any>;
 
   //是否树形帮助
   @Input() tree: boolean = false;
@@ -101,26 +89,149 @@ export class SmarthelpComponent implements OnInit,AfterViewChecked {
   @Input() pageOption: Array<number> = [5, 10, 20, 50, 100];//分页候选
 
   //输入框placeholder
-  @Input() placeHolder: string = '';
+  @Input() placeHolder: string = '物料帮助';
 
   //列表型数据，树帮助时存储全部展开的列表数据
   listData: Array<any>;
 
   mapOfExpandedData: { [key: string]: TreeNodeInterface[] } = {};
 
-  searchValue: string = null; // 简单搜索值
   loading: boolean = false;
   focus: boolean;
+  tabs = ['物料分类', '物料类型'];
+  categroy: any;
+  demoData = [
+    {
+      code: '0001',
+      name: '物料1'
+    }, {
+      code: '0002',
+      name: '物料2'
+    }, {
+      code: '0003',
+      name: '物料3'
+    }, {
+      code: '0004',
+      name: '物料4'
+    }, {
+      code: '0005',
+      name: '物料5'
+    },
+  ];
+
+  rightData = [
+    {
+      code: "0001",
+      name: '物料1',
+      spec: '0909',
+      model: '1938-gtx990',
+      drnum: '01990'
+    }, {
+      code: "0001",
+      name: '物料1',
+      spec: '0909',
+      model: '1938-gtx990',
+      drnum: '01990'
+    }, {
+      code: "0001",
+      name: '物料1',
+      spec: '0909',
+      model: '1938-gtx990',
+      drnum: '01990'
+    }, {
+      code: "0001",
+      name: '物料1',
+      spec: '0909',
+      model: '1938-gtx990',
+      drnum: '01990'
+    }, {
+      code: "0001",
+      name: '物料1',
+      spec: '0909',
+      model: '1938-gtx990',
+      drnum: '01990'
+    }, {
+      code: "0001",
+      name: '物料1',
+      spec: '0909',
+      model: '1938-gtx990',
+      drnum: '01990'
+    }, {
+      code: "0001",
+      name: '物料1',
+      spec: '0909',
+      model: '1938-gtx990',
+      drnum: '01990'
+    }, {
+      code: "0001",
+      name: '物料1',
+      spec: '0909',
+      model: '1938-gtx990',
+      drnum: '01990'
+    }, {
+      code: "0001",
+      name: '物料1',
+      spec: '0909',
+      model: '1938-gtx990',
+      drnum: '01990'
+    }, {
+      code: "0001",
+      name: '物料1',
+      spec: '0909',
+      model: '1938-gtx990',
+      drnum: '01990'
+    }, {
+      code: "0001",
+      name: '物料1',
+      spec: '0909',
+      model: '1938-gtx990',
+      drnum: '01990'
+    }, {
+      code: "0001",
+      name: '物料1',
+      spec: '0909',
+      model: '1938-gtx990',
+      drnum: '01990'
+    }, {
+      code: "0001",
+      name: '物料1',
+      spec: '0909',
+      model: '1938-gtx990',
+      drnum: '01990'
+    }, {
+      code: "0001",
+      name: '物料1',
+      spec: '0909',
+      model: '1938-gtx990',
+      drnum: '01990'
+    }, {
+      code: "0001",
+      name: '物料1',
+      spec: '0909',
+      model: '1938-gtx990',
+      drnum: '01990'
+    }, {
+      code: "0001",
+      name: '物料1',
+      spec: '0909',
+      model: '1938-gtx990',
+      drnum: '01990'
+    },
+  ]
 
   constructor(
-    public http: HttpService,
-    private cdRef: ChangeDetectorRef
+    public http: HttpService
   ) {
   }
 
   ngOnInit() {
     // this.loading = true;
-    this.getData();
+    // this.getData();
+    this.columns.forEach(c => {
+      if (!c.hasOwnProperty('display')) {
+        c.display = true;
+      }
+    })
   }
 
   //单选行，勾选框
@@ -200,12 +311,6 @@ export class SmarthelpComponent implements OnInit,AfterViewChecked {
     }
     //不传columns自己循环一个 不分类型，不建议用
     else if (this.data && !this.columns) {
-      for (let key in this.data) {
-        this.columns = [...this.columns, {code: key, name: key}];
-      }
-      if (this.tree) {
-        this.listToTree();
-      }
       this.loading = false;
     }
   }
@@ -328,11 +433,18 @@ export class SmarthelpComponent implements OnInit,AfterViewChecked {
 
   openHelp() {
     this.visible = true;
-    this.selected = this.content;
+    if (this.content) {
+      this.selected = this.content;
+    } else {
+      this.selected = null;
+    }
   }
 
-  ngAfterViewChecked(): void {
-    this.cdRef.detectChanges();
+  query(data: any) {
+
   }
 
+  clear(){
+    this.content=undefined;
+  }
 }

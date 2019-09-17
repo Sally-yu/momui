@@ -3,7 +3,6 @@ import {HttpService} from './service/http.service';
 import {NzMessageService} from 'ng-zorro-antd';
 import j from 'src/assets/tables/meta/meta.json';
 
-declare var $: any;
 
 @Component({
   selector: 'app-demo',

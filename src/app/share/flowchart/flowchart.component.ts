@@ -17,12 +17,12 @@ declare var $: any;
 declare var g: any;
 
 @Component({
-  selector: 'workflow',
-  templateUrl: './workflow.component.html',
-  styleUrls: ['./workflow.component.less']
+  selector: 'flowchart',
+  templateUrl: './flowchart.component.html',
+  styleUrls: ['./flowchart.component.less']
 })
 
-export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
+export class FlowchartComponent implements OnInit, AfterViewInit, OnChanges {
 
   @ViewChild('jointdiv', {static: false}) joint: ElementRef;
 
@@ -247,8 +247,8 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
             cursor: 'pointer',
             fill: this.DataSource[i][this.highLightKey] ? this.HighLightColor : this.BodyColor,
             stroke: this.DataSource[i][this.highLightKey] ? this.HighLightTextColor : this.StrokeColor,
-            rx: 2,
-            ry: 2,
+            // rx: 2,
+            // ry: 2,
             strokeWidth: 1
           },
           label: {
@@ -549,8 +549,8 @@ export class WorkflowComponent implements OnInit, AfterViewInit, OnChanges {
         cursor: 'pointer',
         fill: data[this.highLightKey] ? this.HighLightColor : this.BodyColor,
         stroke: data[this.highLightKey] ? this.HighLightColor : this.StrokeColor,
-        rx: 2,
-        ry: 2,
+        // rx: 2,
+        // ry: 2,
         strokeWidth: 1
       },
       label: {

@@ -1,11 +1,11 @@
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
-import {WorkflowComponent} from './workflow.component';
+import {FlowchartComponent} from './flowchart.component';
 import {NzIconModule, NzToolTipModule} from 'ng-zorro-antd';
 
 @NgModule({
   declarations: [
-    WorkflowComponent
+    FlowchartComponent
   ],
   imports: [
     CommonModule,
@@ -13,8 +13,8 @@ import {NzIconModule, NzToolTipModule} from 'ng-zorro-antd';
     NzToolTipModule
   ],
   exports: [
-    WorkflowComponent
+    FlowchartComponent
   ]
 })
-export class WorkflowModule {
+export class FlowchartModule {
 }

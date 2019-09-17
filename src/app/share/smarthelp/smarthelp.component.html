@@ -63,25 +63,25 @@
 
       <tbody *ngIf="tree">
       <ng-container *ngFor="let data of Table.data">
-        <ng-container *ngFor="let item of mapOfExpandedData[data[path]]">
+        <ng-container *ngFor="let content of mapOfExpandedData[data[path]]">
           <tr
-            (click)="rowClick(item)"
-            (dblclick)="rowClick(item);ok()" *ngIf="(item.parent && item.parent.expand) || !item.parent"
-            [ngClass]="{'selected-tr':item==selected}">
-            <td (nzCheckedChange)="checkRow($event,item)" [nzChecked]="item==selected"
+            (click)="rowClick(content)"
+            (dblclick)="rowClick(content);ok()" *ngIf="(content.parent && content.parent.expand) || !content.parent"
+            [ngClass]="{'selected-tr':content==selected}">
+            <td (nzCheckedChange)="checkRow($event,content)" [nzChecked]="content==selected"
                 nzLeft="0px"
                 nzShowCheckbox
             >
             <td
-              (nzExpandChange)="collapse(mapOfExpandedData[data[path]], item, $event)"
-              [(nzExpand)]="item.expand"
-              [nzIndentSize]="item.level * 20 "
-              [nzShowExpand]="!!item.children"
+              (nzExpandChange)="collapse(mapOfExpandedData[data[path]], content, $event)"
+              [(nzExpand)]="content.expand"
+              [nzIndentSize]="content.level * 20 "
+              [nzShowExpand]="!!content.children"
             >
-              {{ item[displayedCols()[0]["code"]] }}
+              {{ content[displayedCols()[0]["code"]] }}
             </td>
             <td *ngFor="let c of displayedCols().slice(1,displayedCols().length)">
-              {{ item[c["code"]] }}</td>
+              {{ content[c["code"]] }}</td>
           </tr>
         </ng-container>
       </ng-container>
@@ -115,13 +115,13 @@
 
 
 <nz-input-group [nzSuffix]="suffixIconButton">
-  <input *ngIf="!item" nz-input [placeholder]="placeHolder" (click)="openHelp()" readonly type="text" style="cursor: pointer"/>
-  <input *ngIf="item" [(ngModel)]="item['name']" nz-input (click)="openHelp()" [placeholder]="placeHolder"
+  <input *ngIf="!content" nz-input [placeholder]="placeHolder" (click)="openHelp()" readonly type="text" style="cursor: pointer"/>
+  <input *ngIf="content" [(ngModel)]="content['name']" nz-input (click)="openHelp()" [placeholder]="placeHolder"
          style="cursor: pointer"
          type="text"/>
 </nz-input-group>
 
 <ng-template #suffixIconButton>
 
-  <i nz-icon nzType="search"></i>
+  <i nz-icon nzType="search" style="cursor: pointer;color:rgba(0,0,0,.25);" (click)="openHelp()"></i>
 </ng-template>

@@ -7,19 +7,19 @@ Demo功能演示
 <br>
 <br>
 
-<button  nz-button [nzType]="'primary'" (click)="post()">post</button>
+<button nz-button [nzType]="'primary'" (click)="post()">post</button>
 
 <querylist
   (onQuery)="query($event)"
   [backgroundColor]="'#fafafa'"
   [columns]="columns"
+  [colsInRow]="3"
 ></querylist>
 
-<!--确切引用,直接引用具体的帮助组件-->
-<app-alphahelp (result)="afterHelp($event)"></app-alphahelp>
+<alphahelp [content]="{code:'0001',name:'确认加载方式'}" (result)="afterHelp($event)"></alphahelp>
+<!---->
+<helpcenter [content]="{code:'0001',name:'帮助中心动态帮助'}" helpId="alpha" (result)="afterHelp($event)"></helpcenter>
+<!---->
+<materialhelp (result)="afterHelp($event)"></materialhelp>
 
-<!--动态引用,根据helpId选择帮助,需要ts脚本内添加switch选项-->
-<app-helpcenter helpId="alpha" (result)="afterHelp($event)"></app-helpcenter>
-
-<workflow [TreeData]="tree"    (blockClick)="showNode($event)"></workflow>
-
+<flowchart [TreeData]="tree" [DataSource]="data" (blockClick)="showNode($event)"></flowchart>

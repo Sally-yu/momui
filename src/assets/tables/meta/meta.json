@@ -7,6 +7,14 @@
     "display": true
   },
   {
+    "code": "matertial",
+    "name": "物料",
+    "type": "help",
+    "default": true,
+    "display": true,
+    "helpid": "material"
+  },
+  {
     "code": "code",
     "name": "编号",
     "type": "select",
@@ -15,7 +23,7 @@
     "data": [
       {
         "value": "jackson",
-        "label": "jack"
+        "label": "显示"
       },
       {
         "value": "arm",

@@ -63,8 +63,8 @@
 
 // The background colors for active and hover states for things like
 // list items or table cells.
-@item-active-bg : @primary-1;
-@item-hover-bg : @primary-1;
+@content-active-bg : @primary-1;
+@content-hover-bg : @primary-1;
 
 // ICONFONT
 @iconfont-css-prefix : anticon;
@@ -103,7 +103,7 @@
 @outline-width : 2px;
 @outline-color : @primary-color;
 
-@background-color-light : hsv(0, 0, 98%); // background of header and selected item
+@background-color-light : hsv(0, 0, 98%); // background of header and selected content
 @background-color-base : hsv(0, 0, 96%); // Default grey background color
 
 // Disabled states
@@ -247,8 +247,8 @@
 // ---
 @label-required-color : @highlight-color;
 @label-color : @heading-color;
-@form-item-margin-bottom : 24px;
-@form-item-trailing-colon : true;
+@form-content-margin-bottom : 24px;
+@form-content-trailing-colon : true;
 @form-vertical-label-padding : 0 0 8px;
 @form-vertical-label-margin : 0;
 
@@ -319,23 +319,23 @@
 
 // Menu
 // ---
-@menu-inline-toplevel-item-height: 40px;
-@menu-item-height: 40px;
+@menu-inline-toplevel-content-height: 40px;
+@menu-content-height: 40px;
 @menu-collapsed-width: 80px;
 @menu-bg: @component-background;
 @menu-popup-bg: @component-background;
-@menu-item-color: @text-color;
+@menu-content-color: @text-color;
 @menu-highlight-color: @primary-color;
-@menu-item-active-bg: @item-active-bg;
-@menu-item-active-border-width: 3px;
-@menu-item-group-title-color: @text-color-secondary;
+@menu-content-active-bg: @item-active-bg;
+@menu-content-active-border-width: 3px;
+@menu-content-group-title-color: @text-color-secondary;
 // dark theme
 @menu-dark-color: @text-color-secondary-dark;
 @menu-dark-bg: @layout-header-background;
 @menu-dark-arrow-color: #fff;
 @menu-dark-submenu-bg: #000c17;
 @menu-dark-highlight-color: #fff;
-@menu-dark-item-active-bg: @primary-color;
+@menu-dark-content-active-bg: @primary-color;
 
 // Spin
 // ---
@@ -453,15 +453,15 @@
 
 // Pagination
 // ---
-@pagination-item-size: 32px;
-@pagination-item-size-sm: 24px;
+@pagination-content-size: 32px;
+@pagination-content-size-sm: 24px;
 @pagination-font-family: Arial;
 @pagination-font-weight-active: 500;
 
 // Breadcrumb
 // ---
 @breadcrumb-base-color: @text-color-secondary;
-@breadcrumb-last-item-color: @text-color;
+@breadcrumb-last-content-color: @text-color;
 @breadcrumb-font-size: @font-size-base;
 @breadcrumb-icon-font-size: @font-size-base;
 @breadcrumb-link-color: @text-color-secondary;
@@ -534,10 +534,10 @@
 // List
 // ---
 @list-empty-text-padding: @padding-md;
-@list-item-padding: @padding-sm 0;
-@list-item-content-margin: 0 0 @padding-md 0;
-@list-item-meta-margin-bottom: @padding-md;
-@list-item-meta-avatar-margin-right: @padding-md;
-@list-item-meta-title-margin-bottom: @padding-sm;
+@list-content-padding: @padding-sm 0;
+@list-content-content-margin: 0 0 @padding-md 0;
+@list-content-meta-margin-bottom: @padding-md;
+@list-content-meta-avatar-margin-right: @padding-md;
+@list-content-meta-title-margin-bottom: @padding-sm;
 
 /* You can add global styles to this file, and also import other style files */

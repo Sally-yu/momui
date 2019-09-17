@@ -1,7 +1,7 @@
-<div nz-col [nzSpan]="6" [hidden]="hidden">
+<div nz-col [nzSpan]="span" [hidden]="hidden">
   <nz-form-item nzFlex>
-    <nz-form-label  nzXXl="6" nzXl="6" nzLg="6" nzMd="6" nzSm="12" nzXs="18">{{item.name}}</nz-form-label>
-    <nz-form-control nzXXl="18" nzXl="18" nzLg="18" nzMd="18" nzSm="12" nzXs="6">
+    <nz-form-label  nzXXl="8" nzXl="8" nzLg="8" nzMd="10" nzSm="12" nzXs="18">{{item.name}}</nz-form-label>
+    <nz-form-control nzXXl="15" nzXl="15" nzLg="15" nzMd="13" nzSm="11" nzXs="6">
       <nz-select style="width:100%;" nzAllowClear nzShowSearch [nzPlaceHolder]="'请选择'+item['name']" [(ngModel)]="item.content">
         <nz-option *ngFor="let d of data" [nzValue]="d" [nzLabel]="d.label"></nz-option>
       </nz-select>
