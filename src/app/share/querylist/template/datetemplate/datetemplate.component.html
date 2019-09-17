@@ -1,7 +1,7 @@
 <div [hidden]="hidden" [nzSpan]="span" nz-col>
   <nz-form-item nzFlex>
     <nz-form-label nzXXl="8" nzXl="8" nzLg="8" nzMd="10" nzSm="12" nzXs="18">{{item.name}}</nz-form-label>
-    <nz-form-control nzXXl="15" nzXl="15" nzLg="15" nzMd="13" nzSm="13" nzXs="6">
+    <nz-form-control nzXXl="15" nzXl="15" nzLg="15" nzMd="13" nzSm="11" nzXs="6">
       <nz-date-picker [nzPlaceHolder]="item.showtime?'请选择时间':'请选择日期'" [nzShowTime]="item.showtime" [(ngModel)]="item.content"></nz-date-picker>
     </nz-form-control>
   </nz-form-item>
