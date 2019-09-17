@@ -39,10 +39,10 @@
       <tr>
         <th
           (nzCheckedChange)="thChecked($event)"
-          [nzChecked]="selected"
           nzLeft="0px"
           nzShowCheckbox
           nzWidth="50px"
+          [nzIndeterminate]="selected"
         ></th>
         <th *ngFor="let c of displayedCols() " nzWidth="150px">{{c.name}}</th>
       </tr>
@@ -113,7 +113,6 @@
   </nz-list>
 </ng-template>
 
-
 <nz-input-group [nzSuffix]="suffixIconButton">
   <input *ngIf="!content" nz-input [placeholder]="placeHolder" (click)="openHelp()" readonly type="text" style="cursor: pointer"/>
   <input *ngIf="content" [(ngModel)]="content['name']" nz-input (click)="openHelp()" [placeholder]="placeHolder"
@@ -122,6 +121,6 @@
 </nz-input-group>
 
 <ng-template #suffixIconButton>
-
-  <i nz-icon nzType="search" style="cursor: pointer;color:rgba(0,0,0,.25);" (click)="openHelp()"></i>
+  <i nz-icon *ngIf="!content" [nzType]="'search'" style="cursor: pointer;color:rgba(0,0,0,.25);" (click)="openHelp()"></i>
+  <i nz-icon *ngIf="content" [nzType]="'close'" style="cursor: pointer;color:rgba(0,0,0,.25);" (click)="clearContent()"></i>
 </ng-template>

@@ -56,7 +56,7 @@
           <tr>
             <th
               (nzCheckedChange)="thChecked($event)"
-              [nzChecked]="selected"
+              [nzIndeterminate]="selected"
               nzLeft="0px"
               nzShowCheckbox
               nzWidth="50px"
@@ -134,14 +134,13 @@
 
 
 <nz-input-group [nzSuffix]="suffixIconButton">
-  <input *ngIf="!content" nz-input [placeholder]="placeHolder" (click)="openHelp()" readonly type="text"
-         style="cursor: pointer"/>
+  <input *ngIf="!content" nz-input [placeholder]="placeHolder" (click)="openHelp()" readonly type="text" style="cursor: pointer"/>
   <input *ngIf="content" [(ngModel)]="content['name']" nz-input (click)="openHelp()" [placeholder]="placeHolder"
          style="cursor: pointer"
          type="text"/>
 </nz-input-group>
 
 <ng-template #suffixIconButton>
-
-  <i nz-icon nzType="search" style="cursor: pointer;color:rgba(0,0,0,.25);" (click)="openHelp()"></i>
+  <i nz-icon *ngIf="!content" [nzType]="'search'" style="cursor: pointer;color:rgba(0,0,0,.25);" (click)="openHelp()"></i>
+  <i nz-icon *ngIf="content" [nzType]="'close'" style="cursor: pointer;color:rgba(0,0,0,.25);" (click)="clearContent()"></i>
 </ng-template>

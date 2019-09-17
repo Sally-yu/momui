@@ -15,7 +15,6 @@ import {RangepickerTemplateComponent} from './template/rangepickertemplate/range
 import {InputtemplateModule} from './template/inputtemplate/inputtemplate.module';
 import {SelecttemplateModule} from './template/selecttemplate/selecttemplate.module';
 import {RangepickertemplateModule} from './template/rangepickertemplate/rangepickertemplate.module';
-import {HelpcenterModule} from "../helpcenter/helpcenter.module";
 import {HelpcenterComponent} from "../helpcenter/helpcenter.component";
 import {DatetemplateModule} from "./template/datetemplate/datetemplate.module";
 import {DatetemplateComponent} from "./template/datetemplate/datetemplate.component";

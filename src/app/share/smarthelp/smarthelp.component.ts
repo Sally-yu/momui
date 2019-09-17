@@ -140,7 +140,6 @@ export class SmarthelpComponent implements OnInit,AfterViewChecked {
       this.content = this.selected;
       this.result.emit(this.selected);
     } else {
-      // this.result.emit(false);
     }
   }
 
@@ -335,4 +334,12 @@ export class SmarthelpComponent implements OnInit,AfterViewChecked {
     this.cdRef.detectChanges();
   }
 
+  clearContent() {
+    let v=this.content;
+    this.content = undefined;
+    this.result.emit({
+      "clear":true,
+      "data":v
+    });
+  }
 }

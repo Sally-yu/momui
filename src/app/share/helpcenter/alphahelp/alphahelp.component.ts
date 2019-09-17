@@ -8,7 +8,8 @@ import {
   ViewChild
 } from '@angular/core';
 import {SmarthelpComponent} from "../../smarthelp/smarthelp.component";
-//导入配置文件
+
+//TODO:导入配置文件
 import j from "src/assets/tables/meta/meta.json";
 
 @Component({
@@ -50,6 +51,5 @@ export class AlphahelpComponent implements AfterViewChecked,AfterViewInit{
   ngAfterViewChecked() {
     this.cdRef.detectChanges();
   }
-
 
 }

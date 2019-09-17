@@ -53,6 +53,8 @@
     "code": "from",
     "name": "起始",
     "type": "date",
+    "showtime": true,
+    "default": true,
     "display": true
   },
   {

@@ -13,13 +13,13 @@ Demo功能演示
   (onQuery)="query($event)"
   [backgroundColor]="'#fafafa'"
   [columns]="columns"
-  [colsInRow]="3"
+  [colsInRow]="4"
 ></querylist>
 
 <alphahelp [content]="{code:'0001',name:'确认加载方式'}" (result)="afterHelp($event)"></alphahelp>
-<!---->
+
 <helpcenter [content]="{code:'0001',name:'帮助中心动态帮助'}" helpId="alpha" (result)="afterHelp($event)"></helpcenter>
-<!---->
+
 <materialhelp (result)="afterHelp($event)"></materialhelp>
 
 <flowchart [TreeData]="tree" [DataSource]="data" (blockClick)="showNode($event)"></flowchart>

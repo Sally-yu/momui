@@ -32,8 +32,6 @@ export class QuerylistComponent implements OnInit {
   @Output() onReset: EventEmitter<boolean> = new EventEmitter<boolean>();
   //折叠改变回调
   @Output() onCollapseChange: EventEmitter<boolean> = new EventEmitter<boolean>();
-  //打开查询条件配置回调
-  @Output() onOptionsOpen: EventEmitter<any> = new EventEmitter<any>();
 
   //查询块标题
   @Input() title: string = '筛选条件';
@@ -54,7 +52,7 @@ export class QuerylistComponent implements OnInit {
   //候选列
   @Input() columns: Array<any> = [];
   //左右选框辅助显示信息,左右
-  @Input() titleOptions = ['未选', '已选'];
+  @Input() titleOptions:Array<string> = ['未选', '已选'];
   //列数
   @Input() colsInRow: number=4;
 
