@@ -5,9 +5,10 @@
   [nzTitle]="title"
   class="help-modal">
   <div>
-    <nz-input-group [nzAddOnAfter]="helpSearch"
+    <nz-input-group [nzPrefix]="helpSearch" [nzSuffix]="helpClear"
                     style="margin-bottom: 8px;margin-right: -40px;padding-right: 40px;">
-      <input [(ngModel)]="searchValue" nz-input placeholder="请输入查找关键字" type="text"/>
+      <input #searchInput (input)="search()" [(ngModel)]="searchValue" nz-input placeholder="请输入查找关键字"
+             type="text"/>
     </nz-input-group>
     <button
       [nzContent]="menu"
@@ -20,14 +21,19 @@
   </div>
 
   <div>
+
     <ng-template #helpSearch>
-      <i nz-icon nzType="search"></i>
+      <i nz-icon nzType="search" style="color: rgba(0,0,0,.25);"></i>
+    </ng-template>
+    <ng-template #helpClear>
+      <i (click)="searchValue=undefined;search();" *ngIf="searchValue&&searchValue.length>0" nz-icon nzType="close"
+         style="cursor: pointer;margin-right: 40px;"></i>
     </ng-template>
 
     <nz-table #Table
               [(nzPageIndex)]="pageIndex"
               [(nzPageSize)]="pageSize"
-              [nzData]="data"
+              [nzData]="displayData"
               [nzLoading]="loading"
               [nzPageSizeOptions]="pageOption"
               [nzScroll]="{x:colWidth(),y:'380px'}"
@@ -39,10 +45,10 @@
       <tr>
         <th
           (nzCheckedChange)="thChecked($event)"
+          [nzIndeterminate]="selected"
           nzLeft="0px"
           nzShowCheckbox
           nzWidth="50px"
-          [nzIndeterminate]="selected"
         ></th>
         <th *ngFor="let c of displayedCols() " nzWidth="150px">{{c.name}}</th>
       </tr>
@@ -114,13 +120,16 @@
 </ng-template>
 
 <nz-input-group [nzSuffix]="suffixIconButton">
-  <input *ngIf="!content" nz-input [placeholder]="placeHolder" (click)="openHelp()" readonly type="text" style="cursor: pointer"/>
+  <input *ngIf="!content" nz-input [placeholder]="placeHolder" (click)="openHelp()" readonly type="text"
+         style="cursor: pointer"/>
   <input *ngIf="content" [(ngModel)]="content['name']" nz-input (click)="openHelp()" [placeholder]="placeHolder"
          style="cursor: pointer"
          type="text"/>
 </nz-input-group>
 
 <ng-template #suffixIconButton>
-  <i nz-icon *ngIf="!content" [nzType]="'search'" style="cursor: pointer;color:rgba(0,0,0,.25);" (click)="openHelp()"></i>
-  <i nz-icon *ngIf="content" [nzType]="'close'" style="cursor: pointer;color:rgba(0,0,0,.25);" (click)="clearContent()"></i>
+  <i nz-icon *ngIf="!content" [nzType]="'search'" style="cursor: pointer;color:rgba(0,0,0,.25);"
+     (click)="openHelp()"></i>
+  <i nz-icon *ngIf="content" [nzType]="'close'" style="cursor: pointer;color:rgba(0,0,0,.25);"
+     (click)="clearContent()"></i>
 </ng-template>

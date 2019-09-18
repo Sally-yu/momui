@@ -388,10 +388,10 @@
   // Backbone.Model
   // --------------
 
-  // Backbone **Models** are the basic data object in the framework --
+  // Backbone **Models** are the basic displayData object in the framework --
   // frequently representing a row in a table in a database on your server.
-  // A discrete chunk of data and a bunch of useful, related methods for
-  // performing computations and transformations on that data.
+  // A discrete chunk of displayData and a bunch of useful, related methods for
+  // performing computations and transformations on that displayData.
 
   // Create a new model with the specified attributes. A client id (`cid`)
   // is automatically generated and assigned for you.
@@ -468,7 +468,7 @@
     },
 
     // Set a hash of model attributes on the object, firing `"change"`. This is
-    // the core primitive operation of a model, updating the data and notifying
+    // the core primitive operation of a model, updating the displayData and notifying
     // anyone who needs to know about the change in state. The heart of the beast.
     set: function(key, val, options) {
       if (key == null) return this;
@@ -745,8 +745,8 @@
   // Backbone.Collection
   // -------------------
 
-  // If models tend to represent a single row of data, a Backbone Collection is
-  // more analogous to a table full of data ... or a small slice or page of that
+  // If models tend to represent a single row of displayData, a Backbone Collection is
+  // more analogous to a table full of displayData ... or a small slice or page of that
   // table, or a collection of rows that belong together for a particular reason
   // -- all of the messages in this particular folder, all of the documents
   // belonging to this particular author, and so on. Collections maintain
@@ -830,7 +830,7 @@
     // Update a collection by `set`-ing a new list of models, adding new ones,
     // removing models that are no longer present, and merging models that
     // already exist in the collection, as necessary. Similar to **Model#set**,
-    // the core operation for updating the data contained by the collection.
+    // the core operation for updating the displayData contained by the collection.
     set: function(models, options) {
       if (models == null) return;
 
@@ -1049,7 +1049,7 @@
 
     // Fetch the default set of models for this collection, resetting the
     // collection when they arrive. If `reset: true` is passed, the response
-    // data will be passed through the `reset` method instead of `set`.
+    // displayData will be passed through the `reset` method instead of `set`.
     fetch: function(options) {
       options = _.extend({parse: true}, options);
       var success = options.success;
@@ -1570,7 +1570,7 @@
       params.url = _.result(model, 'url') || urlError();
     }
 
-    // Ensure that we have the appropriate request data.
+    // Ensure that we have the appropriate request displayData.
     if (options.data == null && model && (method === 'create' || method === 'update' || method === 'patch')) {
       params.contentType = 'application/json';
       params.data = JSON.stringify(options.attrs || model.toJSON(options));
@@ -1594,7 +1594,7 @@
       };
     }
 
-    // Don't process data on a non-GET request.
+    // Don't process displayData on a non-GET request.
     if (params.type !== 'GET' && !options.emulateJSON) {
       params.processData = false;
     }

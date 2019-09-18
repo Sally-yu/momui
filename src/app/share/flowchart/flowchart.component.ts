@@ -477,7 +477,7 @@ export class FlowchartComponent implements OnInit, AfterViewInit, OnChanges {
         this.checkChildren(d);
       });
       // FIXME:偶数子节点情况，行数计算
-      // if (data[this.children].length % 2 == 0) {
+      // if (displayData[this.children].length % 2 == 0) {
       //   this.row -= 1;
       // }
       if (data[this.children].length > 1) {
@@ -562,7 +562,7 @@ export class FlowchartComponent implements OnInit, AfterViewInit, OnChanges {
     });
 
     // let subRect = new joint.shapes.standard.Rectangle();
-    // subRect.position(data['x'] + 4, data['y'] + 4);
+    // subRect.position(displayData['x'] + 4, displayData['y'] + 4);
     // subRect.resize(this.boxHeight - 8, this.boxHeight - 8);
     // subRect.attr({
     //   body: {
@@ -575,8 +575,8 @@ export class FlowchartComponent implements OnInit, AfterViewInit, OnChanges {
     //   },
     //   label: {
     //     cursor: 'pointer',
-    //     text: data['pre'] ? data['pre'] : '',
-    //     fill: data[this.highLightKey] ? this.HighLightColor : '#101010'
+    //     text: displayData['pre'] ? displayData['pre'] : '',
+    //     fill: displayData[this.highLightKey] ? this.HighLightColor : '#101010'
     //   },
     // });
 
@@ -668,8 +668,8 @@ export class FlowchartComponent implements OnInit, AfterViewInit, OnChanges {
         });
         // 指定左近右出，不必指定路径点
         // linkToNext.vertices([
-        //   new g.Point(data['x'] + this.boxWidth + this.LineWidth * 2, data['y'] + 0.5 * this.boxHeight),
-        //   new g.Point(data['x'] + this.disX - 10, top + 0.5 * this.avaHeight + this.minTop)
+        //   new g.Point(displayData['x'] + this.boxWidth + this.LineWidth * 2, displayData['y'] + 0.5 * this.boxHeight),
+        //   new g.Point(displayData['x'] + this.disX - 10, top + 0.5 * this.avaHeight + this.minTop)
         // ]);
         linkToNext.connector('rounded');//圆润
         this.completeTree(data[this.children][i], linkToNext, x + this.disX, top);

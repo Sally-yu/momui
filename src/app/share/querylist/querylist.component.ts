@@ -174,7 +174,7 @@ export class QuerylistComponent implements OnInit {
           ref.instance.item = j;
           ref.instance.span=colNumber;
           ref.instance.hidden = this.isCollapse && i >= this.showNumber;
-          ref.instance.data = j['data'];
+          ref.instance.displayData = j['data'];
           break;
         case 'range':
           j['content'] = undefined;

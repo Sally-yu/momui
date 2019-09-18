@@ -444,16 +444,16 @@ export class MaterialhelpComponent implements OnInit {
 
   }
 
-  clear(){
-    this.content=undefined;
+  clear() {
+    this.content = undefined;
   }
 
   clearContent() {
-    let v=this.content;
+    let v = this.content;
     this.content = undefined;
     this.result.emit({
-      "clear":true,
-      "data":v
+      "clear": true,
+      "data": v
     });
   }
 }

@@ -4,11 +4,9 @@ import {
   Component,
   EventEmitter,
   Input,
-  OnInit,
-  Output,
+  Output, ViewChild,
 } from '@angular/core';
 import {HttpService} from './service/http.service';
-
 export interface TreeNodeInterface {
   key: number;
   name: string;
@@ -24,7 +22,9 @@ export interface TreeNodeInterface {
   templateUrl: './smarthelp.component.html',
   styleUrls: ['./smarthelp.component.less']
 })
-export class SmarthelpComponent implements OnInit,AfterViewChecked {
+export class SmarthelpComponent implements AfterViewChecked {
+
+  @ViewChild('searchInput',{static:true}) input:any;
 
   //当前选中项
   //仿制帮助时,务必保证该变量名为item  重要
@@ -59,7 +59,9 @@ export class SmarthelpComponent implements OnInit,AfterViewChecked {
   @Input() urlBody: any;
 
   //帮助数据源，最终显示的数据
-  @Input() data: Array<any>;
+  displayData: Array<any>;
+
+  @Input() data:Array<any>;
 
   //树形数据
   treeData: Array<any>;
@@ -118,10 +120,6 @@ export class SmarthelpComponent implements OnInit,AfterViewChecked {
   ) {
   }
 
-  ngOnInit() {
-    // this.loading = true;
-    this.getData();
-  }
 
   //单选行，勾选框
   rowClick(row: any) {
@@ -131,6 +129,8 @@ export class SmarthelpComponent implements OnInit,AfterViewChecked {
   //取消按钮事件
   cancel() {
     this.visible = false;
+    this.searchValue=undefined;
+    this.displayData=undefined;
   }
 
   //确认返回事件
@@ -152,7 +152,8 @@ export class SmarthelpComponent implements OnInit,AfterViewChecked {
         this.urlHeader, this.urlBody).subscribe(res => {
           const list = JSON.parse(JSON.stringify(res));
           if (list) {
-            this.data = list;
+            this.displayData = list;
+            this.listData = [...this.displayData];
             if (this.tree) {
               this.listToTree();
             }
@@ -175,7 +176,8 @@ export class SmarthelpComponent implements OnInit,AfterViewChecked {
       ob.subscribe(res => {
           const list = JSON.parse(JSON.stringify(res));
           if (list) {
-            this.data = list;
+            this.displayData = list;
+            this.listData = [...this.displayData];
             //整理树类型数据源
             if (this.tree) {
               this.listToTree();
@@ -189,19 +191,10 @@ export class SmarthelpComponent implements OnInit,AfterViewChecked {
         }
       );
     }
-
     // 传data优先data
-    if (this.data && this.columns) {
-      if (this.tree) {
-        this.listToTree();
-      }
-      this.loading = false;
-    }
-    //不传columns自己循环一个 不分类型，不建议用
-    else if (this.data && !this.columns) {
-      for (let key in this.data) {
-        this.columns = [...this.columns, {code: key, name: key}];
-      }
+    else if (this.data && this.columns) {
+      this.displayData=[...this.data];
+      this.listData = [...this.displayData];
       if (this.tree) {
         this.listToTree();
       }
@@ -243,10 +236,10 @@ export class SmarthelpComponent implements OnInit,AfterViewChecked {
 
   //列表转树
   listToTree() {
-    if (!(this.parentId in this.data[0]) && this.path in this.data[0] && this.layer in this.data[0]) {
-      this.data.sort((a, b) => a[this.layer] - b[this.layer]);
-      this.listData = [...this.data];
-      this.treeData = [...this.data];
+    //分级码树
+    if (this.displayData[0] && this.path in this.displayData[0] && this.layer in this.displayData[0]) {
+      this.displayData.sort((a, b) => a[this.layer] - b[this.layer]);
+      this.treeData = [...this.displayData];
       let min = this.treeData[0][this.layer];
       let max = this.treeData[this.treeData.length - 1][this.layer];
       for (let i = min; i < max; i++) {
@@ -259,15 +252,15 @@ export class SmarthelpComponent implements OnInit,AfterViewChecked {
           }
         });
       }
-      this.data = this.treeData.filter(l => l[this.layer] == min);
-    } else if (this.parentId in this.data[0]) {
-      this.listData = [...this.data];
-      this.treeData = [...this.data];
-      this.pushChildren(this.treeData);
-      this.data = this.treeData.filter(l => !l[this.parentId]);
+      this.displayData = this.treeData.filter(l => l[this.layer] == min);
     }
-
-    this.data.forEach(item => {
+    //parentid树
+    else if (this.displayData[0] && this.parentId in this.displayData[0]) {
+      this.treeData = [...this.displayData];
+      this.pushChildren(this.treeData);
+      this.displayData = this.treeData.filter(l => !l[this.parentId]);
+    }
+    this.displayData.forEach(item => {
       this.mapOfExpandedData[item[this.path]] = this.convertTreeToList(item);
     });
   }
@@ -327,6 +320,7 @@ export class SmarthelpComponent implements OnInit,AfterViewChecked {
 
   openHelp() {
     this.visible = true;
+    this.getData();
     this.selected = this.content;
   }
 
@@ -335,11 +329,32 @@ export class SmarthelpComponent implements OnInit,AfterViewChecked {
   }
 
   clearContent() {
-    let v=this.content;
+    let v = this.content;
     this.content = undefined;
     this.result.emit({
-      "clear":true,
-      "data":v
+      "clear": true,
+      "data": v
     });
   }
+
+  search() {
+    if (this.searchValue && this.searchValue.length > 0) {
+      this.displayData = JSON.parse(JSON.stringify(this.listData)).filter(d => {
+        let i=0;
+        this.displayedCols().forEach(c=>{
+          if (d.hasOwnProperty(c.code)&& d[c.code].toString().indexOf(this.searchValue)>=0){
+            i+=1;
+          }
+        });
+        return i>0;
+      });
+    } else {
+      this.displayData = JSON.parse(JSON.stringify(this.listData));
+    }
+
+    if (this.tree) {
+      this.listToTree();
+    }
+  }
+
 }
