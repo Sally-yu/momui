@@ -12,7 +12,7 @@ export class MaterialhelpComponent implements OnInit {
 
 //当前选中项
   //仿制帮助时,务必保证该变量名为content  TODO:重要
-  content: any;
+  @Input() content: any;
 
   //弹出结果事件
   //仿制帮助时,务必保证该变量名为result   TODO:重要
