@@ -91,9 +91,9 @@ Demo功能演示
   [colsInRow]="4"
 ></querylist>
 
-<alphahelp [content]="{code:'0001',name:'确认加载方式'}" (result)="afterHelp($event)" [readOnly]="readonly"></alphahelp>
+<alphahelp [content]="{code:'0001',name:'单选默认值'}" (result)="afterHelp($event)" [readOnly]="readonly"></alphahelp>
 
-<helpcenter [content]="{code:'0001',name:'帮助中心动态帮助'}" helpId="alpha" [readOnly]="readonly" (result)="afterHelp($event)"></helpcenter>
+<helpcenter [content]="[{code:'0001',name:'多选默认值1'},{code:'3001',name:'多选默认值2'}]" helpId="alpha" [readOnly]="readonly" (result)="afterHelp($event)"></helpcenter>
 
 <materialhelp [content]="{code:'0001',name:'物料'}" (result)="afterHelp($event)" ></materialhelp>
 

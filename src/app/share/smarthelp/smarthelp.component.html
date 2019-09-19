@@ -80,9 +80,9 @@
       <!--单选-->
       <tr
         *ngFor="let a of Table.data"
-        [ngClass]="{'selected-tr':a==selected}">
+        [ngClass]="{'selected-tr':a==selected}"
         (click)="rowClick(a)"
-        (dblclick)="rowClick(a);ok()"
+        (dblclick)="rowClick(a);ok()">
         <td
           (nzCheckedChange)="checkRow($event,a)"
           [nzChecked]="a==selected"

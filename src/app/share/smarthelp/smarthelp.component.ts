@@ -1,5 +1,5 @@
 import {
-  AfterViewChecked,
+  AfterViewChecked, AfterViewInit,
   ChangeDetectorRef,
   Component, ElementRef,
   EventEmitter,
@@ -24,7 +24,7 @@ export interface TreeNodeInterface {
   templateUrl: './smarthelp.component.html',
   styleUrls: ['./smarthelp.component.less']
 })
-export class SmarthelpComponent implements AfterViewChecked {
+export class SmarthelpComponent implements AfterViewChecked ,AfterViewInit{
 
   @ViewChild('searchInput', {static: true}) input: any;
 
@@ -187,7 +187,7 @@ export class SmarthelpComponent implements AfterViewChecked {
         this.selectedList = [...this.selectedList, JSON.parse(a)];
       }
     } else {
-      this.selected = JSON.parse(a);
+      this.selected = row;
     }
   }
 
@@ -382,6 +382,9 @@ export class SmarthelpComponent implements AfterViewChecked {
 
   ngAfterViewChecked() {
     this.cdRef.detectChanges();
+    if (this.multiSelect){
+      this.muiltInput.nativeElement.value = this.muiltTitle();
+    }
   }
 
   clearContent() {
@@ -443,5 +446,9 @@ export class SmarthelpComponent implements AfterViewChecked {
     delete n1.expand;
     delete n2.expand;
     return JSON.stringify(n1) === JSON.stringify(n2);
+  }
+
+  ngAfterViewInit(): void {
+
   }
 }
