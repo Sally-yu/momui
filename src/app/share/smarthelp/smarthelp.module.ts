@@ -16,7 +16,7 @@ import {
 
 @NgModule({
   declarations: [
-    SmarthelpComponent
+    SmarthelpComponent,
   ],
   imports: [
     CommonModule,

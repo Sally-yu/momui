@@ -91,10 +91,13 @@ Demo功能演示
   [colsInRow]="4"
 ></querylist>
 
-<alphahelp [content]="{code:'0001',name:'确认加载方式'}" (result)="afterHelp($event)"></alphahelp>
+<alphahelp [content]="{code:'0001',name:'确认加载方式'}" (result)="afterHelp($event)" [readOnly]="readonly"></alphahelp>
 
-<helpcenter [content]="{code:'0001',name:'帮助中心动态帮助'}" helpId="alpha" (result)="afterHelp($event)"></helpcenter>
 
-<materialhelp (result)="afterHelp($event)"></materialhelp>
+<helpcenter [content]="{code:'0001',name:'帮助中心动态帮助'}" helpId="alpha" [readOnly]="readonly" (result)="afterHelp($event)"></helpcenter>
+
+<materialhelp (result)="afterHelp($event)" ></materialhelp>
+
+<button nz-button (click)="readonly=!readonly">readonly</button>
 
 <flowchart [TreeData]="tree" [DataSource]="data" (blockClick)="showNode($event)"></flowchart>

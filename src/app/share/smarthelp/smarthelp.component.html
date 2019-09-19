@@ -43,9 +43,30 @@
     >
       <thead>
       <tr>
+        <!--单选-->
         <th
-          (nzCheckedChange)="thChecked($event)"
-          [nzIndeterminate]="selected"
+          *ngIf="!multiSelect"
+          nzLeft="0px"
+          nzWidth="50px"
+        ></th>
+
+        <!--多选-->
+        <th
+          (nzCheckedChange) ="thChecked($event)"
+          *ngIf="multiSelect&&!tree"
+          [nzChecked]="selectedList.length>0&&selectedList.length==displayData.length"
+          [nzIndeterminate]="selectedList.length>0&&selectedList.length!=displayData.length"
+          nzLeft="0px"
+          nzShowCheckbox
+          nzWidth="50px"
+        >
+
+
+        </th><th
+          (nzCheckedChange) ="thChecked($event)"
+          *ngIf="multiSelect&&tree"
+          [nzChecked]="selectedList.length>0&&selectedList.length==treeData.length"
+          [nzIndeterminate]="selectedList.length>0&&selectedList.length!=treeData.length"
           nzLeft="0px"
           nzShowCheckbox
           nzWidth="50px"
@@ -53,13 +74,20 @@
         <th *ngFor="let c of displayedCols() " nzWidth="150px">{{c.name}}</th>
       </tr>
       </thead>
-      <tbody *ngIf="!tree">
-      <tr (click)="rowClick(a)"
-          (dblclick)="rowClick(a);ok()" *ngFor="let a of Table.data"
-          [ngClass]="{'selected-tr':a==selected}">
-        <td (nzCheckedChange)="checkRow($event,a)" [nzChecked]="a==selected"
-            nzLeft="0px"
-            nzShowCheckbox
+
+      <!--列表,非树-->
+      <tbody *ngIf="!tree&&!multiSelect">
+      <!--单选-->
+      <tr
+        *ngFor="let a of Table.data"
+        [ngClass]="{'selected-tr':a==selected}">
+        (click)="rowClick(a)"
+        (dblclick)="rowClick(a);ok()"
+        <td
+          (nzCheckedChange)="checkRow($event,a)"
+          [nzChecked]="a==selected"
+          nzLeft="0px"
+          nzShowCheckbox
         >
         </td>
         <td *ngFor="let c of displayedCols() "
@@ -67,14 +95,34 @@
       </tr>
       </tbody>
 
-      <tbody *ngIf="tree">
+      <!--列表 多选-->
+      <tbody *ngIf="!tree&&multiSelect">
+      <tr
+        *ngFor="let a of Table.data"
+        (click)="rowClick(a)"
+        [ngClass]="{'selected-tr':isSelected(a)}">
+        <td
+          (nzCheckedChange)="checkRow($event,a)"
+          [nzChecked]="isSelected(a)"
+          nzLeft="0px"
+          nzShowCheckbox
+        >
+        </td>
+        <td *ngFor="let c of displayedCols() "
+            [title]="c.name+':'+(a[c.code]?a[c.code]:'')">{{a[c.code]}}</td>
+      </tr>
+      </tbody>
+
+      <!--树单选-->
+      <tbody *ngIf="tree&&!multiSelect">
       <ng-container *ngFor="let data of Table.data">
         <ng-container *ngFor="let content of mapOfExpandedData[data[path]]">
           <tr
             (click)="rowClick(content)"
             (dblclick)="rowClick(content);ok()" *ngIf="(content.parent && content.parent.expand) || !content.parent"
             [ngClass]="{'selected-tr':content==selected}">
-            <td (nzCheckedChange)="checkRow($event,content)" [nzChecked]="content==selected"
+            <td (nzCheckedChange)="checkRow($event,content)"
+                [nzChecked]="content==selected"
                 nzLeft="0px"
                 nzShowCheckbox
             >
@@ -92,12 +140,42 @@
         </ng-container>
       </ng-container>
       </tbody>
+
+      <!--树多选-->
+      <tbody *ngIf="tree&&multiSelect">
+      <ng-container *ngFor="let data of Table.data">
+        <ng-container *ngFor="let content of mapOfExpandedData[data[path]]">
+          <tr
+            (click)="rowClick(content)"
+            *ngIf="(content.parent && content.parent.expand) || !content.parent"
+            [ngClass]="{'selected-tr':isSelected(content)}">
+            <td
+              (nzCheckedChange)="checkRow($event,content)"
+              [nzChecked]="isSelected(content)"
+              nzLeft="0px"
+              nzShowCheckbox
+            >
+            <td
+              (nzExpandChange)="collapse(mapOfExpandedData[data[path]], content, $event)"
+              [(nzExpand)]="content.expand"
+              [nzIndentSize]="content.level * 20 "
+              [nzShowExpand]="!!content.children"
+            >
+              {{ content[displayedCols()[0]["code"]] }}
+            </td>
+            <td *ngFor="let c of displayedCols().slice(1,displayedCols().length)">
+              {{ content[c["code"]] }}</td>
+          </tr>
+        </ng-container>
+      </ng-container>
+
+      </tbody>
     </nz-table>
 
   </div>
   <div *nzModalFooter>
     <button (click)="cancel()" nz-button> 取消</button>
-    <button (click)="ok()" [disabled]="!selected" [nzLoading]="loading"
+    <button (click)="ok()" [disabled]="!selected&&selectedList.length<1" [nzLoading]="loading"
             [nzType]="'primary'" nz-button> 确定
     </button>
   </div>
@@ -111,7 +189,7 @@
     [nzRenderItem]="smallItem"
   >
     <ng-template #smallItem let-item>
-      <nz-list-item [nzContent]="item[name]">
+      <nz-list-item [nzContent]="item.name">
         <nz-switch [nzDisabled]="displayedCols().length<=3&&item['display']" [(ngModel)]="item['display']"
                    style="margin-right: 8px;"></nz-switch>
       </nz-list-item>
@@ -120,16 +198,31 @@
 </ng-template>
 
 <nz-input-group [nzSuffix]="suffixIconButton">
-  <input *ngIf="!content" nz-input [placeholder]="placeHolder" (click)="openHelp()" readonly type="text"
-         style="cursor: pointer"/>
-  <input *ngIf="content" [(ngModel)]="content['name']" nz-input (click)="openHelp()" [placeholder]="placeHolder"
-         style="cursor: pointer"
-         type="text"/>
+  <input *ngIf="!content" nz-input  class="input" [placeholder]="placeHolder" (click)="openHelp()" readonly [disabled]="readOnly"
+         type="text"
+         [ngStyle]="{'cursor':readOnly?'not-allowed':'pointer'}"/>
+  <!--单选-->
+  <input *ngIf="content&&!multiSelect" class="input" [(ngModel)]="content[name]" nz-input (click)="openHelp()" [disabled]="readOnly"
+         [placeholder]="placeHolder"
+         [ngStyle]="{'cursor':readOnly?'not-allowed':'pointer'}" type="text"/>
+  <!--多选-->
+  <input #muiltInput nz-popover class="input" nzPlacement="bottomLeft" [nzTitle]="muiltTitle()" nz-input (click)="openHelp()"
+         [disabled]="readOnly"
+         [placeholder]="placeHolder"
+         [ngStyle]="{'cursor':readOnly?'not-allowed':'pointer','display':content&&multiSelect&&content[0]?'block':'none'}" type="text"/>
+
+  <input *ngIf="content&&multiSelect&&!content[0]" class="input" nz-input (click)="openHelp()"
+         [disabled]="readOnly"
+         [placeholder]="placeHolder"
+         [ngStyle]="{'cursor':readOnly?'not-allowed':'pointer'}" type="text"/>
+
 </nz-input-group>
 
 <ng-template #suffixIconButton>
-  <i nz-icon *ngIf="!content" [nzType]="'search'" style="cursor: pointer;color:rgba(0,0,0,.25);"
+  <i nz-icon *ngIf="!content" [nzType]="'search'" [ngStyle]="{'cursor':readOnly?'not-allowed':'pointer'}"
+     style="color:rgba(0,0,0,.25);"
      (click)="openHelp()"></i>
-  <i nz-icon *ngIf="content" [nzType]="'close'" style="cursor: pointer;color:rgba(0,0,0,.25);"
+  <i nz-icon *ngIf="content" [nzType]="'close'" [ngStyle]="{'cursor':readOnly?'not-allowed':'pointer'}"
+     style="color:rgba(0,0,0,.25);"
      (click)="clearContent()"></i>
 </ng-template>

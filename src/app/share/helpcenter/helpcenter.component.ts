@@ -4,8 +4,8 @@ import {
   Component,
   ComponentFactoryResolver,
   ComponentRef, EventEmitter,
-  Input,
-  OnInit, Output,
+  Input, OnChanges,
+  OnInit, Output, SimpleChanges,
   ViewChild, ViewContainerRef
 } from '@angular/core';
 import {AlphahelpComponent} from "./alphahelp/alphahelp.component";
@@ -16,12 +16,14 @@ import {MaterialhelpComponent} from "./materialhelp/materialhelp.component";
   templateUrl: './helpcenter.component.html',
   styleUrls: ['./helpcenter.component.less']
 })
-export class HelpcenterComponent implements OnInit, AfterViewInit, AfterViewChecked {
+export class HelpcenterComponent implements OnInit, AfterViewInit, AfterViewChecked, OnChanges {
 
   @ViewChild('help', {read: ViewContainerRef, static: false}) help: ViewContainerRef;
 
   //帮助结果回调,是所选整个条目
   @Output() result: EventEmitter<any> = new EventEmitter<any>();
+
+  @Input() readOnly: boolean = false;
 
   @Input() query: false;
   @Input() helpId: string;
@@ -50,32 +52,33 @@ export class HelpcenterComponent implements OnInit, AfterViewInit, AfterViewChec
     switch (this.helpId) {
       case "alpha":
         help = this.componentFactoryResolver.resolveComponentFactory(AlphahelpComponent);
-        this.ref = this.help.createComponent(help);
         break;
       case "material":
         help = this.componentFactoryResolver.resolveComponentFactory(MaterialhelpComponent);
-        this.ref = this.help.createComponent(help);
         break;
 
       //TODO:追加需要的case,使用不同的id对应不同的帮助组件
       // case "myhelp":
       //   help = this.componentFactoryResolver.resolveComponentFactory(MyhelpComponent);
-      //   this.ref = this.help.createComponent(help);
       //   break;
 
       default:
         help = this.componentFactoryResolver.resolveComponentFactory(AlphahelpComponent);
-        this.ref = this.help.createComponent(help);
         break;
     }
+
+
+    //统一处理
+    this.ref = this.help.createComponent(help);
+    this.ref.instance.readOnly = this.readOnly;
 
   }
 
   ngAfterViewInit(): void {
     this.findHelpWithId();
-    this.ref.instance.content=this.content;
+    this.ref.instance.content = this.content;
     this.ref.instance.result.subscribe(res => {
-      this.content = JSON.parse(JSON.stringify(this.ref.instance.content));
+      this.content = JSON.parse(JSON.stringify(res));
       this.result.emit(this.content);
     });
   }
@@ -88,6 +91,15 @@ export class HelpcenterComponent implements OnInit, AfterViewInit, AfterViewChec
   clear() {
     this.content = undefined;
     this.ref.instance.clear();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes.hasOwnProperty('helpId') && !changes['helpId'].firstChange) {
+      this.findHelpWithId();
+    }
+    if (changes.hasOwnProperty('readOnly') && !changes['readOnly'].firstChange) {
+      this.ref.instance.readOnly = this.readOnly;
+    }
   }
 
 }

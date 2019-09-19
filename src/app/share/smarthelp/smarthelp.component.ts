@@ -1,12 +1,13 @@
 import {
   AfterViewChecked,
   ChangeDetectorRef,
-  Component,
+  Component, ElementRef,
   EventEmitter,
-  Input,
+  Input, OnInit,
   Output, ViewChild,
 } from '@angular/core';
 import {HttpService} from './service/http.service';
+
 export interface TreeNodeInterface {
   key: number;
   name: string;
@@ -24,18 +25,35 @@ export interface TreeNodeInterface {
 })
 export class SmarthelpComponent implements AfterViewChecked {
 
-  @ViewChild('searchInput',{static:true}) input:any;
+  @ViewChild('searchInput', {static: true}) input: any;
 
   //当前选中项
   //仿制帮助时,务必保证该变量名为item  重要
   content: any;
 
+  json: JSON = new class implements JSON {
+    readonly [Symbol.toStringTag]: string;
+
+    parse(text: string, reviver?: (this: any, key: string, value: any) => any): any {
+    }
+
+    stringify(value: any, replacer?: (this: any, key: string, value: any) => any, space?: string | number): string;
+    stringify(value: any, replacer?: (number | string)[] | null, space?: string | number): string;
+    stringify(value: any, replacer?: ((this: any, key: string, value: any) => any) | (number | string)[] | null, space?: string | number): string {
+      return "";
+    }
+  };
+
   //弹出结果事件
   //仿制帮助时,务必保证该变量名为result   重要
   @Output() result: EventEmitter<any> = new EventEmitter<any>();
 
+  @ViewChild('muiltInput', {static: false}) muiltInput: ElementRef;
+
   //暂存选中行
-  selected: any = null;
+  selected: any;
+
+  selectedList: Array<any> = new Array<any>();
 
   //帮助标题
   @Input() title: string = '快捷帮助';
@@ -61,7 +79,7 @@ export class SmarthelpComponent implements AfterViewChecked {
   //帮助数据源，最终显示的数据
   displayData: Array<any>;
 
-  @Input() data:Array<any>;
+  @Input() data: Array<any>;
 
   //树形数据
   treeData: Array<any>;
@@ -82,7 +100,7 @@ export class SmarthelpComponent implements AfterViewChecked {
   @Input() tree: boolean = false;
 
   //多选
-  // @Input() multiSelect: boolean = false;
+  @Input() multiSelect: boolean = false;
 
   //分级码字段
   @Input() path: string = 'path';
@@ -105,7 +123,7 @@ export class SmarthelpComponent implements AfterViewChecked {
   //输入框placeholder
   @Input() placeHolder: string = '';
 
-  //列表型数据，树帮助时存储全部展开的列表数据
+  //列表型数据，全部列表数据
   listData: Array<any>;
 
   mapOfExpandedData: { [key: string]: TreeNodeInterface[] } = {};
@@ -113,6 +131,7 @@ export class SmarthelpComponent implements AfterViewChecked {
   searchValue: string = null; // 简单搜索值
   loading: boolean = false;
   focus: boolean;
+  @Input() readOnly: boolean = false;
 
   constructor(
     public http: HttpService,
@@ -120,27 +139,78 @@ export class SmarthelpComponent implements AfterViewChecked {
   ) {
   }
 
+  //表头勾选
+  thChecked(checked: boolean) {
+    if (this.tree) {
+      if (this.selectedList.length < this.treeData.length) {
+        Object.values(this.mapOfExpandedData).forEach(e => {
+          e.forEach(d => {
+            this.addToSelectec(d);
+          })
+        });
+      } else {
+        this.selectedList = [];
+      }
+    } else {
+      if (this.selectedList.length < this.displayData.length) {
+        this.selectedList = JSON.parse(JSON.stringify(this.displayData))
+      } else {
+        this.selectedList = [];
+      }
+    }
+  }
 
-  //单选行，勾选框
+  addToSelectec(d) {
+    if (JSON.stringify(this.selectedList).indexOf(JSON.stringify(d)) < 0) {
+      this.selectedList = [...this.selectedList, d];
+    }
+    if (d.hasOwnProperty('children') && d.children.length > 0) {
+      d.children.forEach(e => {
+        this.addToSelectec(e);
+      })
+    }
+  }
+
+  //行勾选
+  checkRow(checked: boolean, row: any) {
+    this.rowClick(row);
+  }
+
+  //行点击
   rowClick(row: any) {
-    this.selected = row;
+    let a = JSON.stringify(row);
+    if (this.multiSelect) {
+      if (JSON.stringify(this.selectedList).includes(a)) {
+        this.selectedList = this.selectedList.filter(s => JSON.stringify(s) != a);
+      } else {
+        this.selectedList = [...this.selectedList, JSON.parse(a)];
+      }
+    } else {
+      this.selected = JSON.parse(a);
+    }
   }
 
   //取消按钮事件
   cancel() {
     this.visible = false;
-    this.searchValue=undefined;
-    this.displayData=undefined;
+    this.searchValue = undefined;
+    this.displayData = undefined;
+    this.selected = undefined;
+    this.selectedList = [];
   }
 
   //确认返回事件
   ok() {
-    this.visible = false;
-    if (this.selected) {
+    if (!this.multiSelect) {
       this.content = this.selected;
-      this.result.emit(this.selected);
-    } else {
+      this.result.emit(this.content);
     }
+    if (this.multiSelect) {
+      this.content = this.selectedList;
+      this.muiltInput.nativeElement.value = this.muiltTitle();
+      this.result.emit(this.content);
+    }
+    this.cancel();
   }
 
   //获取数据源并整理格式
@@ -193,7 +263,7 @@ export class SmarthelpComponent implements AfterViewChecked {
     }
     // 传data优先data
     else if (this.data && this.columns) {
-      this.displayData=[...this.data];
+      this.displayData = [...this.data];
       this.listData = [...this.displayData];
       if (this.tree) {
         this.listToTree();
@@ -214,23 +284,6 @@ export class SmarthelpComponent implements AfterViewChecked {
     try {
       return this.displayedCols().length * 150 + 50 + 'px';
     } catch (e) {
-    }
-  }
-
-  //勾选行
-  checkRow(checked: boolean, a: any) {
-    if (checked) {
-      this.selected = a;
-    } else {
-      this.selected = null;
-    }
-  }
-
-  //表头勾选
-  thChecked(checked: boolean) {
-    if (checked) {
-    } else {
-      this.selected = null;
     }
   }
 
@@ -319,16 +372,21 @@ export class SmarthelpComponent implements AfterViewChecked {
   }
 
   openHelp() {
+    if (this.readOnly) {
+      return;
+    }
     this.visible = true;
     this.getData();
-    this.selected = this.content;
   }
 
-  ngAfterViewChecked(): void {
+  ngAfterViewChecked() {
     this.cdRef.detectChanges();
   }
 
   clearContent() {
+    if (this.readOnly) {
+      return;
+    }
     let v = this.content;
     this.content = undefined;
     this.result.emit({
@@ -340,13 +398,13 @@ export class SmarthelpComponent implements AfterViewChecked {
   search() {
     if (this.searchValue && this.searchValue.length > 0) {
       this.displayData = JSON.parse(JSON.stringify(this.listData)).filter(d => {
-        let i=0;
-        this.displayedCols().forEach(c=>{
-          if (d.hasOwnProperty(c.code)&& d[c.code].toString().indexOf(this.searchValue)>=0){
-            i+=1;
+        let i = 0;
+        this.displayedCols().forEach(c => {
+          if (d.hasOwnProperty(c.code) && d[c.code].toString().indexOf(this.searchValue) >= 0) {
+            i += 1;
           }
         });
-        return i>0;
+        return i > 0;
       });
     } else {
       this.displayData = JSON.parse(JSON.stringify(this.listData));
@@ -355,6 +413,21 @@ export class SmarthelpComponent implements AfterViewChecked {
     if (this.tree) {
       this.listToTree();
     }
+  }
+
+  isSelected(row) {
+    return this.selectedList.filter(s => JSON.stringify(s) == JSON.stringify(row)).length > 0;
+  }
+
+  muiltTitle() {
+    let title = '';
+    try {
+      this.content.forEach(e => {
+        title = title + ';' + e[this.name];
+      });
+    } catch (e) {
+    }
+    return title.slice(1);
   }
 
 }

@@ -25,6 +25,8 @@ export class AlphahelpComponent implements AfterViewChecked,AfterViewInit{
   //务必保证使用result变量名 弹出选中后事件
   @Output() result: EventEmitter<any> = new EventEmitter<any>();
 
+  @Input() readOnly:boolean=false;
+
   //从配置文件读入数据
   columns = j;
 
@@ -38,6 +40,7 @@ export class AlphahelpComponent implements AfterViewChecked,AfterViewInit{
   afterHelp(data:any) {
     this.content=data;
     this.result.emit(this.content);
+    console.log(this.content)
   }
 
   clear(){

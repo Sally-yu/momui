@@ -76,6 +76,7 @@ export class DemoComponent implements OnInit, AfterViewInit {
   ];
 
   columns = j;
+  readonly: boolean=false;
 
   constructor(
     public http: HttpService,

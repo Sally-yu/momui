@@ -27,6 +27,8 @@ export class MaterialhelpComponent implements OnInit {
   //
   leftSelected: any = null;
 
+  @Input() readOnly:boolean=false;
+
   //帮助标题
   @Input() title: string = '物料帮助';
 
