@@ -231,12 +231,10 @@ export class MaterialhelpComponent implements OnInit {
       model: '1938-gtx990',
       drnum: '01990'
     },
-  ]
-  tableHeight: string ='300px';
+  ];
 
   constructor(
     public http: HttpService,
-    private cdRef: ChangeDetectorRef
   ) {
   }
 
