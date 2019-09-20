@@ -391,12 +391,12 @@ export class SmarthelpComponent implements AfterViewChecked ,AfterViewInit{
     if (this.readOnly) {
       return;
     }
-    // let v = this.content;
+    let v = this.content;
     this.content = undefined;
-    // this.result.emit({
-    //   "clear": true,
-    //   "data": v
-    // });
+    this.result.emit({
+      "clear":true,
+      "data":v
+    });
   }
 
   search() {
