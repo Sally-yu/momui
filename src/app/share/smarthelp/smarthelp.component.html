@@ -202,6 +202,7 @@
 </ng-template>
 
 <nz-input-group [nzSuffix]="suffixIconButton">
+  <!--单选无值-->
   <input *ngIf="!content" nz-input class="input" [placeholder]="placeHolder" (click)="openHelp()" readonly
          [disabled]="readOnly"
          type="text"

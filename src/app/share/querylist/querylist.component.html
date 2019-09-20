@@ -1,6 +1,5 @@
 <div
-  [ngStyle]="{'background-color':backgroundColor}"
-  class="">
+  [ngStyle]="{'background-color':backgroundColor}">
   <div>
     <div style="text-align: left;width: 50%;display: inline-block;padding: 8px;">
       <div (click)="showTransfer=!showTransfer;" class="query-title primary-color">
@@ -23,7 +22,7 @@
   <form
     [ngStyle]="{'display':componentArray.length>0&&!isCollapse?'block':'none','background-color':backgroundColor}"
     nz-form
-    style="padding-top: 0 !important;">
+    style="padding: 0 16px 8px 16px !important;">
     <div nz-row [nzGutter]="18">
       <div #template></div>
     </div>

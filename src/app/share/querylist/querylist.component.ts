@@ -217,7 +217,10 @@ export class QuerylistComponent implements OnInit {
         s = '选择类型';
         break;
       case 'range':
-        s = '时间范围';
+        s = '日期范围';
+        break;
+      case 'date':
+        s = '日期';
         break;
       default:
         s = '文字类型';
