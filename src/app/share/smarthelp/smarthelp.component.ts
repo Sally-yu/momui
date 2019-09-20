@@ -208,7 +208,7 @@ export class SmarthelpComponent implements AfterViewChecked ,AfterViewInit{
     }
     if (this.multiSelect) {
       this.content = this.selectedList;
-      this.muiltInput.nativeElement.value = this.muiltTitle();
+      this.muiltInput.nativeElement.value = this.multiTitle();
       this.result.emit(this.content);
     }
     this.cancel();
@@ -383,7 +383,7 @@ export class SmarthelpComponent implements AfterViewChecked ,AfterViewInit{
   ngAfterViewChecked() {
     this.cdRef.detectChanges();
     if (this.multiSelect){
-      this.muiltInput.nativeElement.value = this.muiltTitle();
+      this.muiltInput.nativeElement.value = this.multiTitle();
     }
   }
 
@@ -422,14 +422,14 @@ export class SmarthelpComponent implements AfterViewChecked ,AfterViewInit{
   isSelected(row) {
     if (this.tree) {
       return this.selectedList.filter(s => {
-        return this.treeNodeComapre(s, row);
+        return this.treeNodeCompare(s, row);
       }).length > 0;
     } else {
       return this.selectedList.filter(s => JSON.stringify(s) == JSON.stringify(row)).length > 0;
     }
   }
 
-  muiltTitle() {
+  multiTitle() {
     let title = '';
     try {
       this.content.forEach(e => {
@@ -440,7 +440,7 @@ export class SmarthelpComponent implements AfterViewChecked ,AfterViewInit{
     return title.slice(1);
   }
 
-  treeNodeComapre(node1, node2) {
+  treeNodeCompare(node1, node2) {
     let n1 = JSON.parse(JSON.stringify(node1));
     let n2 = JSON.parse(JSON.stringify(node2));
     delete n1.expand;

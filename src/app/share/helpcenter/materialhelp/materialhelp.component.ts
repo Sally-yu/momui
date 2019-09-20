@@ -1,4 +1,13 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild
+} from '@angular/core';
 import j from 'src/assets/tables/material/material.json';
 import {HttpService} from "./service/http.service";
 import {TreeNodeInterface} from "../../smarthelp/smarthelp.component";
@@ -18,6 +27,8 @@ export class MaterialhelpComponent implements OnInit {
   //仿制帮助时,务必保证该变量名为result   TODO:重要
   @Output() result: EventEmitter<any> = new EventEmitter<any>();
 
+  @ViewChild('querylist', {static: false}) querylist: ElementRef;
+
   //帮助数据源列名映射关系
   columns: Array<any> = j;
 
@@ -27,7 +38,7 @@ export class MaterialhelpComponent implements OnInit {
   //
   leftSelected: any = null;
 
-  @Input() readOnly:boolean=false;
+  @Input() readOnly: boolean = false;
 
   //帮助标题
   @Input() title: string = '物料帮助';
@@ -102,6 +113,7 @@ export class MaterialhelpComponent implements OnInit {
   focus: boolean;
   tabs = ['物料分类', '物料类型'];
   categroy: any;
+
   demoData = [
     {
       code: '0001',
@@ -220,9 +232,11 @@ export class MaterialhelpComponent implements OnInit {
       drnum: '01990'
     },
   ]
+  tableHeight: string ='300px';
 
   constructor(
-    public http: HttpService
+    public http: HttpService,
+    private cdRef: ChangeDetectorRef
   ) {
   }
 
@@ -458,4 +472,6 @@ export class MaterialhelpComponent implements OnInit {
       "data": v
     });
   }
+
+
 }

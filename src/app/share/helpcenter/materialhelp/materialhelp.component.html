@@ -6,7 +6,7 @@
   class="m-help"
 >
 
-  <div style="display: inline-flex;width:100%">
+  <div class="content">
     <div class="left">
       <nz-select [(ngModel)]="categroy" style="width: 100%;margin-bottom: 8px;margin-top: 4px;">
         <nz-option *ngFor="let data of ['物料类型','物料分类']" [nzLabel]="data" [nzValue]="data"></nz-option>
@@ -34,12 +34,13 @@
 
     <nz-divider nzType="vertical" style="height: auto;margin-bottom: 8px;"></nz-divider>
     <div class="right">
-      <querylist
-        (onQuery)="query($event)"
-        [colsInRow]="3"
-        [columns]="columns"
-      ></querylist>
-
+      <div id="querylist" #querylist>
+        <querylist
+          (onQuery)="query($event)"
+          [colsInRow]="3"
+          [columns]="columns"
+        ></querylist>
+      </div>
       <div>
         <nz-table #Table
                   [(nzPageIndex)]="pageIndex"
@@ -47,10 +48,11 @@
                   [nzData]="rightData"
                   [nzLoading]="loading"
                   [nzPageSizeOptions]="pageOption"
-                  [nzScroll]="{x:colWidth(),y:'468px'}"
+                  [nzScroll]="{x:colWidth(),y:'300px'}"
                   [nzShowQuickJumper]="showJumper"
                   nzSize="small"
-                  style="height: 468px;margin-top: 8px;"
+                  [style.height]="'300px'"
+                  style="margin-top: 8px;"
         >
           <thead>
           <tr>
@@ -134,13 +136,16 @@
 
 
 <nz-input-group [nzSuffix]="suffixIconButton">
-  <input *ngIf="!content" nz-input [placeholder]="placeHolder" (click)="openHelp()" readonly type="text" style="cursor: pointer"/>
+  <input *ngIf="!content" nz-input [placeholder]="placeHolder" (click)="openHelp()" readonly type="text"
+         style="cursor: pointer"/>
   <input *ngIf="content" [(ngModel)]="content['name']" nz-input (click)="openHelp()" [placeholder]="placeHolder"
          style="cursor: pointer"
          type="text"/>
 </nz-input-group>
 
 <ng-template #suffixIconButton>
-  <i nz-icon *ngIf="!content" [nzType]="'search'" style="cursor: pointer;color:rgba(0,0,0,.25);" (click)="openHelp()"></i>
-  <i nz-icon *ngIf="content" [nzType]="'close'" style="cursor: pointer;color:rgba(0,0,0,.25);" (click)="clearContent()"></i>
+  <i nz-icon *ngIf="!content" [nzType]="'search'" style="cursor: pointer;color:rgba(0,0,0,.25);"
+     (click)="openHelp()"></i>
+  <i nz-icon *ngIf="content" [nzType]="'close'" style="cursor: pointer;color:rgba(0,0,0,.25);"
+     (click)="clearContent()"></i>
 </ng-template>
