@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import j from 'src/assets/config/http.json';
+import j from 'src/assets/config/webconfig.json';
 
 @Injectable({
   providedIn: 'root'
