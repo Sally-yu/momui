@@ -1,20 +1,36 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
+import j from 'src/assets/config/http.json';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UrlService {
 
-  public hostip='http://212.64.2.48';
-  public hostport=':8899';
-  public hostname=this.hostip+this.hostport;
+  //配置文件ip(或域名)
+  public hostip = j['ORIGIN'];
+  //配置文件端口
+  public hostport = j['PORT'];
+  //如配置了hostname(注册的域名),则使用域名
+  public hostname = j['HOSTNAME'] ? j['HOSTNAME'] : this.hostip + this.hostport;
 
-  public gridUrl=this.hostname+'/grid';
-  public loginUrl=this.hostname+'/login';
-  public interUrl=this.hostname+'/inter';
-  public demoUrl=this.hostname+'/demo3';
 
-  constructor() { }
+  //FIXME:样例两个,业务中不要调
+  public gridUrl = this.hostname + '/grid';
+  public loginUrl = this.hostname + '/login';
+
+
+  /**********************************************************************/
+  //TODO:请求后台api的url统一写到该服务下
+  /**********************************************************************/
+
+
+
+
+
+
+
+  constructor() {
+  }
 
 
 }
