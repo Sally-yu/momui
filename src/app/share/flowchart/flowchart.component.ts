@@ -47,9 +47,9 @@ export class FlowchartComponent implements OnInit, AfterViewInit, OnChanges {
   @Input() col: number = 0; //列数，默认自动计算
   @Input() distance: number = 40;//列最小间距，
 
-  @Input() boxWidth: number = 120;
-  @Input() boxHeight: number = 40;
-  @Input() radius: number = 20;
+  @Input() boxWidth: number = 100;
+  @Input() boxHeight: number = 30;
+  @Input() radius: number = 0;
 
   @Input() text: string = 'text';//标签绑定的字段名
   @Input() highLightKey: string = 'selected'; //选中标记符，字段值boolean
@@ -256,7 +256,8 @@ export class FlowchartComponent implements OnInit, AfterViewInit, OnChanges {
             text: 'OP'+(this.DataSource[i]['pre']?this.DataSource[i]['pre']:i.toString())+':'+this.DataSource[i][this.text],
             fill: this.DataSource[i][this.highLightKey] ? this.HighLightTextColor : this.TextColor,
             // 'ref-x': (this.boxHeight) / 3
-          }
+            'font-size': 12,
+          },
         });
 
         //圆圈子块
@@ -557,6 +558,7 @@ export class FlowchartComponent implements OnInit, AfterViewInit, OnChanges {
         cursor: 'pointer',
         text: (data['pre']?'OP'+data['pre']+':':'')+data[this.text],
         fill: data[this.highLightKey] ? this.HighLightTextColor : this.TextColor,
+        'font-size': 12,
         // 'ref-x': this.boxHeight / 3
       },
     });
