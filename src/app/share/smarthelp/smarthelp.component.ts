@@ -125,7 +125,7 @@ export class SmarthelpComponent implements AfterViewChecked {
 
   @Input() readOnly: boolean = false;
 
-  @Input() onlyItem: boolean = false;
+  @Input() onlyDetail: boolean = false;
   //列表型数据，全部列表数据
   listData: Array<any>;
 
@@ -147,7 +147,7 @@ export class SmarthelpComponent implements AfterViewChecked {
       if (checked) {
         Object.values(this.mapOfExpandedData).forEach(e => {
           e.forEach((d: any) => {
-            if (this.onlyItem && d.hasOwnProperty('children')) {
+            if (this.onlyDetail && d.hasOwnProperty('children')) {
               return;
             } else {
               this.addToSelected(d);
@@ -186,7 +186,7 @@ export class SmarthelpComponent implements AfterViewChecked {
   //行点击
   rowClick(row: any) {
     let a = JSON.stringify(row);
-    if (this.onlyItem && row.hasOwnProperty('children')) {
+    if (this.onlyDetail && row.hasOwnProperty('children')) {
       //只返回明细节点,树型帮助时
       return
     }
@@ -473,7 +473,7 @@ export class SmarthelpComponent implements AfterViewChecked {
     if (this.multiSelect) {
       return;
     }
-    if (this.onlyItem && a.hasOwnProperty('children')) {
+    if (this.onlyDetail && a.hasOwnProperty('children')) {
       return;
     }
     this.rowClick(a);

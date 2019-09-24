@@ -127,7 +127,7 @@
           >
             <td (nzCheckedChange)="checkRow($event,content)"
                 [nzChecked]="content==selected"
-                [nzDisabled]="onlyItem&&content.hasOwnProperty('children')"
+                [nzDisabled]="onlyDetail&&content.hasOwnProperty('children')"
                 nzLeft="0px"
                 nzShowCheckbox
             >
@@ -160,7 +160,7 @@
               (nzCheckedChange)="checkRow($event,content)"
               [nzChecked]="isSelected(content)"
               nzLeft="0px"
-              [nzDisabled]="onlyItem&&content.hasOwnProperty('children')"
+              [nzDisabled]="onlyDetail&&content.hasOwnProperty('children')"
               nzShowCheckbox
             >
             <td
