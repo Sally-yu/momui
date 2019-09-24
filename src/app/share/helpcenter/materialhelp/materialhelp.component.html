@@ -34,7 +34,7 @@
 
     <nz-divider nzType="vertical" style="height: auto;margin-bottom: 8px;"></nz-divider>
     <div class="right">
-      <div id="querylist" #querylist>
+      <div id="querylist" style="margin-top: 2px;" #querylist>
         <querylist
           (onQuery)="query($event)"
           [colsInRow]="3"
@@ -48,10 +48,10 @@
                   [nzData]="rightData"
                   [nzLoading]="loading"
                   [nzPageSizeOptions]="pageOption"
-                  [nzScroll]="{x:colWidth(),y:'300px'}"
+                  [nzScroll]="{x:colWidth(),y:'240px'}"
                   [nzShowQuickJumper]="showJumper"
                   nzSize="small"
-                  [style.height]="'300px'"
+                  [style.height]="'240px'"
                   style="margin-top: 8px;"
         >
           <thead>
