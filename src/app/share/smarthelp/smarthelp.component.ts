@@ -1,13 +1,12 @@
 import {
-  AfterViewChecked, AfterViewInit,
+  AfterViewChecked,
   ChangeDetectorRef,
   Component, ElementRef,
   EventEmitter,
-  Input, OnInit,
+  Input,
   Output, ViewChild,
 } from '@angular/core';
 import {HttpService} from './service/http.service';
-import {del} from "selenium-webdriver/http";
 
 export interface TreeNodeInterface {
   key: number;
@@ -24,7 +23,7 @@ export interface TreeNodeInterface {
   templateUrl: './smarthelp.component.html',
   styleUrls: ['./smarthelp.component.less']
 })
-export class SmarthelpComponent implements AfterViewChecked ,AfterViewInit{
+export class SmarthelpComponent implements AfterViewChecked {
 
   @ViewChild('searchInput', {static: true}) input: any;
 
@@ -49,7 +48,7 @@ export class SmarthelpComponent implements AfterViewChecked ,AfterViewInit{
   //仿制帮助时,务必保证该变量名为result   重要
   @Output() result: EventEmitter<any> = new EventEmitter<any>();
 
-  @ViewChild('muiltInput', {static: false}) muiltInput: ElementRef;
+  @ViewChild('multiInput', {static: false}) multiInput: ElementRef;
 
   //暂存选中行
   selected: any;
@@ -124,6 +123,9 @@ export class SmarthelpComponent implements AfterViewChecked ,AfterViewInit{
   //输入框placeholder
   @Input() placeHolder: string = '';
 
+  @Input() readOnly: boolean = false;
+
+  @Input() onlyItem: boolean = false;
   //列表型数据，全部列表数据
   listData: Array<any>;
 
@@ -132,7 +134,6 @@ export class SmarthelpComponent implements AfterViewChecked ,AfterViewInit{
   searchValue: string = null; // 简单搜索值
   loading: boolean = false;
   focus: boolean;
-  @Input() readOnly: boolean = false;
 
   constructor(
     public http: HttpService,
@@ -143,17 +144,21 @@ export class SmarthelpComponent implements AfterViewChecked ,AfterViewInit{
   //表头勾选
   thChecked(checked: boolean) {
     if (this.tree) {
-      if (this.selectedList.length < this.treeData.length) {
+      if (checked) {
         Object.values(this.mapOfExpandedData).forEach(e => {
-          e.forEach(d => {
-            this.addToSelectec(d);
+          e.forEach((d: any) => {
+            if (this.onlyItem && d.hasOwnProperty('children')) {
+              return;
+            } else {
+              this.addToSelected(d);
+            }
           })
         });
       } else {
         this.selectedList = [];
       }
     } else {
-      if (this.selectedList.length < this.displayData.length) {
+      if (checked) {
         this.selectedList = JSON.parse(JSON.stringify(this.displayData))
       } else {
         this.selectedList = [];
@@ -161,13 +166,14 @@ export class SmarthelpComponent implements AfterViewChecked ,AfterViewInit{
     }
   }
 
-  addToSelectec(d) {
+  //添加到已选,树多选
+  addToSelected(d) {
     if (JSON.stringify(this.selectedList).indexOf(JSON.stringify(d)) < 0) {
       this.selectedList = [...this.selectedList, d];
     }
     if (d.hasOwnProperty('children') && d.children.length > 0) {
       d.children.forEach(e => {
-        this.addToSelectec(e);
+        this.addToSelected(e);
       })
     }
   }
@@ -180,6 +186,10 @@ export class SmarthelpComponent implements AfterViewChecked ,AfterViewInit{
   //行点击
   rowClick(row: any) {
     let a = JSON.stringify(row);
+    if (this.onlyItem && row.hasOwnProperty('children')) {
+      //只返回明细节点,树型帮助时
+      return
+    }
     if (this.multiSelect) {
       if (JSON.stringify(this.selectedList).includes(a)) {
         this.selectedList = this.selectedList.filter(s => JSON.stringify(s) != a);
@@ -196,19 +206,23 @@ export class SmarthelpComponent implements AfterViewChecked ,AfterViewInit{
     this.visible = false;
     this.searchValue = undefined;
     this.displayData = undefined;
+    this.treeData = undefined;
+    this.listData = undefined;
     this.selected = undefined;
-    this.selectedList = [];
+    this.selectedList = new Array<any>();
   }
 
   //确认返回事件
   ok() {
+    if (!this.selected && this.selectedList.length < 1) {
+      return
+    }
     if (!this.multiSelect) {
       this.content = this.selected;
       this.result.emit(this.content);
-    }
-    if (this.multiSelect) {
+    } else if (this.multiSelect) {
       this.content = this.selectedList;
-      this.muiltInput.nativeElement.value = this.multiTitle();
+      this.multiInput.nativeElement.value = this.multiTitle();
       this.result.emit(this.content);
     }
     this.cancel();
@@ -281,6 +295,7 @@ export class SmarthelpComponent implements AfterViewChecked ,AfterViewInit{
     }
   }
 
+  //计算列表所需宽度
   colWidth(): string {
     try {
       return this.displayedCols().length * 150 + 50 + 'px';
@@ -372,6 +387,7 @@ export class SmarthelpComponent implements AfterViewChecked ,AfterViewInit{
     return array;
   }
 
+  //输入框打开帮助
   openHelp() {
     if (this.readOnly) {
       return;
@@ -382,11 +398,12 @@ export class SmarthelpComponent implements AfterViewChecked ,AfterViewInit{
 
   ngAfterViewChecked() {
     this.cdRef.detectChanges();
-    if (this.multiSelect){
-      this.muiltInput.nativeElement.value = this.multiTitle();
+    if (this.multiSelect) {
+      this.multiInput.nativeElement.value = this.multiTitle();
     }
   }
 
+  //叉号清空内容
   clearContent() {
     if (this.readOnly) {
       return;
@@ -394,11 +411,12 @@ export class SmarthelpComponent implements AfterViewChecked ,AfterViewInit{
     let v = this.content;
     this.content = undefined;
     this.result.emit({
-      "clear":true,
-      "data":v
+      "clear": true,
+      "data": v
     });
   }
 
+  //简单模糊查询
   search() {
     if (this.searchValue && this.searchValue.length > 0) {
       this.displayData = JSON.parse(JSON.stringify(this.listData)).filter(d => {
@@ -419,6 +437,7 @@ export class SmarthelpComponent implements AfterViewChecked ,AfterViewInit{
     }
   }
 
+  //树形判断选中
   isSelected(row) {
     if (this.tree) {
       return this.selectedList.filter(s => {
@@ -429,6 +448,7 @@ export class SmarthelpComponent implements AfterViewChecked ,AfterViewInit{
     }
   }
 
+  //设置多选输入框内容
   multiTitle() {
     let title = '';
     try {
@@ -448,7 +468,15 @@ export class SmarthelpComponent implements AfterViewChecked ,AfterViewInit{
     return JSON.stringify(n1) === JSON.stringify(n2);
   }
 
-  ngAfterViewInit(): void {
-
+  //单选双击
+  dbClick(a) {
+    if (this.multiSelect) {
+      return;
+    }
+    if (this.onlyItem && a.hasOwnProperty('children')) {
+      return;
+    }
+    this.rowClick(a);
+    this.ok();
   }
 }

@@ -31,6 +31,7 @@
     </ng-template>
 
     <nz-table #Table
+              *ngIf="visible"
               [(nzPageIndex)]="pageIndex"
               [(nzPageSize)]="pageSize"
               [nzData]="displayData"
@@ -65,12 +66,13 @@
         <th
           (nzCheckedChange)="thChecked($event)"
           *ngIf="multiSelect&&tree"
-          [nzChecked]="selectedList.length>0&&selectedList.length==treeData.length"
           [nzIndeterminate]="selectedList.length>0&&selectedList.length!=treeData.length"
+          [nzChecked]="selectedList.length>0&&selectedList.length==treeData.length"
           nzLeft="0px"
           nzShowCheckbox
           nzWidth="50px"
         ></th>
+
         <th *ngFor="let c of displayedCols() " nzWidth="150px">{{c.name}}</th>
       </tr>
       </thead>
@@ -82,7 +84,7 @@
         *ngFor="let a of Table.data"
         [ngClass]="{'selected-tr':a==selected}"
         (click)="rowClick(a)"
-        (dblclick)="rowClick(a);ok()">
+        (dblclick)="dbClick(a)">
         <td
           (nzCheckedChange)="checkRow($event,a)"
           [nzChecked]="a==selected"
@@ -119,12 +121,13 @@
         <ng-container *ngFor="let content of mapOfExpandedData[data[path]]">
           <tr
             (click)="rowClick(content)"
-            (dblclick)="rowClick(content);ok()" *ngIf="(content.parent && content.parent.expand) || !content.parent"
+            (dblclick)="dbClick(content)" *ngIf="(content.parent && content.parent.expand) || !content.parent"
             [ngClass]="{'selected-tr':content==selected}"
             style="cursor: pointer;"
           >
             <td (nzCheckedChange)="checkRow($event,content)"
                 [nzChecked]="content==selected"
+                [nzDisabled]="onlyItem&&content.hasOwnProperty('children')"
                 nzLeft="0px"
                 nzShowCheckbox
             >
@@ -157,6 +160,7 @@
               (nzCheckedChange)="checkRow($event,content)"
               [nzChecked]="isSelected(content)"
               nzLeft="0px"
+              [nzDisabled]="onlyItem&&content.hasOwnProperty('children')"
               nzShowCheckbox
             >
             <td
@@ -213,7 +217,7 @@
          [placeholder]="placeHolder"
          [ngStyle]="{'cursor':readOnly?'not-allowed':'pointer'}" type="text"/>
   <!--多选-->
-  <input #muiltInput nz-popover class="input" nzPlacement="bottomLeft" [nzTitle]="multiTitle()" nz-input
+  <input #multiInput nz-popover class="input" nzPlacement="bottomLeft" [nzTitle]="multiTitle()" nz-input
          (click)="openHelp()"
          [disabled]="readOnly"
          [placeholder]="placeHolder"
