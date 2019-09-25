@@ -82,6 +82,12 @@ export class QuerylistComponent implements OnInit {
 
   //查询
   query(): void {
+    this.createParam();
+    this.onQuery.emit(this.queryArray);
+  }
+
+  //组织查询结果
+  createParam(){
     this.queryArray = {};
     this.componentArray.forEach(c => {
       switch (c.instance.item.type) {
@@ -102,7 +108,6 @@ export class QuerylistComponent implements OnInit {
           break;
       }
     });
-    this.onQuery.emit(this.queryArray);
   }
 
   //展开/关闭
@@ -202,6 +207,12 @@ export class QuerylistComponent implements OnInit {
       }
       this.componentArray.push(ref);
     });
+  }
+
+  //供外部调用查询结果的方法
+  getQueryParam(){
+    this.createParam();
+    return this.queryArray;
   }
 
   inputType(item): string {

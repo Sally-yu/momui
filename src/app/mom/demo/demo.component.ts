@@ -1,7 +1,8 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {HttpService} from './service/http.service';
 import {NzMessageService} from 'ng-zorro-antd';
 import j from 'src/assets/tables/meta/meta.json';
+import {QuerylistComponent} from "../../share/querylist/querylist.component";
 
 
 @Component({
@@ -10,6 +11,8 @@ import j from 'src/assets/tables/meta/meta.json';
   styleUrls: ['./demo.component.less']
 })
 export class DemoComponent implements OnInit, AfterViewInit {
+  @ViewChild(QuerylistComponent,{static:false}) querylist:QuerylistComponent;
+
   visible: boolean;
 
   tree = {
@@ -114,6 +117,13 @@ export class DemoComponent implements OnInit, AfterViewInit {
 
   afterHelp(data: any) {
     this.message.success(JSON.stringify(data));
+  }
+
+  queryAnyWhere(){
+    let d=this.querylist.getQueryParam();
+    let text=JSON.stringify(d);
+    this.message.success(text);
+    console.log(text)
   }
 
   ngAfterViewInit(): void {

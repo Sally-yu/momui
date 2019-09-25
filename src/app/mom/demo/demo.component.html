@@ -4,6 +4,7 @@ Demo功能演示
 <br>
 <br>
 
+
 <button nz-button [nzType]="'primary'" (click)="get()">get</button>
 <br>
 <br>
@@ -92,6 +93,7 @@ Demo功能演示
   [colsInRow]="4"
 ></querylist>
 
+
 <alphahelp [content]="{code:'0001',name:'单选默认值'}" (result)="afterHelp($event)" [readOnly]="readonly"></alphahelp>
 
 <helpcenter [content]="[{code:'0001',name:'多选默认值1'},{code:'3001',name:'多选默认值2'}]" helpId="alpha" [readOnly]="readonly" (result)="afterHelp($event)"></helpcenter>
@@ -99,6 +101,9 @@ Demo功能演示
 <materialhelp [content]="{code:'0001',name:'物料'}" (result)="afterHelp($event)" ></materialhelp>
 
 <button nz-button (click)="readonly=!readonly">只读切换</button>
+
+  <button nz-button (click)="queryAnyWhere()">任意触发查询</button>
+
 </div>
 
 <flowchart [TreeData]="tree" (blockClick)="showNode($event)"></flowchart>

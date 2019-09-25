@@ -290,6 +290,7 @@ export class SmarthelpComponent implements AfterViewChecked {
   //展示列
   displayedCols(): Array<any> {
     try {
+      let c;
       return this.columns.filter(c => c.display || !c.hasOwnProperty('display'));
     } catch (e) {
     }

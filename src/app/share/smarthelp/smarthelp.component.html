@@ -66,8 +66,8 @@
         <th
           (nzCheckedChange)="thChecked($event)"
           *ngIf="multiSelect&&tree"
-          [nzIndeterminate]="selectedList.length>0&&selectedList.length!=treeData.length"
           [nzChecked]="selectedList.length>0&&selectedList.length==treeData.length"
+          [nzIndeterminate]="selectedList.length>0&&selectedList.length!=treeData.length"
           nzLeft="0px"
           nzShowCheckbox
           nzWidth="50px"
@@ -81,10 +81,10 @@
       <tbody *ngIf="!tree&&!multiSelect">
       <!--单选-->
       <tr
-        *ngFor="let a of Table.data"
-        [ngClass]="{'selected-tr':a==selected}"
         (click)="rowClick(a)"
-        (dblclick)="dbClick(a)">
+        (dblclick)="dbClick(a)"
+        *ngFor="let a of Table.data"
+        [ngClass]="{'selected-tr':a==selected}">
         <td
           (nzCheckedChange)="checkRow($event,a)"
           [nzChecked]="a==selected"
@@ -159,8 +159,8 @@
             <td
               (nzCheckedChange)="checkRow($event,content)"
               [nzChecked]="isSelected(content)"
-              nzLeft="0px"
               [nzDisabled]="onlyDetail&&content.hasOwnProperty('children')"
+              nzLeft="0px"
               nzShowCheckbox
             >
             <td
@@ -197,8 +197,16 @@
     [nzRenderItem]="smallItem"
   >
     <ng-template #smallItem let-item>
-      <nz-list-item [nzContent]="item.name">
+      <nz-list-item *ngIf="!item.hasOwnProperty('origin')" [nzContent]="item.name">
         <nz-switch [nzDisabled]="displayedCols().length<=3&&item['display']" [(ngModel)]="item['display']"
+                   style="margin-right: 8px;"></nz-switch>
+      </nz-list-item>
+      <nz-list-item *ngIf="item.hasOwnProperty('origin')" [nzContent]="item.origin.code.name">
+        <nz-switch [nzDisabled]="displayedCols().length<=3&&item['display']" [(ngModel)]="item.origin.code['display']"
+                   style="margin-right: 8px;"></nz-switch>
+      </nz-list-item>
+      <nz-list-item *ngIf="item.hasOwnProperty('origin')" [nzContent]="item.origin.name.name">
+        <nz-switch [nzDisabled]="displayedCols().length<=3&&item['display']" [(ngModel)]="item.origin.name['display']"
                    style="margin-right: 8px;"></nz-switch>
       </nz-list-item>
     </ng-template>

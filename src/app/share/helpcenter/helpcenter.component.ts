@@ -25,9 +25,11 @@ export class HelpcenterComponent implements OnInit, AfterViewInit, AfterViewChec
 
   @Input() readOnly: boolean = false;
 
-  @Input() query: false;
+  //表示在动态查询条件中使用,渲染成form内标签加输入框
+  @Input() query:boolean;
   @Input() helpId: string;
 
+  //接收动态配置参数
   @Input() item: any;
   @Input() hidden: boolean;
 

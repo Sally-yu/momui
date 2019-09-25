@@ -12,7 +12,21 @@
     "type": "help",
     "default": true,
     "display": true,
-    "helpid": "material"
+    "helpid": "material",
+    "origin": {
+      "code": {
+        "code": "code",
+        "name": "物料编号",
+        "type": "text",
+        "display": true
+      },
+      "name": {
+        "code": "name",
+        "name": "物料名称",
+        "type": "text",
+        "display": true
+      }
+    }
   },
   {
     "code": "code",
